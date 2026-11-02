@@ -26,15 +26,17 @@ release/<версия>
 
 Пример из карточки: `feature/LUMEN-0001-ebu-alibabu`, `hotfix/LUMEN-0002-ebu-alibabu`.
 
+**Пока у ClickAuto нет доски задач**, ветки называются без кода: `feature/<кратко-что-делаем>`, `hotfix/<кратко-что-делаем>`. Например: `feature/docs-decisions`, `hotfix/login-code-resend`. Когда появится доска, возвращаемся к формату с кодом.
+
 Для релизов кода задачи нет, только версия: `release/0.2.0`.
 
 ## Порядок работы
 
-1. Обнови `develop` и создай от неё ветку задачи: `git switch develop && git pull && git switch -c feature/<КОД>-<описание>`.
+1. Обнови `develop` и создай от неё ветку задачи: `git switch develop && git pull && git switch -c feature/<описание>` (с кодом задачи, когда появится доска: `feature/<КОД>-<описание>`).
 2. Коммить по Conventional Commits: `feat(listings): hide listing from search`.
 3. Открой pull request в `develop`. Нужны зелёный CI и ревью.
 4. Релиз: ветка `release/<версия>` от `develop`, исправления только в ней, затем мерж в `main` с тегом `v<версия>` и обратно в `develop`.
-5. Хотфикс: ветка `hotfix/<КОД>-<описание>` от `main`, мерж в `main` с новым патч-тегом и в `develop`.
+5. Хотфикс: ветка `hotfix/<описание>` (или `hotfix/<КОД>-<описание>`) от `main`, мерж в `main` с новым патч-тегом и в `develop`.
 
 ## Окружения
 
