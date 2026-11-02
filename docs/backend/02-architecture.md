@@ -23,7 +23,7 @@ flowchart LR
     Worker --> S3
     Worker -->|парсинг| Sources[999.md / makler.md / klaxon.md]
     Worker -->|курсы| Banks[ПРБ / НБМ]
-    API -->|письма| Email[Email-провайдер]
+    API -->|письма, SMTP| Email[Spacemail]
     API -->|OIDC| Google[Google]
 ```
 
@@ -70,7 +70,7 @@ docs/
 - Запуск парсинга из админки ставит задачу в очередь BullMQ `import.<source>` с флагом `manual`. Статус прогона админка читает из `ImportRun`, обновления — через polling раз в 5 с.
 - Изменение справочника ставит задачу `search.reindex` для затронутых объявлений.
 - Сессии сотрудников короче пользовательских: 12 часов без продления.
-- В production админка доступна только с разрешённых IP или через VPN (решается при выборе хостинга).
+- В production админка доступна только с разрешённых IP или через VPN: ограничение на reverse proxy VPS для домена админки и для `/api/v1/admin/*`.
 
 Правило зависимостей: модуль обращается к другому только через его публичный сервис. Прямые запросы в чужие таблицы запрещены.
 
@@ -153,3 +153,5 @@ flowchart LR
 | local | docker compose: PostgreSQL, Redis, Meilisearch, MinIO, imgproxy, Mailpit |
 | staging | Копия прода с тестовыми данными, автодеплой из `develop` |
 | production | Деплой по релизу. Схема веток — по [gitflow](../gitflow.md) |
+
+staging и production работают на VPS Spaceship в docker compose: reverse proxy с TLS, сайт, админка, API, воркер, PostgreSQL, Redis, Meilisearch, MinIO, imgproxy. Бэкапы PostgreSQL и MinIO — ежедневно, хранятся вне сервера.
