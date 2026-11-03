@@ -76,7 +76,7 @@ erDiagram
 | theme | enum `light` / `dark` / `system` | |
 | status | enum `active` / `deactivated` / `banned` / `deleted` | `deactivated` — пользователь скрыл себя сам, вход возвращает `active`. `deleted` — необратимо ([правила](../analytics/03-requirements.md#деактивация-и-удаление-аккаунта)) |
 | deactivated_at, deleted_at | timestamptz, null | При удалении `email`, `name`, `phone`, `avatar_media_id` очищаются, `username` освобождается, `AuthIdentity` удаляются |
-| banned_until, ban_reason | timestamptz, text, null | Заполняются при блокировке из админки |
+| banned_until, ban_reason | timestamptz, text, null | Заполняются при блокировке из админки. Срок — 1, 7 или 30 дней; `banned_until = null` при `status = banned` — навсегда |
 | role | enum `user` / `moderator` / `admin` | По умолчанию `user`. Меняет только администратор |
 | created_at, updated_at | timestamptz | |
 
@@ -131,7 +131,7 @@ stateDiagram-v2
 ### GoodsDetails и ServiceDetails
 
 - `GoodsDetails`: `category_id`, `condition` (`new` / `used`), `attributes` (JSONB), `compatible_models` (массив `model_id` + годы, для запчастей).
-- `ServiceDetails`: `category_id`, `address`, `working_hours`, `mobile_service` (выезд к клиенту), `served_brands` (массив `brand_id`).
+- `ServiceDetails`: `category_id`, `address`, `working_hours` (свободный текст, например «Пн–Сб 9:00–19:00»; расписание по дням и фильтр «работает сейчас» — следующий этап), `mobile_service` (выезд к клиенту), `served_brands` (массив `brand_id`).
 - `attributes` проверяются по схеме атрибутов категории (`CategoryAttribute`): например, у шин — ширина, профиль, диаметр, сезон.
 
 ### Category и CategoryAttribute
