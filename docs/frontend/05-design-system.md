@@ -7,7 +7,8 @@
 | Страница | Что там |
 | --- | --- |
 | [Дизайн-система](https://www.figma.com/design/xvASQmqPFIaoo2XYknDkLC/ClickAuto?node-id=24-4824) | Иконки, цвета обеих тем, типографика, компоненты |
-| [Экраны (mobile)](https://www.figma.com/design/xvASQmqPFIaoo2XYknDkLC/ClickAuto?node-id=28-4587) | 19 экранов сайта в светлой теме, ключевые — ещё и в тёмной |
+| [Экраны (mobile)](https://www.figma.com/design/xvASQmqPFIaoo2XYknDkLC/ClickAuto?node-id=28-4587) | 19 экранов сайта в светлой теме, ключевые — ещё и в тёмной. Согласованы командой 2026-11-03 |
+| [Экраны (desktop)](https://www.figma.com/design/xvASQmqPFIaoo2XYknDkLC/ClickAuto?node-id=41-4383) | Главная, лента с фильтрами в боковой панели, карточка авто — 1440 px, контейнер 1200 |
 | [Главная (варианты)](https://www.figma.com/design/xvASQmqPFIaoo2XYknDkLC/ClickAuto?node-id=9-4283) | Варианты A–D и оттенки красного, из которых выбирали |
 
 Значения ниже совпадают с переменными Figma (коллекции `Color` с режимами Light / Dark и `Dimension`) и текстовыми стилями `text/*`.
