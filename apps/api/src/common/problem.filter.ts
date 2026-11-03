@@ -21,6 +21,7 @@ const TITLES: Record<number, string> = {
   422: 'Validation failed',
   429: 'Too many requests',
   500: 'Internal server error',
+  503: 'Service unavailable',
 };
 
 const DEFAULT_CODES: Record<number, string> = {
@@ -33,6 +34,7 @@ const DEFAULT_CODES: Record<number, string> = {
   422: 'validation_failed',
   429: 'rate_limited',
   500: 'internal_error',
+  503: 'unavailable',
 };
 
 function fromZod(error: ZodError): ProblemFieldError[] {

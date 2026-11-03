@@ -6,7 +6,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "generate": "prisma generate",
-    "build": "prisma generate && tsc -p tsconfig.build.json",
+    "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint src prisma",
     "migrate:dev": "prisma migrate dev",

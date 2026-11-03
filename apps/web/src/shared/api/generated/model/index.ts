@@ -5,5 +5,22 @@
  * OpenAPI spec version: 1.0.0
  */
 
+export * from './authResultDto';
+export * from './authResultDtoUser';
+export * from './authResultDtoUserLocale';
+export * from './authResultDtoUserRole';
+export * from './authResultDtoUserTheme';
+export * from './completeProfileDto';
+export * from './emailStartDto';
+export * from './emailStartDtoLocale';
+export * from './emailVerifyDto';
 export * from './healthDto';
 export * from './healthDtoStatus';
+export * from './meDto';
+export * from './meDtoLocale';
+export * from './meDtoRole';
+export * from './meDtoTheme';
+export * from './problem';
+export * from './problemFieldError';
+export * from './startGoogleSignInLocale';
+export * from './startGoogleSignInParams';

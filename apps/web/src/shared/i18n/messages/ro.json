@@ -7,10 +7,58 @@
     "cars": "Auto",
     "goods": "Produse",
     "services": "Servicii",
-    "post": "Publică"
+    "post": "Publică",
+    "login": "Intră"
   },
   "home": {
     "title": "Găsiți-vă mașina",
     "subtitle": "Mașini, produse și servicii auto în Transnistria și Moldova"
+  },
+  "auth": {
+    "login": {
+      "title": "Conectare și înregistrare",
+      "subtitle": "Vă trimitem un cod pe e-mail. Parola nu este necesară.",
+      "email": "E-mail",
+      "emailPlaceholder": "ivan@example.com",
+      "submit": "Primește codul",
+      "or": "sau",
+      "google": "Intră cu Google",
+      "terms": "Continuând, sunteți de acord cu acordul de utilizare și politica de confidențialitate"
+    },
+    "code": {
+      "title": "Codul din e-mail",
+      "subtitle": "Am trimis 6 cifre la {email}",
+      "label": "Codul din e-mail",
+      "resend": "Trimite codul din nou",
+      "resendIn": "Trimite codul din nou peste {seconds} s",
+      "changeEmail": "Schimbă e-mailul",
+      "attemptsLeft": "Încercări rămase: {count}"
+    },
+    "profile": {
+      "title": "Cum să vă numim",
+      "subtitle": "Numele de utilizator este necesar pentru linkul profilului, numele îl văd cumpărătorii și vânzătorii",
+      "username": "Nume de utilizator",
+      "usernameHint": "3–30 caractere: litere latine, cifre și _. Se poate schimba o dată la 30 de zile",
+      "name": "Nume",
+      "submit": "Gata"
+    }
+  },
+  "errors": {
+    "otp_invalid": "Cod greșit, încercați din nou",
+    "otp_expired": "Codul a expirat. Trimiteți unul nou",
+    "otp_too_many_attempts": "Prea multe încercări. Trimiteți un cod nou",
+    "otp_resend_too_soon": "Un cod nou poate fi solicitat puțin mai târziu",
+    "rate_limited": "Prea multe solicitări. Încercați mai târziu",
+    "user_banned": "Contul este blocat",
+    "username_length": "Numele de utilizator trebuie să aibă între 3 și 30 de caractere",
+    "username_charset": "Se pot folosi litere latine, cifre și _",
+    "username_start": "Numele de utilizator trebuie să înceapă cu o literă",
+    "username_reserved": "Acest nume de utilizator nu este disponibil",
+    "username_taken": "Numele de utilizator este deja ocupat",
+    "email_invalid": "Verificați e-mailul",
+    "name_required": "Indicați numele",
+    "google": "Nu s-a reușit conectarea cu Google. Încercați din nou sau intrați prin e-mail",
+    "banned": "Contul este blocat",
+    "unknown_error": "Ceva nu a mers bine. Încercați din nou"
   }
 }

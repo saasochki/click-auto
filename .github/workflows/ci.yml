@@ -8,6 +8,23 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: clickauto
+          POSTGRES_PASSWORD: clickauto
+          POSTGRES_DB: clickauto_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U clickauto" --health-interval 5s --health-retries 10
+      redis:
+        image: redis:7-alpine
+        ports: ['6379:6379']
+    env:
+      DATABASE_URL: postgresql://clickauto:clickauto@localhost:5432/clickauto_test
+      REDIS_URL: redis://localhost:6379/15
+      E2E: '1'
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -17,6 +34,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm db:generate
+      - run: pnpm --filter @clickauto/db migrate:deploy
+      - run: pnpm --filter @clickauto/db seed
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm typecheck
@@ -26,5 +45,6 @@ jobs:
           pnpm --filter api api:openapi
           pnpm --filter web api:generate
           pnpm --filter admin api:generate
+          pnpm exec prettier --write packages/api-contract
           git diff --exit-code
       - run: pnpm build

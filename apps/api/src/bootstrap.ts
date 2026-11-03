@@ -11,6 +11,11 @@ export function configureApp(app: INestApplication, allowedOrigins: string[]): v
   app.useLogger(app.get(Logger));
   app.setGlobalPrefix(API_PREFIX);
   app.use(cookieParser());
+  const http = app.getHttpAdapter().getInstance() as {
+    set?: (key: string, value: unknown) => void;
+  };
+  // One reverse proxy in front of the API: take the client IP from X-Forwarded-For.
+  http.set?.('trust proxy', 1);
   app.enableCors({ origin: allowedOrigins, credentials: true });
 }
 
