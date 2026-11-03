@@ -12,7 +12,7 @@ ClickAuto — mobile-first сайт для покупки и продажи ав
 
 | Вопрос | Где ответ |
 | --- | --- |
-| Что делает продукт, что входит в MVP | [docs/analytics/03-requirements.md](docs/analytics/03-requirements.md) |
+| Что делает продукт, что входит в первый релиз | [docs/analytics/03-requirements.md](docs/analytics/03-requirements.md) |
 | Фильтры, категории, зависимости полей | [docs/analytics/05-filters.md](docs/analytics/05-filters.md) |
 | События аналитики | [docs/analytics/06-metrics.md](docs/analytics/06-metrics.md) |
 | Сущности, поля, статусы, инварианты | [docs/backend/03-domain-model.md](docs/backend/03-domain-model.md) |
