@@ -1,0 +1,36 @@
+{
+  "name": "admin",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5173",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --port 5173",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src",
+    "api:generate": "orval --config orval.config.ts"
+  },
+  "dependencies": {
+    "@clickauto/shared": "workspace:*",
+    "@clickauto/ui": "workspace:*",
+    "@tanstack/react-query": "5.105.3",
+    "@tanstack/react-router": "1.170.46",
+    "react": "19.2.9",
+    "react-dom": "19.2.9"
+  },
+  "devDependencies": {
+    "@clickauto/api-contract": "workspace:*",
+    "@clickauto/config": "workspace:*",
+    "@tailwindcss/vite": "4.3.4",
+    "@tanstack/router-plugin": "1.168.48",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.7",
+    "@vitejs/plugin-react": "5.2.0",
+    "eslint": "9.39.5",
+    "orval": "7.21.0",
+    "tailwindcss": "4.3.4",
+    "typescript": "5.9.3",
+    "vite": "6.4.5"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "nav": {
+    "dashboard": "Rezumat"
+  },
+  "dashboard": {
+    "title": "Rezumat",
+    "empty": "Secțiunile panoului apar pe măsură ce sunt dezvoltate modulele"
+  }
+}

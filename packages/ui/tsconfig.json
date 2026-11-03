@@ -1,0 +1,7 @@
+{
+  "extends": "@clickauto/config/tsconfig.react.json",
+  "compilerOptions": {
+    "jsx": "react-jsx"
+  },
+  "include": ["src"]
+}

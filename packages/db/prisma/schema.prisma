@@ -1,0 +1,750 @@
+// Domain model: docs/backend/03-domain-model.md. Change it only through migrations.
+// Money is stored as BigInt minor units together with the author's currency.
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [citext]
+}
+
+// ---------- Identity & profile ----------
+
+enum Locale {
+  ru
+  ro
+}
+
+enum Theme {
+  light
+  dark
+  system
+}
+
+enum UserRole {
+  user
+  moderator
+  admin
+}
+
+enum UserStatus {
+  active
+  deactivated
+  banned
+  deleted
+}
+
+enum AuthProvider {
+  email
+  google
+}
+
+model User {
+  id                   String     @id @db.Uuid
+  email                String?    @unique @db.Citext
+  username             String?    @unique @db.Citext
+  usernameChangedAt    DateTime?  @map("username_changed_at")
+  name                 String?
+  avatarMediaId        String?    @map("avatar_media_id") @db.Uuid
+  phone                String?
+  cityId               String?    @map("city_id") @db.Uuid
+  locale               Locale     @default(ru)
+  theme                Theme      @default(system)
+  notifyEmailMessages  Boolean    @default(true) @map("notify_email_messages")
+  notifyEmailSystem    Boolean    @default(true) @map("notify_email_system")
+  status               UserStatus @default(active)
+  bannedUntil          DateTime?  @map("banned_until")
+  banReason            String?    @map("ban_reason")
+  deactivatedAt        DateTime?  @map("deactivated_at")
+  deletedAt            DateTime?  @map("deleted_at")
+  role                 UserRole   @default(user)
+  createdAt            DateTime   @default(now()) @map("created_at")
+  updatedAt            DateTime   @updatedAt @map("updated_at")
+
+  city            City?           @relation(fields: [cityId], references: [id])
+  avatar          MediaFile?      @relation("UserAvatar", fields: [avatarMediaId], references: [id])
+  identities      AuthIdentity[]
+  sessions        Session[]
+  listings        Listing[]       @relation("ListingOwner")
+  favorites       Favorite[]
+  buyerChats      Conversation[]  @relation("ConversationBuyer")
+  sellerChats     Conversation[]  @relation("ConversationSeller")
+  messages        Message[]
+  notifications   Notification[]
+  reports         Report[]        @relation("ReportReporter")
+  resolvedReports Report[]        @relation("ReportResolver")
+  blocks          UserBlock[]     @relation("Blocker")
+  blockedBy       UserBlock[]     @relation("Blocked")
+  auditLogs       AdminAuditLog[]
+  media           MediaFile[]     @relation("MediaOwner")
+
+  @@map("users")
+}
+
+model AuthIdentity {
+  id              String       @id @db.Uuid
+  userId          String       @map("user_id") @db.Uuid
+  provider        AuthProvider
+  providerSubject String       @map("provider_subject")
+  createdAt       DateTime     @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerSubject])
+  @@index([userId])
+  @@map("auth_identities")
+}
+
+/// Session token is stored only as a SHA-256 hash.
+model Session {
+  id         String    @id @db.Uuid
+  userId     String    @map("user_id") @db.Uuid
+  tokenHash  String    @unique @map("token_hash")
+  userAgent  String?   @map("user_agent")
+  ip         String?
+  isStaff    Boolean   @default(false) @map("is_staff")
+  expiresAt  DateTime  @map("expires_at")
+  lastSeenAt DateTime  @default(now()) @map("last_seen_at")
+  revokedAt  DateTime? @map("revoked_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+// ---------- Catalog ----------
+
+enum Country {
+  pmr
+  md
+}
+
+enum CategoryKind {
+  goods
+  service
+}
+
+enum AttributeType {
+  number
+  range
+  enum
+  multi_enum
+  bool
+  text
+}
+
+model Brand {
+  id       String  @id @db.Uuid
+  slug     String  @unique
+  name     String
+  isActive Boolean @default(true) @map("is_active")
+  sort     Int     @default(0)
+
+  models Model[]
+  cars   CarDetails[]
+
+  @@map("brands")
+}
+
+model Model {
+  id       String  @id @db.Uuid
+  brandId  String  @map("brand_id") @db.Uuid
+  slug     String
+  name     String
+  isActive Boolean @default(true) @map("is_active")
+
+  brand       Brand        @relation(fields: [brandId], references: [id])
+  generations Generation[]
+  cars        CarDetails[]
+
+  @@unique([brandId, slug])
+  @@map("models")
+}
+
+model Generation {
+  id       String  @id @db.Uuid
+  modelId  String  @map("model_id") @db.Uuid
+  slug     String
+  name     String
+  yearFrom Int?    @map("year_from")
+  yearTo   Int?    @map("year_to")
+  isActive Boolean @default(true) @map("is_active")
+
+  model Model        @relation(fields: [modelId], references: [id])
+  cars  CarDetails[]
+
+  @@unique([modelId, slug])
+  @@map("generations")
+}
+
+model Category {
+  id       String       @id @db.Uuid
+  kind     CategoryKind
+  parentId String?      @map("parent_id") @db.Uuid
+  slug     String
+  nameRu   String       @map("name_ru")
+  nameRo   String       @map("name_ro")
+  sort     Int          @default(0)
+
+  parent     Category?           @relation("CategoryTree", fields: [parentId], references: [id])
+  children   Category[]          @relation("CategoryTree")
+  attributes CategoryAttribute[]
+  goods      GoodsDetails[]
+  services   ServiceDetails[]
+
+  @@unique([kind, slug])
+  @@map("categories")
+}
+
+model CategoryAttribute {
+  id         String        @id @db.Uuid
+  categoryId String        @map("category_id") @db.Uuid
+  key        String
+  type       AttributeType
+  options    Json?
+  unit       String?
+  filterable Boolean       @default(true)
+  required   Boolean       @default(false)
+  sort       Int           @default(0)
+
+  category Category @relation(fields: [categoryId], references: [id])
+
+  @@unique([categoryId, key])
+  @@map("category_attributes")
+}
+
+model Region {
+  id      String  @id @db.Uuid
+  slug    String  @unique
+  nameRu  String  @map("name_ru")
+  nameRo  String  @map("name_ro")
+  country Country
+  sort    Int     @default(0)
+
+  cities City[]
+
+  @@map("regions")
+}
+
+model City {
+  id       String @id @db.Uuid
+  regionId String @map("region_id") @db.Uuid
+  slug     String @unique
+  nameRu   String @map("name_ru")
+  nameRo   String @map("name_ro")
+  lat      Float
+  lng      Float
+
+  region   Region    @relation(fields: [regionId], references: [id])
+  listings Listing[]
+  users    User[]
+
+  @@map("cities")
+}
+
+// ---------- Listings ----------
+
+enum ListingType {
+  car
+  goods
+  service
+}
+
+enum ListingOrigin {
+  native
+  imported
+}
+
+enum ListingStatus {
+  draft
+  active
+  hidden
+  removed
+  blocked
+}
+
+enum Currency {
+  MDL
+  PRB
+  USD
+  EUR
+}
+
+enum Transmission {
+  manual
+  automatic
+  robot
+  cvt
+}
+
+enum Drive {
+  fwd
+  rwd
+  awd
+}
+
+enum BodyType {
+  sedan
+  hatchback
+  wagon
+  liftback
+  coupe
+  convertible
+  suv
+  crossover
+  minivan
+  pickup
+  van
+  minibus
+}
+
+enum Color {
+  white
+  black
+  gray
+  silver
+  blue
+  light_blue
+  red
+  burgundy
+  green
+  beige
+  brown
+  yellow
+  orange
+  purple
+  gold
+  other
+}
+
+enum FuelType {
+  petrol
+  cng
+  lpg
+  diesel
+  hybrid
+  plugin_hybrid
+  electric
+}
+
+enum Steering {
+  left
+  right
+}
+
+enum Registration {
+  pmr
+  md
+  neutral
+  foreign
+}
+
+enum CarCondition {
+  new
+  used
+  needs_repair
+}
+
+enum GoodsCondition {
+  new
+  used
+}
+
+model Listing {
+  id              String        @id @db.Uuid
+  type            ListingType
+  ownerId         String?       @map("owner_id") @db.Uuid
+  origin          ListingOrigin @default(native)
+  status          ListingStatus @default(draft)
+  title           String
+  description     String        @default("")
+  priceAmount     BigInt?       @map("price_amount")
+  priceCurrency   Currency?     @map("price_currency")
+  priceNegotiable Boolean       @default(false) @map("price_negotiable")
+  cityId          String        @map("city_id") @db.Uuid
+  contactName     String?       @map("contact_name")
+  contactPhone    String?       @map("contact_phone")
+  version         Int           @default(1)
+  publishedAt     DateTime?     @map("published_at")
+  hiddenAt        DateTime?     @map("hidden_at")
+  removedAt       DateTime?     @map("removed_at")
+  blockedReason   String?       @map("blocked_reason")
+  blockedBy       String?       @map("blocked_by") @db.Uuid
+  blockedAt       DateTime?     @map("blocked_at")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  owner         User?            @relation("ListingOwner", fields: [ownerId], references: [id])
+  city          City             @relation(fields: [cityId], references: [id])
+  car           CarDetails?
+  goods         GoodsDetails?
+  service       ServiceDetails?
+  photos        ListingPhoto[]
+  favorites     Favorite[]
+  conversations Conversation[]
+  external      ExternalListing?
+
+  @@index([ownerId, status])
+  @@index([status, type, publishedAt])
+  @@map("listings")
+}
+
+model CarDetails {
+  listingId        String        @id @map("listing_id") @db.Uuid
+  modelId          String?       @map("model_id") @db.Uuid
+  generationId     String?       @map("generation_id") @db.Uuid
+  customModelName  String?       @map("custom_model_name")
+  /// Set only when the model is "Другая" (customModelName); otherwise the brand comes from the model.
+  brandId          String?       @map("brand_id") @db.Uuid
+  year             Int
+  mileageKm        Int?          @map("mileage_km")
+  bodyType         BodyType?     @map("body_type")
+  transmission     Transmission?
+  drive            Drive?
+  fuelTypes        FuelType[]    @map("fuel_types")
+  engineVolumeCc   Int?          @map("engine_volume_cc")
+  powerHp          Int?          @map("power_hp")
+  steering         Steering?
+  color            Color?
+  registration     Registration?
+  condition        CarCondition
+  ownersCount      Int?          @map("owners_count")
+  vin              String?
+  exchangePossible Boolean       @default(false) @map("exchange_possible")
+
+  listing    Listing     @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  brand      Brand?      @relation(fields: [brandId], references: [id])
+  model      Model?      @relation(fields: [modelId], references: [id])
+  generation Generation? @relation(fields: [generationId], references: [id])
+
+  @@map("car_details")
+}
+
+model GoodsDetails {
+  listingId        String         @id @map("listing_id") @db.Uuid
+  categoryId       String         @map("category_id") @db.Uuid
+  condition        GoodsCondition
+  attributes       Json           @default("{}")
+  /// Array of { modelId, yearFrom, yearTo } for parts.
+  compatibleModels Json           @default("[]") @map("compatible_models")
+
+  listing  Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id])
+
+  @@map("goods_details")
+}
+
+model ServiceDetails {
+  listingId     String   @id @map("listing_id") @db.Uuid
+  categoryId    String   @map("category_id") @db.Uuid
+  address       String?
+  /// Free text, e.g. "Пн–Сб 9:00–19:00".
+  workingHours  String?  @map("working_hours")
+  mobileService Boolean  @default(false) @map("mobile_service")
+  servedBrands  String[] @map("served_brands") @db.Uuid
+
+  listing  Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id])
+
+  @@map("service_details")
+}
+
+model MediaFile {
+  id          String   @id @db.Uuid
+  ownerId     String?  @map("owner_id") @db.Uuid
+  storageKey  String   @unique @map("storage_key")
+  mimeType    String   @map("mime_type")
+  sizeBytes   Int      @map("size_bytes")
+  width       Int?
+  height      Int?
+  uploaded    Boolean  @default(false)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  owner        User?          @relation("MediaOwner", fields: [ownerId], references: [id])
+  listingPhoto ListingPhoto[]
+  avatarOf     User[]         @relation("UserAvatar")
+
+  @@map("media_files")
+}
+
+model ListingPhoto {
+  id        String @id @db.Uuid
+  listingId String @map("listing_id") @db.Uuid
+  mediaId   String @map("media_id") @db.Uuid
+  position  Int
+
+  listing Listing   @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  media   MediaFile @relation(fields: [mediaId], references: [id])
+
+  @@unique([listingId, position])
+  @@map("listing_photos")
+}
+
+// ---------- Pricing ----------
+
+enum RateBase {
+  USD
+  EUR
+}
+
+enum RateQuote {
+  MDL
+  PRB
+}
+
+enum RateSource {
+  nbm
+  prb
+  manual
+}
+
+model ExchangeRate {
+  id        String     @id @db.Uuid
+  date      DateTime   @db.Date
+  base      RateBase
+  quote     RateQuote
+  /// Rate as decimal string with fixed precision; never float.
+  rate      Decimal    @db.Decimal(18, 6)
+  source    RateSource
+  setBy     String?    @map("set_by") @db.Uuid
+  createdAt DateTime   @default(now()) @map("created_at")
+
+  @@unique([date, base, quote])
+  @@map("exchange_rates")
+}
+
+// ---------- Engagement ----------
+
+model Favorite {
+  userId    String   @map("user_id") @db.Uuid
+  listingId String   @map("listing_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@id([userId, listingId])
+  @@map("favorites")
+}
+
+// ---------- Messaging ----------
+
+model Conversation {
+  id            String    @id @db.Uuid
+  listingId     String    @map("listing_id") @db.Uuid
+  buyerId       String    @map("buyer_id") @db.Uuid
+  sellerId      String    @map("seller_id") @db.Uuid
+  lastMessageAt DateTime? @map("last_message_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  listing  Listing   @relation(fields: [listingId], references: [id])
+  buyer    User      @relation("ConversationBuyer", fields: [buyerId], references: [id])
+  seller   User      @relation("ConversationSeller", fields: [sellerId], references: [id])
+  messages Message[]
+
+  @@unique([listingId, buyerId])
+  @@index([sellerId, lastMessageAt])
+  @@index([buyerId, lastMessageAt])
+  @@map("conversations")
+}
+
+model Message {
+  id             String    @id @db.Uuid
+  conversationId String    @map("conversation_id") @db.Uuid
+  senderId       String    @map("sender_id") @db.Uuid
+  clientId       String?   @map("client_id")
+  body           String
+  readAt         DateTime? @map("read_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User         @relation(fields: [senderId], references: [id])
+
+  @@unique([senderId, clientId])
+  @@index([conversationId, createdAt])
+  @@map("messages")
+}
+
+// ---------- Notifications ----------
+
+model Notification {
+  id        String    @id @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  kind      String
+  payload   Json      @default("{}")
+  readAt    DateTime? @map("read_at")
+  emailedAt DateTime? @map("emailed_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@map("notifications")
+}
+
+// ---------- Moderation ----------
+
+enum ReportTarget {
+  listing
+  message
+  user
+}
+
+enum ReportStatus {
+  new
+  resolved
+  rejected
+}
+
+enum ReportResolution {
+  listing_blocked
+  user_banned
+  rejected
+}
+
+model Report {
+  id                String            @id @db.Uuid
+  reporterId        String            @map("reporter_id") @db.Uuid
+  targetType        ReportTarget      @map("target_type")
+  targetId          String            @map("target_id") @db.Uuid
+  reason            String
+  comment           String?
+  status            ReportStatus      @default(new)
+  resolvedBy        String?           @map("resolved_by") @db.Uuid
+  resolvedAt        DateTime?         @map("resolved_at")
+  resolution        ReportResolution?
+  resolutionComment String?           @map("resolution_comment")
+  createdAt         DateTime          @default(now()) @map("created_at")
+
+  reporter User  @relation("ReportReporter", fields: [reporterId], references: [id])
+  resolver User? @relation("ReportResolver", fields: [resolvedBy], references: [id])
+
+  @@index([status, createdAt])
+  @@index([targetType, targetId])
+  @@map("reports")
+}
+
+model UserBlock {
+  blockerId String   @map("blocker_id") @db.Uuid
+  blockedId String   @map("blocked_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at")
+
+  blocker User @relation("Blocker", fields: [blockerId], references: [id], onDelete: Cascade)
+  blocked User @relation("Blocked", fields: [blockedId], references: [id], onDelete: Cascade)
+
+  @@id([blockerId, blockedId])
+  @@map("user_blocks")
+}
+
+// ---------- Import ----------
+
+enum ImportRunStatus {
+  queued
+  running
+  succeeded
+  failed
+}
+
+enum ImportTrigger {
+  schedule
+  manual
+}
+
+enum MatchStatus {
+  matched
+  needs_review
+  duplicate
+}
+
+model ImportSource {
+  id        String  @id @db.Uuid
+  code      String  @unique
+  baseUrl   String  @map("base_url")
+  isEnabled Boolean @default(true) @map("is_enabled")
+  /// Cron expression.
+  schedule  String
+
+  runs     ImportRun[]
+  listings ExternalListing[]
+
+  @@map("import_sources")
+}
+
+model ImportRun {
+  id          String          @id @db.Uuid
+  sourceId    String          @map("source_id") @db.Uuid
+  startedAt   DateTime?       @map("started_at")
+  finishedAt  DateTime?       @map("finished_at")
+  status      ImportRunStatus @default(queued)
+  stats       Json            @default("{}")
+  trigger     ImportTrigger   @default(schedule)
+  triggeredBy String?         @map("triggered_by") @db.Uuid
+  createdAt   DateTime        @default(now()) @map("created_at")
+
+  source ImportSource @relation(fields: [sourceId], references: [id])
+
+  @@index([sourceId, createdAt])
+  @@map("import_runs")
+}
+
+model ExternalListing {
+  id          String      @id @db.Uuid
+  sourceId    String      @map("source_id") @db.Uuid
+  externalId  String      @map("external_id")
+  url         String
+  raw         Json
+  contentHash String      @map("content_hash")
+  lastSeenAt  DateTime    @map("last_seen_at")
+  listingId   String?     @unique @map("listing_id") @db.Uuid
+  matchStatus MatchStatus @map("match_status")
+  createdAt   DateTime    @default(now()) @map("created_at")
+
+  source  ImportSource @relation(fields: [sourceId], references: [id])
+  listing Listing?     @relation(fields: [listingId], references: [id])
+
+  @@unique([sourceId, externalId])
+  @@index([matchStatus])
+  @@map("external_listings")
+}
+
+// ---------- Admin ----------
+
+/// Insert-only.
+model AdminAuditLog {
+  id         String   @id @db.Uuid
+  actorId    String   @map("actor_id") @db.Uuid
+  action     String
+  targetType String   @map("target_type")
+  targetId   String   @map("target_id")
+  reason     String?
+  diff       Json     @default("{}")
+  ip         String?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  actor User @relation(fields: [actorId], references: [id])
+
+  @@index([actorId, createdAt])
+  @@index([targetType, targetId])
+  @@map("admin_audit_logs")
+}
+
+// ---------- Infrastructure ----------
+
+/// Transactional outbox: domain events consumed by the worker (search indexing etc.).
+model OutboxEvent {
+  id          String    @id @db.Uuid
+  type        String
+  payload     Json
+  createdAt   DateTime  @default(now()) @map("created_at")
+  processedAt DateTime? @map("processed_at")
+  attempts    Int       @default(0)
+
+  @@index([processedAt, createdAt])
+  @@map("outbox_events")
+}

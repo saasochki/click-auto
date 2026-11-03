@@ -1,0 +1,7 @@
+pnpm-lock.yaml
+dist
+.next
+docs
+packages/api-contract/openapi.json
+**/api/generated
+AGENTS.md

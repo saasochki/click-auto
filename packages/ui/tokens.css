@@ -1,0 +1,121 @@
+/*
+ * Design tokens. Values match Figma variables (collections Color: Light/Dark, Dimension)
+ * and docs/frontend/05-design-system.md. Change Figma first, then this file.
+ * Tailwind 4 reads them via @theme below: bg-bg, text-text-muted, bg-accent, rounded-lg, …
+ */
+
+@theme {
+  --color-bg: var(--ca-bg);
+  --color-surface: var(--ca-surface);
+  --color-surface-raised: var(--ca-surface-raised);
+  --color-border: var(--ca-border);
+  --color-text: var(--ca-text);
+  --color-text-muted: var(--ca-text-muted);
+  --color-accent: var(--ca-accent);
+  --color-accent-hover: var(--ca-accent-hover);
+  --color-accent-text: var(--ca-accent-text);
+  --color-accent-subtle: var(--ca-accent-subtle);
+  --color-accent-contrast: var(--ca-accent-contrast);
+  --color-success: var(--ca-success);
+  --color-success-subtle: var(--ca-success-subtle);
+  --color-warning: var(--ca-warning);
+  --color-danger: var(--ca-danger);
+  --color-danger-subtle: var(--ca-danger-subtle);
+  --color-overlay: var(--ca-overlay);
+
+  --font-sans: var(--ca-font-sans, 'Inter'), system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  --text-display: 40px;
+  --text-display--line-height: 44px;
+  --text-display--letter-spacing: -1.2px;
+  --text-display--font-weight: 700;
+  --text-h1: 24px;
+  --text-h1--line-height: 30px;
+  --text-h1--letter-spacing: -0.4px;
+  --text-h1--font-weight: 600;
+  --text-h2: 20px;
+  --text-h2--line-height: 26px;
+  --text-h2--font-weight: 600;
+  --text-h3: 17px;
+  --text-h3--line-height: 22px;
+  --text-h3--font-weight: 600;
+  --text-body: 16px;
+  --text-body--line-height: 24px;
+  --text-label: 14px;
+  --text-label--line-height: 20px;
+  --text-label--font-weight: 500;
+  --text-caption: 13px;
+  --text-caption--line-height: 18px;
+  --text-micro: 11px;
+  --text-micro--line-height: 14px;
+  --text-micro--font-weight: 500;
+
+  --container-page: 1200px;
+
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+}
+
+:root {
+  --ca-bg: #ffffff;
+  --ca-surface: #f4f4f5;
+  --ca-surface-raised: #ffffff;
+  --ca-border: #e4e4e7;
+  --ca-text: #0b0b0c;
+  --ca-text-muted: #71717a;
+  --ca-accent: #e0241b;
+  --ca-accent-hover: #c01d15;
+  --ca-accent-text: #e0241b;
+  --ca-accent-subtle: #fdecea;
+  --ca-accent-contrast: #ffffff;
+  --ca-success: #15803d;
+  --ca-success-subtle: #e7f6ec;
+  --ca-warning: #b45309;
+  --ca-danger: #b42318;
+  --ca-danger-subtle: #fdecec;
+  --ca-overlay: #0b0b0c;
+  color-scheme: light;
+}
+
+.dark {
+  --ca-bg: #0b0b0c;
+  --ca-surface: #1a1a1c;
+  --ca-surface-raised: #242427;
+  --ca-border: #2e2e32;
+  --ca-text: #ffffff;
+  --ca-text-muted: #a1a1aa;
+  --ca-accent: #e0241b;
+  --ca-accent-hover: #f0342b;
+  --ca-accent-text: #ff3b30;
+  --ca-accent-subtle: #3a1513;
+  --ca-accent-contrast: #ffffff;
+  --ca-success: #22c55e;
+  --ca-success-subtle: #0f2a1a;
+  --ca-warning: #f59e0b;
+  --ca-danger: #f97066;
+  --ca-danger-subtle: #3a1414;
+  --ca-overlay: #000000;
+  color-scheme: dark;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    background: var(--color-bg);
+    color: var(--color-text);
+    -webkit-text-size-adjust: 100%;
+  }
+  /* iOS Safari zooms on focus below 16px. */
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
