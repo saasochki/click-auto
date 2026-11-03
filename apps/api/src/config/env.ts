@@ -5,9 +5,28 @@ const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   API_PORT: z.coerce.number().int().positive().default(4000),
   DATABASE_URL: z.string().url(),
+  REDIS_URL: z.string().url().default('redis://localhost:6379'),
   /** Comma-separated list of allowed origins (site and admin) for CORS and the Origin check. */
   ALLOWED_ORIGINS: z.string().default('http://localhost:3000,http://localhost:5173'),
   PUBLIC_API_URL: z.string().url().default('http://localhost:4000'),
+  /** Site URL: redirects after Google sign-in, links in emails. */
+  WEB_URL: z.string().url().default('http://localhost:3000'),
+  /** Parent domain for the session cookie in production, e.g. ".example.md". Empty — host-only. */
+  COOKIE_DOMAIN: z.string().optional(),
+  /** Secret mixed into one-time code hashes. */
+  OTP_PEPPER: z.string().min(16).default('local-dev-otp-pepper-change-me'),
+  SMTP_HOST: z.string().default('localhost'),
+  SMTP_PORT: z.coerce.number().int().positive().default(1025),
+  SMTP_USER: z.string().optional(),
+  SMTP_PASS: z.string().optional(),
+  SMTP_SECURE: z
+    .enum(['true', 'false'])
+    .default('false')
+    .transform((value) => value === 'true'),
+  MAIL_FROM: z.string().default('ClickAuto <no-reply@localhost>'),
+  /** Google OAuth client. Without them the Google sign-in endpoints answer 503. */
+  GOOGLE_CLIENT_ID: z.string().optional(),
+  GOOGLE_CLIENT_SECRET: z.string().optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;
@@ -17,6 +36,9 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
   if (!parsed.success) {
     const fields = parsed.error.issues.map((issue) => issue.path.join('.')).join(', ');
     throw new Error(`Invalid environment variables: ${fields}`);
+  }
+  if (parsed.data.NODE_ENV === 'production' && parsed.data.OTP_PEPPER.startsWith('local-dev')) {
+    throw new Error('OTP_PEPPER must be set in production');
   }
   return parsed.data;
 }

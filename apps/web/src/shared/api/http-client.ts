@@ -1,3 +1,5 @@
+import { API_URL } from '@/shared/config/env';
+
 /**
  * orval mutator: every generated request goes through here. Sends cookies, parses
  * Problem Details into ApiError. Do not call fetch directly from features.
@@ -17,8 +19,6 @@ export class ApiError extends Error {
     super(problem.code);
   }
 }
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
 
 export async function httpClient<T>(url: string, init: RequestInit = {}): Promise<T> {
   const response = await fetch(`${API_URL}${url}`, { credentials: 'include', ...init });
