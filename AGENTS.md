@@ -22,6 +22,7 @@ ClickAuto — mobile-first сайт для покупки и продажи ав
 | Запросы к API с фронта | [docs/frontend/06-api-client.md](docs/frontend/06-api-client.md) |
 | Токены, темы, компоненты | [docs/frontend/05-design-system.md](docs/frontend/05-design-system.md) |
 | Админка | [docs/frontend/07-admin.md](docs/frontend/07-admin.md) |
+| Значения справочников, причины жалоб, регионы | [docs/analytics/08-dictionaries.md](docs/analytics/08-dictionaries.md) |
 | Открытые вопросы | [docs/analytics/07-open-questions.md](docs/analytics/07-open-questions.md) |
 
 Если код и документация расходятся — не выбирай сам. Сообщи о расхождении и спроси, что верно.

@@ -65,16 +65,17 @@ erDiagram
 | Поле | Тип | Правила |
 | --- | --- | --- |
 | id | uuid v7 | |
-| email | citext, unique | Обязателен: основной способ входа |
-| username | citext, unique | 3–30 символов, `^[a-z](?!.*__)[a-z0-9_]*[a-z0-9]$`, уникальность без учёта регистра, не из стоп-листа ([правила](../analytics/03-requirements.md#1-вход-и-регистрация)) |
+| email | citext, unique, null | Обязателен у живого аккаунта: основной способ входа. null только при `status = deleted` |
+| username | citext, unique, null | null только при `status = deleted`. 3–30 символов, `^[a-z](?!.*__)[a-z0-9_]*[a-z0-9]$`, уникальность без учёта регистра, не из стоп-листа ([правила](../analytics/03-requirements.md#1-вход-и-регистрация)) |
 | username_changed_at | timestamptz, null | Время последней смены ника, для лимита «раз в 30 дней» |
-| name | text | Обязательно |
+| name | text, null | Обязательно, null только при `status = deleted` |
 | avatar_media_id | uuid, null | Фото необязательно |
 | phone | text, null | Только для связи, без подтверждения, формат E.164 |
 | city_id | fk City, null | |
 | locale | enum `ru` / `ro` | |
 | theme | enum `light` / `dark` / `system` | |
-| status | enum `active` / `deactivated` / `banned` | |
+| status | enum `active` / `deactivated` / `banned` / `deleted` | `deactivated` — пользователь скрыл себя сам, вход возвращает `active`. `deleted` — необратимо ([правила](../analytics/03-requirements.md#деактивация-и-удаление-аккаунта)) |
+| deactivated_at, deleted_at | timestamptz, null | При удалении `email`, `name`, `phone`, `avatar_media_id` очищаются, `username` освобождается, `AuthIdentity` удаляются |
 | banned_until, ban_reason | timestamptz, text, null | Заполняются при блокировке из админки |
 | role | enum `user` / `moderator` / `admin` | По умолчанию `user`. Меняет только администратор |
 | created_at, updated_at | timestamptz | |
@@ -123,7 +124,9 @@ stateDiagram-v2
 
 ### CarDetails
 
-`listing_id`, `model_id` (марка выводится из модели), `generation_id` (null), `custom_model_name` (если выбрано «Другая»), `year`, `mileage_km`, `body_type`, `transmission`, `drive`, `fuel_types` (массив), `engine_volume_cc`, `power_hp`, `steering` (`left` / `right`), `color`, `registration` (`pmr` / `md` / `neutral` / `foreign`), `condition` (`new` / `used` / `needs_repair`), `owners_count`, `vin`, `exchange_possible`.
+Значения `transmission`, `drive`, `body_type`, `color` — в [справочниках](../analytics/08-dictionaries.md#авто). Расхода, ПТС и «ограничений» в модели нет намеренно ([требования](../analytics/03-requirements.md#3-карточка-авто)).
+
+`listing_id`, `model_id` (марка выводится из модели), `generation_id` (null), `custom_model_name` (если выбрано «Другая»), `year`, `mileage_km`, `body_type`, `transmission`, `drive`, `fuel_types` (массив), `engine_volume_cc`, `power_hp`, `steering` (`left` / `right`), `color`, `registration` (`pmr` / `md` / `neutral` / `foreign`; в интерфейсе — «Учёт», вместо ПТС), `condition` (`new` / `used` / `needs_repair`), `owners_count`, `vin`, `exchange_possible`.
 
 ### GoodsDetails и ServiceDetails
 
@@ -142,7 +145,7 @@ stateDiagram-v2
 
 ### Region и City
 
-`Region` (`name_ru`, `name_ro`, `country`: `pmr` / `md`) → `City` (`name_ru`, `name_ro`, координаты центра для геолокации).
+`Region` (`name_ru`, `name_ro`, `country`: `pmr` / `md`; [список](../analytics/08-dictionaries.md#регионы)) → `City` (`name_ru`, `name_ro`, координаты центра для геолокации).
 
 ### ExchangeRate
 
@@ -164,7 +167,7 @@ stateDiagram-v2
 
 ### Report и UserBlock
 
-- `Report`: `reporter_id`, `target_type` (`listing` / `message` / `user`), `target_id`, `reason`, `comment`, `status` (`new` / `resolved` / `rejected`).
+- `Report`: `reporter_id`, `target_type` (`listing` / `message` / `user`), `target_id`, `reason` (enum, набор зависит от `target_type`, [список](../analytics/08-dictionaries.md#причины-жалобы--reportreason)), `comment` (обязателен при `reason = other`), `status` (`new` / `resolved` / `rejected`).
 - `UserBlock`: `blocker_id`, `blocked_id`.
 
 ### Импорт
