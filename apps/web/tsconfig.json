@@ -1,0 +1,17 @@
+{
+  "extends": "@clickauto/config/tsconfig.react.json",
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "incremental": true
+  },
+  "include": ["next-env.d.ts", "src", "next.config.ts", "orval.config.ts", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}

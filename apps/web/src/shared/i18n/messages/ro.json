@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "title": "ClickAuto — mașini, produse și servicii auto în Transnistria și Moldova",
+    "description": "Cumpărați și vindeți mașini, piese, anvelope și servicii auto în Transnistria și Moldova"
+  },
+  "header": {
+    "cars": "Auto",
+    "goods": "Produse",
+    "services": "Servicii",
+    "post": "Publică"
+  },
+  "home": {
+    "title": "Găsiți-vă mașina",
+    "subtitle": "Mașini, produse și servicii auto în Transnistria și Moldova"
+  }
+}

@@ -74,6 +74,7 @@ erDiagram
 | city_id | fk City, null | |
 | locale | enum `ru` / `ro` | |
 | theme | enum `light` / `dark` / `system` | |
+| notify_email_messages, notify_email_system | bool | Письма о новых сообщениях и системных событиях, по умолчанию включены |
 | status | enum `active` / `deactivated` / `banned` / `deleted` | `deactivated` — пользователь скрыл себя сам, вход возвращает `active`. `deleted` — необратимо ([правила](../analytics/03-requirements.md#деактивация-и-удаление-аккаунта)) |
 | deactivated_at, deleted_at | timestamptz, null | При удалении `email`, `name`, `phone`, `avatar_media_id` очищаются, `username` освобождается, `AuthIdentity` удаляются |
 | banned_until, ban_reason | timestamptz, text, null | Заполняются при блокировке из админки. Срок — 1, 7 или 30 дней; `banned_until = null` при `status = banned` — навсегда |
@@ -85,6 +86,10 @@ erDiagram
 ### AuthIdentity
 
 Способ входа: `provider` (`email` / `google`), `provider_subject` (email или Google `sub`), `user_id`. Уникальность — `(provider, provider_subject)`. Паролей в модели нет.
+
+### Session
+
+`user_id`, `token_hash` (SHA-256 токена из cookie, сам токен не хранится), `user_agent`, `ip`, `is_staff`, `expires_at`, `last_seen_at`, `revoked_at`. Код входа (`OtpCode`) живёт только в Redis.
 
 ### Listing
 
@@ -103,6 +108,7 @@ erDiagram
 | city_id | fk City | Регион выводится из города |
 | contact_name, contact_phone | text, null | Для импортированных — из источника |
 | published_at, hidden_at, removed_at | timestamptz, null | |
+| version | int | Растёт при каждом изменении, для `If-Match` |
 | created_at, updated_at | timestamptz | |
 
 Статусы и переходы:
@@ -126,7 +132,12 @@ stateDiagram-v2
 
 Значения `transmission`, `drive`, `body_type`, `color` — в [справочниках](../analytics/08-dictionaries.md#авто). Расхода, ПТС и «ограничений» в модели нет намеренно ([требования](../analytics/03-requirements.md#3-карточка-авто)).
 
-`listing_id`, `model_id` (марка выводится из модели), `generation_id` (null), `custom_model_name` (если выбрано «Другая»), `year`, `mileage_km`, `body_type`, `transmission`, `drive`, `fuel_types` (массив), `engine_volume_cc`, `power_hp`, `steering` (`left` / `right`), `color`, `registration` (`pmr` / `md` / `neutral` / `foreign`; в интерфейсе — «Учёт», вместо ПТС), `condition` (`new` / `used` / `needs_repair`), `owners_count`, `vin`, `exchange_possible`.
+`listing_id`, `model_id` (марка выводится из модели), `generation_id` (null), `custom_model_name` и `brand_id` (если выбрана модель «Другая»: марка из справочника, модель — текстом), `year`, `mileage_km`, `body_type`, `transmission`, `drive`, `fuel_types` (массив), `engine_volume_cc`, `power_hp`, `steering` (`left` / `right`), `color`, `registration` (`pmr` / `md` / `neutral` / `foreign`; в интерфейсе — «Учёт», вместо ПТС), `condition` (`new` / `used` / `needs_repair`), `owners_count`, `vin`, `exchange_possible`.
+
+### ListingPhoto и MediaFile
+
+- `MediaFile`: `owner_id`, `storage_key` (ключ в S3), `mime_type`, `size_bytes`, `width`, `height`, `uploaded` (файл дошёл до S3 по подписанному URL).
+- `ListingPhoto`: `listing_id`, `media_id`, `position` (0 — главное фото), не больше 20 на объявление.
 
 ### GoodsDetails и ServiceDetails
 
@@ -186,6 +197,10 @@ stateDiagram-v2
 - `Report`: `resolved_by`, `resolved_at`, `resolution` (`listing_blocked`, `user_banned`, `rejected`), `resolution_comment`.
 - `ImportRun`: `trigger` (`schedule` / `manual`), `triggered_by`.
 - `ExchangeRate`: `source` дополняется значением `manual`, `set_by`.
+
+### OutboxEvent
+
+`type` (`listing.published`, `listing.updated` и др.), `payload`, `processed_at`, `attempts`. API пишет событие в той же транзакции, что и изменение; воркер забирает необработанные и обновляет поиск.
 
 ## Инварианты
 

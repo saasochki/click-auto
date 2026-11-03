@@ -1,0 +1,6 @@
+@import 'tailwindcss';
+@import '@clickauto/ui/tokens.css';
+
+@source '../../../../packages/ui/src';
+
+@custom-variant dark (&:where(.dark, .dark *));

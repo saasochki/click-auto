@@ -1,0 +1,10 @@
+{
+  "extends": "@clickauto/config/tsconfig.node.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "types": ["node"],
+    "declaration": false
+  },
+  "include": ["src"]
+}
