@@ -8,7 +8,8 @@
     "goods": "Produse",
     "services": "Servicii",
     "post": "Publică",
-    "login": "Intră"
+    "login": "Intră",
+    "myListings": "Anunțurile mele"
   },
   "home": {
     "title": "Găsiți-vă mașina",
@@ -60,5 +61,336 @@
     "google": "Nu s-a reușit conectarea cu Google. Încercați din nou sau intrați prin e-mail",
     "banned": "Contul este blocat",
     "unknown_error": "Ceva nu a mers bine. Încercați din nou"
+  },
+  "dict": {
+    "transmission": {
+      "manual": "Manuală",
+      "automatic": "Automată",
+      "robot": "Robotizată",
+      "cvt": "Variator"
+    },
+    "transmissionShort": {
+      "manual": "MT",
+      "automatic": "AT",
+      "robot": "AMT",
+      "cvt": "CVT"
+    },
+    "drive": {
+      "fwd": "Față",
+      "rwd": "Spate",
+      "awd": "Integrală"
+    },
+    "bodyType": {
+      "sedan": "Sedan",
+      "hatchback": "Hatchback",
+      "wagon": "Break",
+      "liftback": "Liftback",
+      "coupe": "Coupé",
+      "convertible": "Cabriolet",
+      "suv": "SUV",
+      "crossover": "Crossover",
+      "minivan": "Monovolum",
+      "pickup": "Pickup",
+      "van": "Furgon",
+      "minibus": "Microbuz"
+    },
+    "color": {
+      "white": "Alb",
+      "black": "Negru",
+      "gray": "Gri",
+      "silver": "Argintiu",
+      "blue": "Albastru",
+      "light_blue": "Albastru deschis",
+      "red": "Roșu",
+      "burgundy": "Vișiniu",
+      "green": "Verde",
+      "beige": "Bej",
+      "brown": "Maro",
+      "yellow": "Galben",
+      "orange": "Portocaliu",
+      "purple": "Violet",
+      "gold": "Auriu",
+      "other": "Altă culoare"
+    },
+    "fuel": {
+      "petrol": "Benzină",
+      "cng": "Gaz (metan)",
+      "lpg": "Gaz (propan)",
+      "diesel": "Motorină",
+      "hybrid": "Hibrid",
+      "plugin_hybrid": "Plug-in hibrid",
+      "electric": "Electric"
+    },
+    "steering": {
+      "left": "Stânga",
+      "right": "Dreapta"
+    },
+    "registration": {
+      "pmr": "RMN",
+      "md": "MD",
+      "neutral": "Neutre",
+      "foreign": "Străine"
+    },
+    "carCondition": {
+      "new": "Nou",
+      "used": "Rulat",
+      "needs_repair": "Necesită reparație"
+    },
+    "goodsCondition": {
+      "new": "Nou",
+      "used": "Folosit"
+    },
+    "status": {
+      "draft": "Ciornă",
+      "active": "Activ",
+      "hidden": "Ascuns",
+      "removed": "Retras",
+      "blocked": "Blocat"
+    },
+    "attr": {
+      "width": "Lățime",
+      "profile": "Profil",
+      "diameter": "Diametru",
+      "season": "Sezon",
+      "studded": "Cu țepi",
+      "quantity": "În set, buc.",
+      "disk_diameter": "Diametru jantă",
+      "disk_width": "Lățime jantă",
+      "pcd": "Prindere (PCD)",
+      "et": "Offset (ET)",
+      "disk_type": "Tip jantă",
+      "oem": "Cod piesă (OEM)",
+      "part_type": "Original / analog"
+    },
+    "attrOption": {
+      "season": {
+        "summer": "De vară",
+        "winter": "De iarnă",
+        "all_season": "All season"
+      },
+      "disk_type": {
+        "alloy": "Aliaj",
+        "steel": "Tablă",
+        "forged": "Forjate"
+      },
+      "part_type": {
+        "original": "Original",
+        "analog": "Analog"
+      }
+    },
+    "unit": {
+      "mm": "mm",
+      "%": "%",
+      "in": "inch"
+    }
+  },
+  "listing": {
+    "negotiable": "Negociabil",
+    "km": "{value} km",
+    "kmUnit": "km",
+    "liters": "{value} l",
+    "hp": "{value} CP",
+    "back": "Înapoi",
+    "publishedOn": "publicat {date}",
+    "registrationChip": "Înmatriculare {value}",
+    "exchange": "Schimb posibil",
+    "importedFrom": "Anunț copiat de pe",
+    "specsTitle": "Caracteristici",
+    "specs": {
+      "body": "Caroserie",
+      "engine": "Motor",
+      "transmission": "Cutie de viteze",
+      "drive": "Tracțiune",
+      "steering": "Volan",
+      "color": "Culoare",
+      "owners": "Proprietari",
+      "year": "anul fabricației",
+      "category": "Categorie",
+      "address": "Adresă",
+      "workingHours": "Program",
+      "mobileService": "Deplasare la client"
+    },
+    "yes": "Da",
+    "no": "Nu",
+    "description": "Descriere",
+    "showAll": "Arată tot",
+    "copy": "Copiază",
+    "copied": "Copiat",
+    "memberSince": "pe ClickAuto din {year}",
+    "call": "Sună",
+    "gone": {
+      "title": "Anunțul a fost retras",
+      "text": "Vânzătorul l-a ascuns sau l-a retras. Vedeți alte anunțuri în listă.",
+      "home": "Pagina principală"
+    }
+  },
+  "listingForm": {
+    "newTitle": {
+      "car": "Auto nou",
+      "goods": "Produs nou",
+      "service": "Serviciu nou"
+    },
+    "editTitle": "Editare",
+    "back": "Înapoi",
+    "close": "Închide",
+    "choose": "Alegeți",
+    "notSpecified": "Nespecificat",
+    "next": {
+      "0": "Mai departe: caracteristici",
+      "1": "Mai departe: descriere"
+    },
+    "saveDraft": "Ciornă",
+    "publish": "Publică",
+    "save": "Salvează",
+    "fixErrors": "Verificați câmpurile marcate cu roșu",
+    "notFound": "Anunțul nu a fost găsit",
+    "notEditable": "Acest anunț nu poate fi modificat",
+    "photos": {
+      "label": "Fotografii",
+      "count": "{count} din {max}",
+      "hint": "Prima fotografie este principala. Trageți pentru a schimba ordinea.",
+      "add": "Adaugă",
+      "main": "Principala",
+      "remove": "Șterge fotografia",
+      "errors": {
+        "format": "Se acceptă JPEG, PNG și WebP de până la 15 MB",
+        "limit": "Puteți adăuga cel mult 20 de fotografii",
+        "upload": "Fotografia nu s-a încărcat. Încercați din nou"
+      }
+    },
+    "price": "Preț",
+    "priceFrom": "Preț de la",
+    "priceForSet": "Preț pentru set",
+    "currency": "Valută",
+    "currencyOption": {
+      "USD": "$ USD",
+      "EUR": "€ EUR",
+      "PRB": "rub. RMN",
+      "MDL": "lei"
+    },
+    "negotiable": "Negociabil",
+    "city": "Oraș",
+    "title": "Titlu",
+    "category": "Categorie",
+    "condition": "Stare",
+    "parameters": "Parametri",
+    "description": "Descriere",
+    "phone": "Telefon pentru apeluri",
+    "phoneHint": "Fără confirmare. Dacă nu îl indicați, butonul „Sună” nu va apărea",
+    "car": {
+      "brand": "Marcă",
+      "model": "Model",
+      "otherModel": "Alt model",
+      "customModel": "Denumirea modelului",
+      "year": "Anul",
+      "mileage": "Rulaj, km",
+      "condition": "Stare",
+      "bodyType": "Tip caroserie",
+      "transmission": "Cutie de viteze",
+      "drive": "Tracțiune",
+      "fuel": "Tip combustibil",
+      "engine": "Capacitate, cm³",
+      "power": "Putere, CP",
+      "steering": "Volan",
+      "registration": "Înmatriculare",
+      "color": "Culoare",
+      "owners": "Proprietari",
+      "exchange": "Schimb posibil",
+      "vin": "VIN (opțional)",
+      "vinHint": "Cumpărătorii îl vor putea copia și verifica singuri"
+    },
+    "service": {
+      "address": "Adresă",
+      "workingHours": "Program",
+      "workingHoursPlaceholder": "Lu–Sâ 9:00–19:00",
+      "mobile": "Deplasare la client",
+      "brands": "Mărcile cu care lucrați",
+      "brandsHint": "Nimic selectat — toate mărcile"
+    },
+    "errors": {
+      "required": "Completați câmpul",
+      "invalid": "Verificați valoarea",
+      "too_short": "Prea scurt",
+      "too_long": "Prea lung",
+      "model_required": "Alegeți marca și modelul",
+      "vin_format": "VIN — 17 litere latine și cifre, fără I, O și Q",
+      "phone": "Număr în format internațional, de exemplu +373 777 00000",
+      "price_required": "Indicați prețul sau bifați „Negociabil”",
+      "unknown": "Valoare care nu e în nomenclator",
+      "immutable": "Acest câmp nu poate fi modificat"
+    },
+    "serverErrors": {
+      "version_conflict": "Anunțul a fost modificat în altă filă. Reîncărcați pagina",
+      "listing_not_editable": "Acest anunț nu mai poate fi modificat",
+      "invalid_status_transition": "Acțiunea nu este disponibilă pentru anunț în acest statut",
+      "rate_limited": "Prea multe cereri. Încercați mai târziu"
+    },
+    "typePicker": {
+      "title": "Ce publicăm?",
+      "back": "Înapoi",
+      "car": {
+        "title": "Automobil",
+        "text": "Autoturisme rulate și noi"
+      },
+      "goods": {
+        "title": "Produs auto",
+        "text": "Anvelope, jante, piese, electronică"
+      },
+      "service": {
+        "title": "Serviciu",
+        "text": "Service auto, vulcanizare, tractare, detailing"
+      }
+    },
+    "published": {
+      "title": "Anunțul a fost publicat",
+      "text": "{title} este deja în listă. Mesajele cumpărătorilor vor veni în „Chaturi” și pe email.",
+      "open": "Deschide anunțul",
+      "share": "Distribuie linkul",
+      "copied": "Linkul a fost copiat",
+      "toMyListings": "La anunțurile mele"
+    }
+  },
+  "myListings": {
+    "title": "Anunțurile mele",
+    "back": "Înapoi",
+    "new": "Publică un anunț",
+    "tabs": {
+      "active": "Active",
+      "hidden": "Ascunse",
+      "draft": "Ciorne",
+      "removed": "Retrase",
+      "blocked": "Blocate"
+    },
+    "publishedOn": "Publicat {date}",
+    "createdOn": "Creat {date}",
+    "more": "Arată mai multe",
+    "empty": {
+      "title": "Încă nu ați publicat nimic",
+      "text": "Automobilele, produsele și serviciile se publică gratuit",
+      "action": "Publică un anunț"
+    },
+    "emptyTab": {
+      "active": "Nu aveți anunțuri active",
+      "hidden": "Nu aveți anunțuri ascunse",
+      "draft": "Nu aveți ciorne",
+      "removed": "Nu aveți anunțuri retrase",
+      "blocked": "Nu aveți anunțuri blocate"
+    },
+    "actions": {
+      "menu": "Acțiuni",
+      "edit": "Editează",
+      "publish": "Publică",
+      "hide": "Ascunde din căutare",
+      "unhide": "Readu în căutare",
+      "remove": "Retrage din vânzare",
+      "removeConfirm": "Sigur retrageți? Nu se poate anula"
+    },
+    "done": {
+      "publish": "Anunțul a fost publicat",
+      "hide": "Anunțul a fost ascuns din căutare",
+      "unhide": "Anunțul este din nou în căutare",
+      "remove": "Anunțul a fost retras din vânzare"
+    },
+    "failed": "Nu a reușit. Reîncărcați pagina și încercați din nou"
   }
 }

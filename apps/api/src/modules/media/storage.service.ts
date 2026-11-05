@@ -3,6 +3,7 @@ import {
   CreateBucketCommand,
   GetObjectCommand,
   HeadBucketCommand,
+  PutBucketCorsCommand,
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
@@ -35,15 +36,37 @@ export class StorageService implements OnModuleInit {
   }
 
   async onModuleInit(): Promise<void> {
-    if (this.env.NODE_ENV === 'production') return;
-    // Local and test convenience: create the bucket if the storage is empty.
-    try {
-      await this.s3.send(new HeadBucketCommand({ Bucket: this.env.S3_BUCKET }));
-    } catch {
-      await this.s3
-        .send(new CreateBucketCommand({ Bucket: this.env.S3_BUCKET }))
-        .catch((error: unknown) => this.logger.warn(`S3 bucket not created: ${String(error)}`));
+    if (this.env.NODE_ENV !== 'production') {
+      // Local and test convenience: create the bucket if the storage is empty.
+      try {
+        await this.s3.send(new HeadBucketCommand({ Bucket: this.env.S3_BUCKET }));
+      } catch {
+        await this.s3
+          .send(new CreateBucketCommand({ Bucket: this.env.S3_BUCKET }))
+          .catch((error: unknown) => this.logger.warn(`S3 bucket not created: ${String(error)}`));
+      }
     }
+    // The browser PUTs photos straight to S3: the bucket must allow our origins (CORS).
+    const origins = this.env.ALLOWED_ORIGINS.split(',')
+      .map((origin) => origin.trim())
+      .filter(Boolean);
+    await this.s3
+      .send(
+        new PutBucketCorsCommand({
+          Bucket: this.env.S3_BUCKET,
+          CORSConfiguration: {
+            CORSRules: [
+              {
+                AllowedOrigins: origins,
+                AllowedMethods: ['PUT'],
+                AllowedHeaders: ['content-type'],
+                MaxAgeSeconds: 3600,
+              },
+            ],
+          },
+        }),
+      )
+      .catch((error: unknown) => this.logger.warn(`S3 CORS not set: ${String(error)}`));
   }
 
   presignPut(key: string, mimeType: string, sizeBytes: number): Promise<string> {

@@ -5,8 +5,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type CategoryDtoKind = typeof CategoryDtoKind[keyof typeof CategoryDtoKind];
-
+export type CategoryDtoKind = (typeof CategoryDtoKind)[keyof typeof CategoryDtoKind];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CategoryDtoKind = {

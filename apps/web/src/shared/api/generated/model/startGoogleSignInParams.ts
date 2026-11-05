@@ -7,5 +7,5 @@
 import type { StartGoogleSignInLocale } from './startGoogleSignInLocale';
 
 export type StartGoogleSignInParams = {
-locale?: StartGoogleSignInLocale;
+  locale?: StartGoogleSignInLocale;
 };

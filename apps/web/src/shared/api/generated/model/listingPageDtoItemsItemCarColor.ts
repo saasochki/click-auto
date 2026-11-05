@@ -8,8 +8,9 @@
 /**
  * @nullable
  */
-export type ListingPageDtoItemsItemCarColor = typeof ListingPageDtoItemsItemCarColor[keyof typeof ListingPageDtoItemsItemCarColor] | null;
-
+export type ListingPageDtoItemsItemCarColor =
+  | (typeof ListingPageDtoItemsItemCarColor)[keyof typeof ListingPageDtoItemsItemCarColor]
+  | null;
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ListingPageDtoItemsItemCarColor = {

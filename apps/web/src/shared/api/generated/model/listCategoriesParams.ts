@@ -7,5 +7,5 @@
 import type { ListCategoriesKind } from './listCategoriesKind';
 
 export type ListCategoriesParams = {
-kind: ListCategoriesKind;
+  kind: ListCategoriesKind;
 };

@@ -5,8 +5,8 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type CarListingInputDtoCarFuelTypesItem = typeof CarListingInputDtoCarFuelTypesItem[keyof typeof CarListingInputDtoCarFuelTypesItem];
-
+export type CarListingInputDtoCarFuelTypesItem =
+  (typeof CarListingInputDtoCarFuelTypesItem)[keyof typeof CarListingInputDtoCarFuelTypesItem];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CarListingInputDtoCarFuelTypesItem = {

@@ -5,8 +5,8 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type ListingPageDtoItemsItemType = typeof ListingPageDtoItemsItemType[keyof typeof ListingPageDtoItemsItemType];
-
+export type ListingPageDtoItemsItemType =
+  (typeof ListingPageDtoItemsItemType)[keyof typeof ListingPageDtoItemsItemType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ListingPageDtoItemsItemType = {

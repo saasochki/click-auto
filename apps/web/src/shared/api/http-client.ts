@@ -20,8 +20,20 @@ export class ApiError extends Error {
   }
 }
 
+/**
+ * Dictionaries come localized by Accept-Language. In the browser it follows the site locale
+ * (`<html lang>`), not the browser settings; on the server the page passes it explicitly.
+ */
+function withLocale(init: RequestInit): RequestInit {
+  if (typeof document === 'undefined') return init;
+  const headers = new Headers(init.headers);
+  if (!headers.has('accept-language'))
+    headers.set('accept-language', document.documentElement.lang || 'ru');
+  return { ...init, headers };
+}
+
 export async function httpClient<T>(url: string, init: RequestInit = {}): Promise<T> {
-  const response = await fetch(`${API_URL}${url}`, { credentials: 'include', ...init });
+  const response = await fetch(`${API_URL}${url}`, { credentials: 'include', ...withLocale(init) });
   const isJson = response.headers.get('content-type')?.includes('json') ?? false;
   const body: unknown = isJson ? await response.json() : null;
   if (!response.ok) {

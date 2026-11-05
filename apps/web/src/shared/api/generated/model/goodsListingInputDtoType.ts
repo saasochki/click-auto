@@ -5,8 +5,8 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GoodsListingInputDtoType = typeof GoodsListingInputDtoType[keyof typeof GoodsListingInputDtoType];
-
+export type GoodsListingInputDtoType =
+  (typeof GoodsListingInputDtoType)[keyof typeof GoodsListingInputDtoType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GoodsListingInputDtoType = {

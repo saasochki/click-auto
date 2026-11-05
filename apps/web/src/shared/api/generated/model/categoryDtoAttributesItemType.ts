@@ -5,8 +5,8 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type CategoryDtoAttributesItemType = typeof CategoryDtoAttributesItemType[keyof typeof CategoryDtoAttributesItemType];
-
+export type CategoryDtoAttributesItemType =
+  (typeof CategoryDtoAttributesItemType)[keyof typeof CategoryDtoAttributesItemType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CategoryDtoAttributesItemType = {

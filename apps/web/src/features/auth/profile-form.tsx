@@ -8,6 +8,7 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { useCompleteProfile } from '@/shared/api/generated/auth/auth';
 import { getGetMeQueryKey, useGetMe } from '@/shared/api/generated/me/me';
 import { useRouter } from '@/shared/i18n/routing';
+import { takeReturnPath } from '@/shared/lib/login-email';
 import { errorKey, problemCode } from '@/shared/lib/problem';
 
 export function ProfileForm() {
@@ -45,7 +46,7 @@ export function ProfileForm() {
       {
         onSuccess: async () => {
           await queryClient.invalidateQueries({ queryKey: getGetMeQueryKey() });
-          router.replace('/');
+          router.replace(takeReturnPath());
         },
         onError: (err) => {
           const code = problemCode(err);

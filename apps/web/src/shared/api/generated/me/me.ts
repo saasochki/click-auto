@@ -4,10 +4,7 @@
  * ClickAuto API
  * OpenAPI spec version: 1.0.0
  */
-import {
-  useQuery,
-  useSuspenseQuery
-} from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -19,7 +16,7 @@ import type {
   UseQueryOptions,
   UseQueryResult,
   UseSuspenseQueryOptions,
-  UseSuspenseQueryResult
+  UseSuspenseQueryResult,
 } from '@tanstack/react-query';
 
 import type {
@@ -28,693 +25,874 @@ import type {
   ListingPageDto,
   MeDto,
   MyListingCountsDto,
-  Problem
+  Problem,
 } from '.././model';
 
 import { httpClient } from '../../http-client';
 
-
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
 
 /**
  * @summary Current user
  */
 export type getMeResponse200 = {
-  data: MeDto
-  status: 200
-}
+  data: MeDto;
+  status: 200;
+};
 
 export type getMeResponse401 = {
-  data: Problem
-  status: 401
-}
-    
-export type getMeResponseSuccess = (getMeResponse200) & {
+  data: Problem;
+  status: 401;
+};
+
+export type getMeResponseSuccess = getMeResponse200 & {
   headers: Headers;
 };
-export type getMeResponseError = (getMeResponse401) & {
+export type getMeResponseError = getMeResponse401 & {
   headers: Headers;
 };
 
-export type getMeResponse = (getMeResponseSuccess | getMeResponseError)
+export type getMeResponse = getMeResponseSuccess | getMeResponseError;
 
 export const getGetMeUrl = () => {
+  return `/api/v1/me`;
+};
 
-
-  
-
-  return `/api/v1/me`
-}
-
-export const getMe = async ( options?: RequestInit): Promise<getMeResponse> => {
-  
-  return httpClient<getMeResponse>(getGetMeUrl(),
-  {      
+export const getMe = async (options?: RequestInit): Promise<getMeResponse> => {
+  return httpClient<getMeResponse>(getGetMeUrl(), {
     ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
-
-
+    method: 'GET',
+  });
+};
 
 export const getGetMeQueryKey = () => {
-    return [
-    `/api/v1/me`
-    ] as const;
-    }
+  return [`/api/v1/me`] as const;
+};
 
-    
-export const getGetMeQueryOptions = <TData = Awaited<ReturnType<typeof getMe>>, TError = Problem>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
-) => {
+export const getGetMeQueryOptions = <
+  TData = Awaited<ReturnType<typeof getMe>>,
+  TError = Problem,
+>(options?: {
+  query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>;
+  request?: SecondParameter<typeof httpClient>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+  const queryKey = queryOptions?.queryKey ?? getGetMeQueryKey();
 
-  const queryKey =  queryOptions?.queryKey ?? getGetMeQueryKey();
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getMe>>> = ({ signal }) =>
+    getMe({ signal, ...requestOptions });
 
-  
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getMe>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMe>>> = ({ signal }) => getMe({ signal, ...requestOptions });
-
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetMeQueryResult = NonNullable<Awaited<ReturnType<typeof getMe>>>
-export type GetMeQueryError = Problem
-
+export type GetMeQueryResult = NonNullable<Awaited<ReturnType<typeof getMe>>>;
+export type GetMeQueryError = Problem;
 
 export function useGetMe<TData = Awaited<ReturnType<typeof getMe>>, TError = Problem>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>> & Pick<
+  options: {
+    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>> &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getMe>>,
           TError,
           Awaited<ReturnType<typeof getMe>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetMe<TData = Awaited<ReturnType<typeof getMe>>, TError = Problem>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>> & Pick<
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>> &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getMe>>,
           TError,
           Awaited<ReturnType<typeof getMe>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetMe<TData = Awaited<ReturnType<typeof getMe>>, TError = Problem>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 /**
  * @summary Current user
  */
 
 export function useGetMe<TData = Awaited<ReturnType<typeof getMe>>, TError = Problem>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGetMeQueryOptions(options);
 
-  const queryOptions = getGetMeQueryOptions(options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
 
+export const getGetMeSuspenseQueryOptions = <
+  TData = Awaited<ReturnType<typeof getMe>>,
+  TError = Problem,
+>(options?: {
+  query?: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>;
+  request?: SecondParameter<typeof httpClient>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
+  const queryKey = queryOptions?.queryKey ?? getGetMeQueryKey();
 
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getMe>>> = ({ signal }) =>
+    getMe({ signal, ...requestOptions });
 
-export const getGetMeSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof getMe>>, TError = Problem>( options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
-) => {
+  return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
+    Awaited<ReturnType<typeof getMe>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetMeQueryKey();
-
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMe>>> = ({ signal }) => getMe({ signal, ...requestOptions });
-
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetMeSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof getMe>>>
-export type GetMeSuspenseQueryError = Problem
-
+export type GetMeSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof getMe>>>;
+export type GetMeSuspenseQueryError = Problem;
 
 export function useGetMeSuspense<TData = Awaited<ReturnType<typeof getMe>>, TError = Problem>(
-  options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+  options: {
+    query: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetMeSuspense<TData = Awaited<ReturnType<typeof getMe>>, TError = Problem>(
-  options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+  options?: {
+    query?: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetMeSuspense<TData = Awaited<ReturnType<typeof getMe>>, TError = Problem>(
-  options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+  options?: {
+    query?: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 /**
  * @summary Current user
  */
 
 export function useGetMeSuspense<TData = Awaited<ReturnType<typeof getMe>>, TError = Problem>(
-  options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient 
- ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  options?: {
+    query?: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGetMeSuspenseQueryOptions(options);
 
-  const queryOptions = getGetMeSuspenseQueryOptions(options)
+  const query = useSuspenseQuery(queryOptions, queryClient) as UseSuspenseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useSuspenseQuery(queryOptions, queryClient) as  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
 
 export type listMyListingsResponse200 = {
-  data: ListingPageDto
-  status: 200
-}
-    
-export type listMyListingsResponseSuccess = (listMyListingsResponse200) & {
+  data: ListingPageDto;
+  status: 200;
+};
+
+export type listMyListingsResponseSuccess = listMyListingsResponse200 & {
   headers: Headers;
 };
-;
+export type listMyListingsResponse = listMyListingsResponseSuccess;
 
-export type listMyListingsResponse = (listMyListingsResponseSuccess)
-
-export const getListMyListingsUrl = (params?: ListMyListingsParams,) => {
+export const getListMyListingsUrl = (params?: ListMyListingsParams) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString())
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/api/v1/me/listings?${stringifiedParams}` : `/api/v1/me/listings`
-}
+  return stringifiedParams.length > 0
+    ? `/api/v1/me/listings?${stringifiedParams}`
+    : `/api/v1/me/listings`;
+};
 
-export const listMyListings = async (params?: ListMyListingsParams, options?: RequestInit): Promise<listMyListingsResponse> => {
-  
-  return httpClient<listMyListingsResponse>(getListMyListingsUrl(params),
-  {      
+export const listMyListings = async (
+  params?: ListMyListingsParams,
+  options?: RequestInit,
+): Promise<listMyListingsResponse> => {
+  return httpClient<listMyListingsResponse>(getListMyListingsUrl(params), {
     ...options,
-    method: 'GET'
-    
-    
-  }
-);}
+    method: 'GET',
+  });
+};
 
+export const getListMyListingsQueryKey = (params?: ListMyListingsParams) => {
+  return [`/api/v1/me/listings`, ...(params ? [params] : [])] as const;
+};
 
-
-
-
-export const getListMyListingsQueryKey = (params?: ListMyListingsParams,) => {
-    return [
-    `/api/v1/me/listings`, ...(params ? [params]: [])
-    ] as const;
-    }
-
-    
-export const getListMyListingsQueryOptions = <TData = Awaited<ReturnType<typeof listMyListings>>, TError = unknown>(params?: ListMyListingsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listMyListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+export const getListMyListingsQueryOptions = <
+  TData = Awaited<ReturnType<typeof listMyListings>>,
+  TError = unknown,
+>(
+  params?: ListMyListingsParams,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listMyListings>>, TError, TData>>;
+    request?: SecondParameter<typeof httpClient>;
+  },
 ) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+  const queryKey = queryOptions?.queryKey ?? getListMyListingsQueryKey(params);
 
-  const queryKey =  queryOptions?.queryKey ?? getListMyListingsQueryKey(params);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listMyListings>>> = ({ signal }) =>
+    listMyListings(params, { signal, ...requestOptions });
 
-  
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listMyListings>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof listMyListings>>> = ({ signal }) => listMyListings(params, { signal, ...requestOptions });
+export type ListMyListingsQueryResult = NonNullable<Awaited<ReturnType<typeof listMyListings>>>;
+export type ListMyListingsQueryError = unknown;
 
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listMyListings>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type ListMyListingsQueryResult = NonNullable<Awaited<ReturnType<typeof listMyListings>>>
-export type ListMyListingsQueryError = unknown
-
-
-export function useListMyListings<TData = Awaited<ReturnType<typeof listMyListings>>, TError = unknown>(
- params: undefined |  ListMyListingsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listMyListings>>, TError, TData>> & Pick<
+export function useListMyListings<
+  TData = Awaited<ReturnType<typeof listMyListings>>,
+  TError = unknown,
+>(
+  params: undefined | ListMyListingsParams,
+  options: {
+    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof listMyListings>>, TError, TData>> &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof listMyListings>>,
           TError,
           Awaited<ReturnType<typeof listMyListings>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListMyListings<TData = Awaited<ReturnType<typeof listMyListings>>, TError = unknown>(
- params?: ListMyListingsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listMyListings>>, TError, TData>> & Pick<
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useListMyListings<
+  TData = Awaited<ReturnType<typeof listMyListings>>,
+  TError = unknown,
+>(
+  params?: ListMyListingsParams,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listMyListings>>, TError, TData>> &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof listMyListings>>,
           TError,
           Awaited<ReturnType<typeof listMyListings>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListMyListings<TData = Awaited<ReturnType<typeof listMyListings>>, TError = unknown>(
- params?: ListMyListingsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listMyListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useListMyListings<
+  TData = Awaited<ReturnType<typeof listMyListings>>,
+  TError = unknown,
+>(
+  params?: ListMyListingsParams,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listMyListings>>, TError, TData>>;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-export function useListMyListings<TData = Awaited<ReturnType<typeof listMyListings>>, TError = unknown>(
- params?: ListMyListingsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listMyListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useListMyListings<
+  TData = Awaited<ReturnType<typeof listMyListings>>,
+  TError = unknown,
+>(
+  params?: ListMyListingsParams,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listMyListings>>, TError, TData>>;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getListMyListingsQueryOptions(params, options);
 
-  const queryOptions = getListMyListingsQueryOptions(params,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
 
-
-
-
-export const getListMyListingsSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof listMyListings>>, TError = unknown>(params?: ListMyListingsParams, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof listMyListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+export const getListMyListingsSuspenseQueryOptions = <
+  TData = Awaited<ReturnType<typeof listMyListings>>,
+  TError = unknown,
+>(
+  params?: ListMyListingsParams,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<Awaited<ReturnType<typeof listMyListings>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof httpClient>;
+  },
 ) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+  const queryKey = queryOptions?.queryKey ?? getListMyListingsQueryKey(params);
 
-  const queryKey =  queryOptions?.queryKey ?? getListMyListingsQueryKey(params);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listMyListings>>> = ({ signal }) =>
+    listMyListings(params, { signal, ...requestOptions });
 
-  
+  return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
+    Awaited<ReturnType<typeof listMyListings>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof listMyListings>>> = ({ signal }) => listMyListings(params, { signal, ...requestOptions });
+export type ListMyListingsSuspenseQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listMyListings>>
+>;
+export type ListMyListingsSuspenseQueryError = unknown;
 
-      
+export function useListMyListingsSuspense<
+  TData = Awaited<ReturnType<typeof listMyListings>>,
+  TError = unknown,
+>(
+  params: undefined | ListMyListingsParams,
+  options: {
+    query: Partial<
+      UseSuspenseQueryOptions<Awaited<ReturnType<typeof listMyListings>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useListMyListingsSuspense<
+  TData = Awaited<ReturnType<typeof listMyListings>>,
+  TError = unknown,
+>(
+  params?: ListMyListingsParams,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<Awaited<ReturnType<typeof listMyListings>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useListMyListingsSuspense<
+  TData = Awaited<ReturnType<typeof listMyListings>>,
+  TError = unknown,
+>(
+  params?: ListMyListingsParams,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<Awaited<ReturnType<typeof listMyListings>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-      
+export function useListMyListingsSuspense<
+  TData = Awaited<ReturnType<typeof listMyListings>>,
+  TError = unknown,
+>(
+  params?: ListMyListingsParams,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<Awaited<ReturnType<typeof listMyListings>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getListMyListingsSuspenseQueryOptions(params, options);
 
-   return  { queryKey, queryFn, ...queryOptions} as UseSuspenseQueryOptions<Awaited<ReturnType<typeof listMyListings>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
+  const query = useSuspenseQuery(queryOptions, queryClient) as UseSuspenseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-export type ListMyListingsSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof listMyListings>>>
-export type ListMyListingsSuspenseQueryError = unknown
-
-
-export function useListMyListingsSuspense<TData = Awaited<ReturnType<typeof listMyListings>>, TError = unknown>(
- params: undefined |  ListMyListingsParams, options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof listMyListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListMyListingsSuspense<TData = Awaited<ReturnType<typeof listMyListings>>, TError = unknown>(
- params?: ListMyListingsParams, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof listMyListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListMyListingsSuspense<TData = Awaited<ReturnType<typeof listMyListings>>, TError = unknown>(
- params?: ListMyListingsParams, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof listMyListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-
-export function useListMyListingsSuspense<TData = Awaited<ReturnType<typeof listMyListings>>, TError = unknown>(
- params?: ListMyListingsParams, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof listMyListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient 
- ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getListMyListingsSuspenseQueryOptions(params,options)
-
-  const query = useSuspenseQuery(queryOptions, queryClient) as  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
 
 /**
  * @summary Counts by status for tabs
  */
 export type countMyListingsResponse200 = {
-  data: MyListingCountsDto
-  status: 200
-}
-    
-export type countMyListingsResponseSuccess = (countMyListingsResponse200) & {
+  data: MyListingCountsDto;
+  status: 200;
+};
+
+export type countMyListingsResponseSuccess = countMyListingsResponse200 & {
   headers: Headers;
 };
-;
-
-export type countMyListingsResponse = (countMyListingsResponseSuccess)
+export type countMyListingsResponse = countMyListingsResponseSuccess;
 
 export const getCountMyListingsUrl = () => {
+  return `/api/v1/me/listings/counts`;
+};
 
-
-  
-
-  return `/api/v1/me/listings/counts`
-}
-
-export const countMyListings = async ( options?: RequestInit): Promise<countMyListingsResponse> => {
-  
-  return httpClient<countMyListingsResponse>(getCountMyListingsUrl(),
-  {      
+export const countMyListings = async (options?: RequestInit): Promise<countMyListingsResponse> => {
+  return httpClient<countMyListingsResponse>(getCountMyListingsUrl(), {
     ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
-
-
+    method: 'GET',
+  });
+};
 
 export const getCountMyListingsQueryKey = () => {
-    return [
-    `/api/v1/me/listings/counts`
-    ] as const;
-    }
+  return [`/api/v1/me/listings/counts`] as const;
+};
 
-    
-export const getCountMyListingsQueryOptions = <TData = Awaited<ReturnType<typeof countMyListings>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof countMyListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
-) => {
+export const getCountMyListingsQueryOptions = <
+  TData = Awaited<ReturnType<typeof countMyListings>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof countMyListings>>, TError, TData>>;
+  request?: SecondParameter<typeof httpClient>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+  const queryKey = queryOptions?.queryKey ?? getCountMyListingsQueryKey();
 
-  const queryKey =  queryOptions?.queryKey ?? getCountMyListingsQueryKey();
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof countMyListings>>> = ({ signal }) =>
+    countMyListings({ signal, ...requestOptions });
 
-  
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof countMyListings>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof countMyListings>>> = ({ signal }) => countMyListings({ signal, ...requestOptions });
+export type CountMyListingsQueryResult = NonNullable<Awaited<ReturnType<typeof countMyListings>>>;
+export type CountMyListingsQueryError = unknown;
 
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof countMyListings>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type CountMyListingsQueryResult = NonNullable<Awaited<ReturnType<typeof countMyListings>>>
-export type CountMyListingsQueryError = unknown
-
-
-export function useCountMyListings<TData = Awaited<ReturnType<typeof countMyListings>>, TError = unknown>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof countMyListings>>, TError, TData>> & Pick<
+export function useCountMyListings<
+  TData = Awaited<ReturnType<typeof countMyListings>>,
+  TError = unknown,
+>(
+  options: {
+    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof countMyListings>>, TError, TData>> &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof countMyListings>>,
           TError,
           Awaited<ReturnType<typeof countMyListings>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useCountMyListings<TData = Awaited<ReturnType<typeof countMyListings>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof countMyListings>>, TError, TData>> & Pick<
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCountMyListings<
+  TData = Awaited<ReturnType<typeof countMyListings>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof countMyListings>>, TError, TData>> &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof countMyListings>>,
           TError,
           Awaited<ReturnType<typeof countMyListings>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useCountMyListings<TData = Awaited<ReturnType<typeof countMyListings>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof countMyListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCountMyListings<
+  TData = Awaited<ReturnType<typeof countMyListings>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof countMyListings>>, TError, TData>>;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 /**
  * @summary Counts by status for tabs
  */
 
-export function useCountMyListings<TData = Awaited<ReturnType<typeof countMyListings>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof countMyListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useCountMyListings<
+  TData = Awaited<ReturnType<typeof countMyListings>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof countMyListings>>, TError, TData>>;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getCountMyListingsQueryOptions(options);
 
-  const queryOptions = getCountMyListingsQueryOptions(options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
 
+export const getCountMyListingsSuspenseQueryOptions = <
+  TData = Awaited<ReturnType<typeof countMyListings>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseSuspenseQueryOptions<Awaited<ReturnType<typeof countMyListings>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof httpClient>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
+  const queryKey = queryOptions?.queryKey ?? getCountMyListingsQueryKey();
 
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof countMyListings>>> = ({ signal }) =>
+    countMyListings({ signal, ...requestOptions });
 
-export const getCountMyListingsSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof countMyListings>>, TError = unknown>( options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof countMyListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
-) => {
+  return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
+    Awaited<ReturnType<typeof countMyListings>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+export type CountMyListingsSuspenseQueryResult = NonNullable<
+  Awaited<ReturnType<typeof countMyListings>>
+>;
+export type CountMyListingsSuspenseQueryError = unknown;
 
-  const queryKey =  queryOptions?.queryKey ?? getCountMyListingsQueryKey();
-
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof countMyListings>>> = ({ signal }) => countMyListings({ signal, ...requestOptions });
-
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseSuspenseQueryOptions<Awaited<ReturnType<typeof countMyListings>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type CountMyListingsSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof countMyListings>>>
-export type CountMyListingsSuspenseQueryError = unknown
-
-
-export function useCountMyListingsSuspense<TData = Awaited<ReturnType<typeof countMyListings>>, TError = unknown>(
-  options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof countMyListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useCountMyListingsSuspense<TData = Awaited<ReturnType<typeof countMyListings>>, TError = unknown>(
-  options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof countMyListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useCountMyListingsSuspense<TData = Awaited<ReturnType<typeof countMyListings>>, TError = unknown>(
-  options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof countMyListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCountMyListingsSuspense<
+  TData = Awaited<ReturnType<typeof countMyListings>>,
+  TError = unknown,
+>(
+  options: {
+    query: Partial<
+      UseSuspenseQueryOptions<Awaited<ReturnType<typeof countMyListings>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCountMyListingsSuspense<
+  TData = Awaited<ReturnType<typeof countMyListings>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<Awaited<ReturnType<typeof countMyListings>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCountMyListingsSuspense<
+  TData = Awaited<ReturnType<typeof countMyListings>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<Awaited<ReturnType<typeof countMyListings>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 /**
  * @summary Counts by status for tabs
  */
 
-export function useCountMyListingsSuspense<TData = Awaited<ReturnType<typeof countMyListings>>, TError = unknown>(
-  options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof countMyListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient 
- ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useCountMyListingsSuspense<
+  TData = Awaited<ReturnType<typeof countMyListings>>,
+  TError = unknown,
+>(
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<Awaited<ReturnType<typeof countMyListings>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getCountMyListingsSuspenseQueryOptions(options);
 
-  const queryOptions = getCountMyListingsSuspenseQueryOptions(options)
+  const query = useSuspenseQuery(queryOptions, queryClient) as UseSuspenseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useSuspenseQuery(queryOptions, queryClient) as  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
 
 /**
  * @summary Own listing in any status, for editing
  */
 export type getMyListingResponse200 = {
-  data: ListingDto
-  status: 200
-}
+  data: ListingDto;
+  status: 200;
+};
 
 export type getMyListingResponse404 = {
-  data: Problem
-  status: 404
-}
-    
-export type getMyListingResponseSuccess = (getMyListingResponse200) & {
-  headers: Headers;
-};
-export type getMyListingResponseError = (getMyListingResponse404) & {
-  headers: Headers;
+  data: Problem;
+  status: 404;
 };
 
-export type getMyListingResponse = (getMyListingResponseSuccess | getMyListingResponseError)
+export type getMyListingResponseSuccess = getMyListingResponse200 & {
+  headers: Headers;
+};
+export type getMyListingResponseError = getMyListingResponse404 & {
+  headers: Headers;
+};
 
-export const getGetMyListingUrl = (id: string,) => {
+export type getMyListingResponse = getMyListingResponseSuccess | getMyListingResponseError;
 
+export const getGetMyListingUrl = (id: string) => {
+  return `/api/v1/me/listings/${id}`;
+};
 
-  
-
-  return `/api/v1/me/listings/${id}`
-}
-
-export const getMyListing = async (id: string, options?: RequestInit): Promise<getMyListingResponse> => {
-  
-  return httpClient<getMyListingResponse>(getGetMyListingUrl(id),
-  {      
+export const getMyListing = async (
+  id: string,
+  options?: RequestInit,
+): Promise<getMyListingResponse> => {
+  return httpClient<getMyListingResponse>(getGetMyListingUrl(id), {
     ...options,
-    method: 'GET'
-    
-    
-  }
-);}
+    method: 'GET',
+  });
+};
 
+export const getGetMyListingQueryKey = (id?: string) => {
+  return [`/api/v1/me/listings/${id}`] as const;
+};
 
-
-
-
-export const getGetMyListingQueryKey = (id?: string,) => {
-    return [
-    `/api/v1/me/listings/${id}`
-    ] as const;
-    }
-
-    
-export const getGetMyListingQueryOptions = <TData = Awaited<ReturnType<typeof getMyListing>>, TError = Problem>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMyListing>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+export const getGetMyListingQueryOptions = <
+  TData = Awaited<ReturnType<typeof getMyListing>>,
+  TError = Problem,
+>(
+  id: string,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getMyListing>>, TError, TData>>;
+    request?: SecondParameter<typeof httpClient>;
+  },
 ) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+  const queryKey = queryOptions?.queryKey ?? getGetMyListingQueryKey(id);
 
-  const queryKey =  queryOptions?.queryKey ?? getGetMyListingQueryKey(id);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getMyListing>>> = ({ signal }) =>
+    getMyListing(id, { signal, ...requestOptions });
 
-  
+  return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getMyListing>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMyListing>>> = ({ signal }) => getMyListing(id, { signal, ...requestOptions });
-
-      
-
-      
-
-   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getMyListing>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetMyListingQueryResult = NonNullable<Awaited<ReturnType<typeof getMyListing>>>
-export type GetMyListingQueryError = Problem
-
+export type GetMyListingQueryResult = NonNullable<Awaited<ReturnType<typeof getMyListing>>>;
+export type GetMyListingQueryError = Problem;
 
 export function useGetMyListing<TData = Awaited<ReturnType<typeof getMyListing>>, TError = Problem>(
- id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMyListing>>, TError, TData>> & Pick<
+  id: string,
+  options: {
+    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getMyListing>>, TError, TData>> &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getMyListing>>,
           TError,
           Awaited<ReturnType<typeof getMyListing>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetMyListing<TData = Awaited<ReturnType<typeof getMyListing>>, TError = Problem>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMyListing>>, TError, TData>> & Pick<
+  id: string,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getMyListing>>, TError, TData>> &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getMyListing>>,
           TError,
           Awaited<ReturnType<typeof getMyListing>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetMyListing<TData = Awaited<ReturnType<typeof getMyListing>>, TError = Problem>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMyListing>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+  id: string,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getMyListing>>, TError, TData>>;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 /**
  * @summary Own listing in any status, for editing
  */
 
 export function useGetMyListing<TData = Awaited<ReturnType<typeof getMyListing>>, TError = Problem>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMyListing>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  id: string,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getMyListing>>, TError, TData>>;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGetMyListingQueryOptions(id, options);
 
-  const queryOptions = getGetMyListingQueryOptions(id,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
 
-
-
-
-export const getGetMyListingSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof getMyListing>>, TError = Problem>(id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMyListing>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+export const getGetMyListingSuspenseQueryOptions = <
+  TData = Awaited<ReturnType<typeof getMyListing>>,
+  TError = Problem,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMyListing>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof httpClient>;
+  },
 ) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+  const queryKey = queryOptions?.queryKey ?? getGetMyListingQueryKey(id);
 
-  const queryKey =  queryOptions?.queryKey ?? getGetMyListingQueryKey(id);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getMyListing>>> = ({ signal }) =>
+    getMyListing(id, { signal, ...requestOptions });
 
-  
+  return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
+    Awaited<ReturnType<typeof getMyListing>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMyListing>>> = ({ signal }) => getMyListing(id, { signal, ...requestOptions });
+export type GetMyListingSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof getMyListing>>>;
+export type GetMyListingSuspenseQueryError = Problem;
 
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMyListing>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetMyListingSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof getMyListing>>>
-export type GetMyListingSuspenseQueryError = Problem
-
-
-export function useGetMyListingSuspense<TData = Awaited<ReturnType<typeof getMyListing>>, TError = Problem>(
- id: string, options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMyListing>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetMyListingSuspense<TData = Awaited<ReturnType<typeof getMyListing>>, TError = Problem>(
- id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMyListing>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetMyListingSuspense<TData = Awaited<ReturnType<typeof getMyListing>>, TError = Problem>(
- id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMyListing>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient
-  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetMyListingSuspense<
+  TData = Awaited<ReturnType<typeof getMyListing>>,
+  TError = Problem,
+>(
+  id: string,
+  options: {
+    query: Partial<
+      UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMyListing>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetMyListingSuspense<
+  TData = Awaited<ReturnType<typeof getMyListing>>,
+  TError = Problem,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMyListing>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetMyListingSuspense<
+  TData = Awaited<ReturnType<typeof getMyListing>>,
+  TError = Problem,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMyListing>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 /**
  * @summary Own listing in any status, for editing
  */
 
-export function useGetMyListingSuspense<TData = Awaited<ReturnType<typeof getMyListing>>, TError = Problem>(
- id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMyListing>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient 
- ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useGetMyListingSuspense<
+  TData = Awaited<ReturnType<typeof getMyListing>>,
+  TError = Problem,
+>(
+  id: string,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMyListing>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof httpClient>;
+  },
+  queryClient?: QueryClient,
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGetMyListingSuspenseQueryOptions(id, options);
 
-  const queryOptions = getGetMyListingSuspenseQueryOptions(id,options)
+  const query = useSuspenseQuery(queryOptions, queryClient) as UseSuspenseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useSuspenseQuery(queryOptions, queryClient) as  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-
-

@@ -5,8 +5,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type ListMyListingsStatus = typeof ListMyListingsStatus[keyof typeof ListMyListingsStatus];
-
+export type ListMyListingsStatus = (typeof ListMyListingsStatus)[keyof typeof ListMyListingsStatus];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ListMyListingsStatus = {

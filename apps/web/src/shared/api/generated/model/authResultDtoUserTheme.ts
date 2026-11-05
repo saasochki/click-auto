@@ -5,8 +5,8 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type AuthResultDtoUserTheme = typeof AuthResultDtoUserTheme[keyof typeof AuthResultDtoUserTheme];
-
+export type AuthResultDtoUserTheme =
+  (typeof AuthResultDtoUserTheme)[keyof typeof AuthResultDtoUserTheme];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const AuthResultDtoUserTheme = {

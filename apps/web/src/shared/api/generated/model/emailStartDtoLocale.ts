@@ -5,8 +5,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type EmailStartDtoLocale = typeof EmailStartDtoLocale[keyof typeof EmailStartDtoLocale];
-
+export type EmailStartDtoLocale = (typeof EmailStartDtoLocale)[keyof typeof EmailStartDtoLocale];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const EmailStartDtoLocale = {

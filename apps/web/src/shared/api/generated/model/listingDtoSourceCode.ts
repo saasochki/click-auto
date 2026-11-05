@@ -5,8 +5,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type ListingDtoSourceCode = typeof ListingDtoSourceCode[keyof typeof ListingDtoSourceCode];
-
+export type ListingDtoSourceCode = (typeof ListingDtoSourceCode)[keyof typeof ListingDtoSourceCode];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ListingDtoSourceCode = {

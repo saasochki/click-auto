@@ -5,4 +5,4 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type ListingDtoGoodsAttributes = {[key: string]: unknown};
+export type ListingDtoGoodsAttributes = { [key: string]: unknown };

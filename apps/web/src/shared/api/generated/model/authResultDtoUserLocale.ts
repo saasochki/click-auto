@@ -5,8 +5,8 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type AuthResultDtoUserLocale = typeof AuthResultDtoUserLocale[keyof typeof AuthResultDtoUserLocale];
-
+export type AuthResultDtoUserLocale =
+  (typeof AuthResultDtoUserLocale)[keyof typeof AuthResultDtoUserLocale];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const AuthResultDtoUserLocale = {

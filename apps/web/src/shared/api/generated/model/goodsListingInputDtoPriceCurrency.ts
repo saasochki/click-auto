@@ -5,8 +5,8 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GoodsListingInputDtoPriceCurrency = typeof GoodsListingInputDtoPriceCurrency[keyof typeof GoodsListingInputDtoPriceCurrency];
-
+export type GoodsListingInputDtoPriceCurrency =
+  (typeof GoodsListingInputDtoPriceCurrency)[keyof typeof GoodsListingInputDtoPriceCurrency];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GoodsListingInputDtoPriceCurrency = {

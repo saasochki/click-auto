@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { useStartEmailSignIn, useVerifyEmailSignIn } from '@/shared/api/generated/auth/auth';
 import { getGetMeQueryKey } from '@/shared/api/generated/me/me';
 import { useRouter } from '@/shared/i18n/routing';
-import { clearLoginEmail, readLoginEmail } from '@/shared/lib/login-email';
+import { clearLoginEmail, readLoginEmail, takeReturnPath } from '@/shared/lib/login-email';
 import { errorKey, problemCode } from '@/shared/lib/problem';
 
 const RESEND_SECONDS = 60;
@@ -48,7 +48,7 @@ export function CodeForm() {
           if (res.status !== 200) return;
           clearLoginEmail();
           await queryClient.invalidateQueries({ queryKey: getGetMeQueryKey() });
-          router.replace(res.data.user.needsProfile ? '/signup/profile' : '/');
+          router.replace(res.data.user.needsProfile ? '/signup/profile' : takeReturnPath());
         },
         onError: (err) => {
           const left = problemCode(err, 'code')?.match(/^attempts_left:(\d+)$/)?.[1];

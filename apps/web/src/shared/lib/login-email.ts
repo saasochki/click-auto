@@ -24,3 +24,26 @@ export function clearLoginEmail(): void {
     // ignore
   }
 }
+
+const RETURN_KEY = 'ca_login_return';
+
+/** Where to go after sign-in: only an in-site path ("/me/listings"), never another host. */
+export function saveReturnPath(path: string | null): void {
+  try {
+    if (path && path.startsWith('/') && !path.startsWith('//'))
+      sessionStorage.setItem(RETURN_KEY, path);
+    else sessionStorage.removeItem(RETURN_KEY);
+  } catch {
+    // ignore
+  }
+}
+
+export function takeReturnPath(): string {
+  try {
+    const path = sessionStorage.getItem(RETURN_KEY);
+    sessionStorage.removeItem(RETURN_KEY);
+    return path ?? '/';
+  } catch {
+    return '/';
+  }
+}

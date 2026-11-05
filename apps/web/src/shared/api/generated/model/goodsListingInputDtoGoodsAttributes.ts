@@ -5,4 +5,6 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type GoodsListingInputDtoGoodsAttributes = {[key: string]: number | string | boolean | string[]};
+export type GoodsListingInputDtoGoodsAttributes = {
+  [key: string]: number | string | boolean | string[];
+};

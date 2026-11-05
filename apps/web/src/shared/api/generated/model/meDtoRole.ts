@@ -5,8 +5,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type MeDtoRole = typeof MeDtoRole[keyof typeof MeDtoRole];
-
+export type MeDtoRole = (typeof MeDtoRole)[keyof typeof MeDtoRole];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const MeDtoRole = {

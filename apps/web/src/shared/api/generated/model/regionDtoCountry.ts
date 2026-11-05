@@ -5,8 +5,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type RegionDtoCountry = typeof RegionDtoCountry[keyof typeof RegionDtoCountry];
-
+export type RegionDtoCountry = (typeof RegionDtoCountry)[keyof typeof RegionDtoCountry];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const RegionDtoCountry = {

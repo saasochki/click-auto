@@ -5,8 +5,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type MeDtoLocale = typeof MeDtoLocale[keyof typeof MeDtoLocale];
-
+export type MeDtoLocale = (typeof MeDtoLocale)[keyof typeof MeDtoLocale];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const MeDtoLocale = {

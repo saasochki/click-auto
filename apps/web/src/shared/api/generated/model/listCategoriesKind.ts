@@ -5,8 +5,7 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type ListCategoriesKind = typeof ListCategoriesKind[keyof typeof ListCategoriesKind];
-
+export type ListCategoriesKind = (typeof ListCategoriesKind)[keyof typeof ListCategoriesKind];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ListCategoriesKind = {

@@ -8,8 +8,9 @@
 /**
  * @nullable
  */
-export type ListingDtoCarBodyType = typeof ListingDtoCarBodyType[keyof typeof ListingDtoCarBodyType] | null;
-
+export type ListingDtoCarBodyType =
+  | (typeof ListingDtoCarBodyType)[keyof typeof ListingDtoCarBodyType]
+  | null;
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ListingDtoCarBodyType = {
