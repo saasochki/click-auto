@@ -36,6 +36,11 @@ const envSchema = z.object({
   IMGPROXY_URL: z.string().url().default('http://localhost:8080'),
   IMGPROXY_KEY: z.string().optional(),
   IMGPROXY_SALT: z.string().optional(),
+  /** Meilisearch: the listings index. On servers a search-only key is enough for the API. */
+  MEILI_URL: z.string().url().default('http://localhost:7700'),
+  MEILI_KEY: z.string().optional(),
+  /** Index name; tests use their own. */
+  MEILI_INDEX: z.string().default('listings'),
   /** Google OAuth client. Without them the Google sign-in endpoints answer 503. */
   GOOGLE_CLIENT_ID: z.string().optional(),
   GOOGLE_CLIENT_SECRET: z.string().optional(),

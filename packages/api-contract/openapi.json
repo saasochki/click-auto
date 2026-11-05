@@ -589,6 +589,1126 @@
         ]
       }
     },
+    "/api/v1/listings": {
+      "get": {
+        "description": "Category attributes are passed as attr.<key>=<value> (repeat or comma-separate values).",
+        "operationId": "searchListings",
+        "parameters": [
+          {
+            "name": "type",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "car",
+                "goods",
+                "service"
+              ]
+            }
+          },
+          {
+            "name": "q",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "date_desc",
+                "price_asc",
+                "price_desc",
+                "mileage_asc",
+                "year_desc"
+              ]
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "exclusiveMaximum": false,
+              "exclusiveMinimum": false,
+              "default": 20,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "cursor",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxLength": 200,
+              "type": "string"
+            }
+          },
+          {
+            "name": "facets",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxItems": 7,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "brand",
+                  "model",
+                  "bodyType",
+                  "fuel",
+                  "transmission",
+                  "condition",
+                  "category"
+                ]
+              }
+            }
+          },
+          {
+            "name": "region",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxItems": 30,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]{1,80}$"
+              }
+            }
+          },
+          {
+            "name": "city",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxItems": 30,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]{1,80}$"
+              }
+            }
+          },
+          {
+            "name": "priceFrom",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 0,
+              "maximum": 1000000000,
+              "exclusiveMaximum": false,
+              "exclusiveMinimum": false,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "priceTo",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 0,
+              "maximum": 1000000000,
+              "exclusiveMaximum": false,
+              "exclusiveMinimum": false,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "priceCurrency",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "USD",
+              "type": "string",
+              "enum": [
+                "MDL",
+                "PRB",
+                "USD",
+                "EUR"
+              ]
+            }
+          },
+          {
+            "name": "negotiable",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "posted",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "car",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxItems": 5,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]{1,80}(:[a-z0-9-]{1,80})?$"
+              }
+            }
+          },
+          {
+            "name": "condition",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxItems": 30,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "new",
+                  "used",
+                  "needs_repair"
+                ]
+              }
+            }
+          },
+          {
+            "name": "bodyType",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxItems": 30,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "sedan",
+                  "hatchback",
+                  "wagon",
+                  "liftback",
+                  "coupe",
+                  "convertible",
+                  "suv",
+                  "crossover",
+                  "minivan",
+                  "pickup",
+                  "van",
+                  "minibus"
+                ]
+              }
+            }
+          },
+          {
+            "name": "transmission",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxItems": 30,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "manual",
+                  "automatic",
+                  "robot",
+                  "cvt"
+                ]
+              }
+            }
+          },
+          {
+            "name": "drive",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxItems": 30,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "fwd",
+                  "rwd",
+                  "awd"
+                ]
+              }
+            }
+          },
+          {
+            "name": "fuel",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxItems": 30,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "petrol",
+                  "cng",
+                  "lpg",
+                  "diesel",
+                  "hybrid",
+                  "plugin_hybrid",
+                  "electric"
+                ]
+              }
+            }
+          },
+          {
+            "name": "steering",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxItems": 30,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "left",
+                  "right"
+                ]
+              }
+            }
+          },
+          {
+            "name": "color",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxItems": 30,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "white",
+                  "black",
+                  "gray",
+                  "silver",
+                  "blue",
+                  "light_blue",
+                  "red",
+                  "burgundy",
+                  "green",
+                  "beige",
+                  "brown",
+                  "yellow",
+                  "orange",
+                  "purple",
+                  "gold",
+                  "other"
+                ]
+              }
+            }
+          },
+          {
+            "name": "registration",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxItems": 30,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "pmr",
+                  "md",
+                  "neutral",
+                  "foreign"
+                ]
+              }
+            }
+          },
+          {
+            "name": "yearFrom",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 0,
+              "maximum": 2100,
+              "exclusiveMaximum": false,
+              "exclusiveMinimum": false,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "yearTo",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 0,
+              "maximum": 2100,
+              "exclusiveMaximum": false,
+              "exclusiveMinimum": false,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "mileageFrom",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 0,
+              "maximum": 10000000,
+              "exclusiveMaximum": false,
+              "exclusiveMinimum": false,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "mileageTo",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 0,
+              "maximum": 10000000,
+              "exclusiveMaximum": false,
+              "exclusiveMinimum": false,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "engineFrom",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 0,
+              "maximum": 20000,
+              "exclusiveMaximum": false,
+              "exclusiveMinimum": false,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "engineTo",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 0,
+              "maximum": 20000,
+              "exclusiveMaximum": false,
+              "exclusiveMinimum": false,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "powerFrom",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 0,
+              "maximum": 5000,
+              "exclusiveMaximum": false,
+              "exclusiveMinimum": false,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "powerTo",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 0,
+              "maximum": 5000,
+              "exclusiveMaximum": false,
+              "exclusiveMinimum": false,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "exchange",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "category",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "pattern": "^[a-z0-9-]{1,80}$",
+              "type": "string"
+            }
+          },
+          {
+            "name": "compatModel",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "compatYear",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 0,
+              "maximum": 2100,
+              "exclusiveMaximum": false,
+              "exclusiveMinimum": false,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "servedBrand",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxItems": 30,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]{1,80}$"
+              }
+            }
+          },
+          {
+            "name": "mobile",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResultDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "bad_cursor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "search_unavailable, rates_unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Feed with filters",
+        "tags": [
+          "listings"
+        ]
+      },
+      "post": {
+        "operationId": "createListing",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CarListingInputDto"
+                  },
+                  {
+                    "$ref": "#/components/schemas/GoodsListingInputDto"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ServiceListingInputDto"
+                  }
+                ],
+                "discriminator": {
+                  "propertyName": "type"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListingDto"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "summary": "Create a draft",
+        "tags": [
+          "listings"
+        ]
+      }
+    },
+    "/api/v1/listings/count": {
+      "get": {
+        "description": "Category attributes are passed as attr.<key>=<value> (repeat or comma-separate values).",
+        "operationId": "countListings",
+        "parameters": [
+          {
+            "name": "type",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "car",
+                "goods",
+                "service"
+              ]
+            }
+          },
+          {
+            "name": "q",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "date_desc",
+                "price_asc",
+                "price_desc",
+                "mileage_asc",
+                "year_desc"
+              ]
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "exclusiveMaximum": false,
+              "exclusiveMinimum": false,
+              "default": 20,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "cursor",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxLength": 200,
+              "type": "string"
+            }
+          },
+          {
+            "name": "facets",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxItems": 7,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "brand",
+                  "model",
+                  "bodyType",
+                  "fuel",
+                  "transmission",
+                  "condition",
+                  "category"
+                ]
+              }
+            }
+          },
+          {
+            "name": "region",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxItems": 30,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]{1,80}$"
+              }
+            }
+          },
+          {
+            "name": "city",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxItems": 30,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]{1,80}$"
+              }
+            }
+          },
+          {
+            "name": "priceFrom",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 0,
+              "maximum": 1000000000,
+              "exclusiveMaximum": false,
+              "exclusiveMinimum": false,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "priceTo",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 0,
+              "maximum": 1000000000,
+              "exclusiveMaximum": false,
+              "exclusiveMinimum": false,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "priceCurrency",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "USD",
+              "type": "string",
+              "enum": [
+                "MDL",
+                "PRB",
+                "USD",
+                "EUR"
+              ]
+            }
+          },
+          {
+            "name": "negotiable",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "posted",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "car",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxItems": 5,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]{1,80}(:[a-z0-9-]{1,80})?$"
+              }
+            }
+          },
+          {
+            "name": "condition",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxItems": 30,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "new",
+                  "used",
+                  "needs_repair"
+                ]
+              }
+            }
+          },
+          {
+            "name": "bodyType",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxItems": 30,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "sedan",
+                  "hatchback",
+                  "wagon",
+                  "liftback",
+                  "coupe",
+                  "convertible",
+                  "suv",
+                  "crossover",
+                  "minivan",
+                  "pickup",
+                  "van",
+                  "minibus"
+                ]
+              }
+            }
+          },
+          {
+            "name": "transmission",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxItems": 30,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "manual",
+                  "automatic",
+                  "robot",
+                  "cvt"
+                ]
+              }
+            }
+          },
+          {
+            "name": "drive",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxItems": 30,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "fwd",
+                  "rwd",
+                  "awd"
+                ]
+              }
+            }
+          },
+          {
+            "name": "fuel",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxItems": 30,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "petrol",
+                  "cng",
+                  "lpg",
+                  "diesel",
+                  "hybrid",
+                  "plugin_hybrid",
+                  "electric"
+                ]
+              }
+            }
+          },
+          {
+            "name": "steering",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxItems": 30,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "left",
+                  "right"
+                ]
+              }
+            }
+          },
+          {
+            "name": "color",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxItems": 30,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "white",
+                  "black",
+                  "gray",
+                  "silver",
+                  "blue",
+                  "light_blue",
+                  "red",
+                  "burgundy",
+                  "green",
+                  "beige",
+                  "brown",
+                  "yellow",
+                  "orange",
+                  "purple",
+                  "gold",
+                  "other"
+                ]
+              }
+            }
+          },
+          {
+            "name": "registration",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxItems": 30,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "pmr",
+                  "md",
+                  "neutral",
+                  "foreign"
+                ]
+              }
+            }
+          },
+          {
+            "name": "yearFrom",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 0,
+              "maximum": 2100,
+              "exclusiveMaximum": false,
+              "exclusiveMinimum": false,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "yearTo",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 0,
+              "maximum": 2100,
+              "exclusiveMaximum": false,
+              "exclusiveMinimum": false,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "mileageFrom",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 0,
+              "maximum": 10000000,
+              "exclusiveMaximum": false,
+              "exclusiveMinimum": false,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "mileageTo",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 0,
+              "maximum": 10000000,
+              "exclusiveMaximum": false,
+              "exclusiveMinimum": false,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "engineFrom",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 0,
+              "maximum": 20000,
+              "exclusiveMaximum": false,
+              "exclusiveMinimum": false,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "engineTo",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 0,
+              "maximum": 20000,
+              "exclusiveMaximum": false,
+              "exclusiveMinimum": false,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "powerFrom",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 0,
+              "maximum": 5000,
+              "exclusiveMaximum": false,
+              "exclusiveMinimum": false,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "powerTo",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 0,
+              "maximum": 5000,
+              "exclusiveMaximum": false,
+              "exclusiveMinimum": false,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "exchange",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "category",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "pattern": "^[a-z0-9-]{1,80}$",
+              "type": "string"
+            }
+          },
+          {
+            "name": "compatModel",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "compatYear",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 0,
+              "maximum": 2100,
+              "exclusiveMaximum": false,
+              "exclusiveMinimum": false,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "servedBrand",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxItems": 30,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]{1,80}$"
+              }
+            }
+          },
+          {
+            "name": "mobile",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchCountDto"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Number of matches for the filter panel",
+        "tags": [
+          "listings"
+        ]
+      }
+    },
     "/api/v1/me/listings": {
       "get": {
         "operationId": "listMyListings",
@@ -872,66 +1992,6 @@
           }
         ],
         "summary": "Replace listing content",
-        "tags": [
-          "listings"
-        ]
-      }
-    },
-    "/api/v1/listings": {
-      "post": {
-        "operationId": "createListing",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/CarListingInputDto"
-                  },
-                  {
-                    "$ref": "#/components/schemas/GoodsListingInputDto"
-                  },
-                  {
-                    "$ref": "#/components/schemas/ServiceListingInputDto"
-                  }
-                ],
-                "discriminator": {
-                  "propertyName": "type"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ListingDto"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Problem"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "cookie": []
-          }
-        ],
-        "summary": "Create a draft",
         "tags": [
           "listings"
         ]
@@ -1748,6 +2808,344 @@
           "thumbUrl",
           "width",
           "height"
+        ]
+      },
+      "SearchResultDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "car",
+                    "goods",
+                    "service"
+                  ]
+                },
+                "origin": {
+                  "type": "string",
+                  "enum": [
+                    "native",
+                    "imported"
+                  ]
+                },
+                "sourceCode": {
+                  "type": "string",
+                  "enum": [
+                    "999md",
+                    "makler",
+                    "klaxon"
+                  ],
+                  "nullable": true
+                },
+                "title": {
+                  "type": "string"
+                },
+                "price": {
+                  "type": "object",
+                  "properties": {
+                    "amount": {
+                      "type": "integer"
+                    },
+                    "currency": {
+                      "type": "string",
+                      "enum": [
+                        "MDL",
+                        "PRB",
+                        "USD",
+                        "EUR"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "amount",
+                    "currency"
+                  ],
+                  "nullable": true
+                },
+                "priceNegotiable": {
+                  "type": "boolean"
+                },
+                "city": {
+                  "type": "object",
+                  "properties": {
+                    "slug": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "slug",
+                    "name"
+                  ]
+                },
+                "publishedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "photo": {
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "width": {
+                      "type": "integer",
+                      "nullable": true
+                    },
+                    "height": {
+                      "type": "integer",
+                      "nullable": true
+                    }
+                  },
+                  "required": [
+                    "url",
+                    "width",
+                    "height"
+                  ],
+                  "nullable": true
+                },
+                "photoCount": {
+                  "type": "integer"
+                },
+                "car": {
+                  "type": "object",
+                  "properties": {
+                    "brand": {
+                      "type": "object",
+                      "properties": {
+                        "slug": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "slug",
+                        "name"
+                      ],
+                      "nullable": true
+                    },
+                    "modelName": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "year": {
+                      "type": "integer"
+                    },
+                    "mileageKm": {
+                      "type": "integer",
+                      "nullable": true
+                    },
+                    "engineVolumeCc": {
+                      "type": "integer",
+                      "nullable": true
+                    },
+                    "powerHp": {
+                      "type": "integer",
+                      "nullable": true
+                    },
+                    "transmission": {
+                      "type": "string",
+                      "enum": [
+                        "manual",
+                        "automatic",
+                        "robot",
+                        "cvt"
+                      ],
+                      "nullable": true
+                    },
+                    "bodyType": {
+                      "type": "string",
+                      "enum": [
+                        "sedan",
+                        "hatchback",
+                        "wagon",
+                        "liftback",
+                        "coupe",
+                        "convertible",
+                        "suv",
+                        "crossover",
+                        "minivan",
+                        "pickup",
+                        "van",
+                        "minibus"
+                      ],
+                      "nullable": true
+                    },
+                    "fuelTypes": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "petrol",
+                          "cng",
+                          "lpg",
+                          "diesel",
+                          "hybrid",
+                          "plugin_hybrid",
+                          "electric"
+                        ]
+                      }
+                    },
+                    "condition": {
+                      "type": "string",
+                      "enum": [
+                        "new",
+                        "used",
+                        "needs_repair"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "brand",
+                    "modelName",
+                    "year",
+                    "mileageKm",
+                    "engineVolumeCc",
+                    "powerHp",
+                    "transmission",
+                    "bodyType",
+                    "fuelTypes",
+                    "condition"
+                  ],
+                  "nullable": true
+                },
+                "goods": {
+                  "type": "object",
+                  "properties": {
+                    "category": {
+                      "type": "object",
+                      "properties": {
+                        "slug": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "slug",
+                        "name"
+                      ]
+                    },
+                    "condition": {
+                      "type": "string",
+                      "enum": [
+                        "new",
+                        "used"
+                      ]
+                    },
+                    "quantity": {
+                      "type": "integer",
+                      "nullable": true
+                    }
+                  },
+                  "required": [
+                    "category",
+                    "condition",
+                    "quantity"
+                  ],
+                  "nullable": true
+                },
+                "service": {
+                  "type": "object",
+                  "properties": {
+                    "category": {
+                      "type": "object",
+                      "properties": {
+                        "slug": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "slug",
+                        "name"
+                      ]
+                    },
+                    "workingHours": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "mobileService": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "category",
+                    "workingHours",
+                    "mobileService"
+                  ],
+                  "nullable": true
+                }
+              },
+              "required": [
+                "id",
+                "type",
+                "origin",
+                "sourceCode",
+                "title",
+                "price",
+                "priceNegotiable",
+                "city",
+                "publishedAt",
+                "photo",
+                "photoCount",
+                "car",
+                "goods",
+                "service"
+              ]
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "nullable": true
+          },
+          "total": {
+            "type": "integer"
+          },
+          "facets": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "integer"
+              }
+            },
+            "nullable": true
+          }
+        },
+        "required": [
+          "items",
+          "nextCursor",
+          "total",
+          "facets"
+        ]
+      },
+      "SearchCountDto": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "total"
         ]
       },
       "ListingPageDto": {

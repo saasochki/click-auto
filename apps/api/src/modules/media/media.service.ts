@@ -86,6 +86,11 @@ export class MediaService {
     return new Map(rows.map((m) => [m.id, this.toPhoto(m)]));
   }
 
+  /** Feed thumbnail by storage key: search documents keep the key, not the media id. */
+  thumbUrl(storageKey: string): string {
+    return this.storage.imageUrl(storageKey, 480, 360);
+  }
+
   toPhoto(
     media: Pick<MediaFile, 'id' | 'storageKey' | 'width' | 'height'>,
   ): z.infer<typeof photoSchema> {

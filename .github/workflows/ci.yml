@@ -27,9 +27,16 @@ jobs:
           RUSTFS_ACCESS_KEY: clickauto
           RUSTFS_SECRET_KEY: clickauto-local
         ports: ['9000:9000']
+      meilisearch:
+        image: getmeili/meilisearch:v1.15
+        env:
+          MEILI_MASTER_KEY: ci-master-key
+          MEILI_ENV: development
+        ports: ['7700:7700']
     env:
       DATABASE_URL: postgresql://clickauto:clickauto@localhost:5432/clickauto_test
       REDIS_URL: redis://localhost:6379/15
+      MEILI_KEY: ci-master-key
       E2E: '1'
     steps:
       - uses: actions/checkout@v4

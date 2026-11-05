@@ -11,7 +11,9 @@ import { IdentityModule } from './modules/identity/identity.module';
 import { CatalogModule } from './modules/catalog/catalog.module';
 import { ListingsModule } from './modules/listings/listings.module';
 import { MediaModule } from './modules/media/media.module';
+import { PricingModule } from './modules/pricing/pricing.module';
 import { ProfileModule } from './modules/profile/profile.module';
+import { SearchModule } from './modules/search/search.module';
 import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
@@ -30,6 +32,9 @@ import { PrismaModule } from './prisma/prisma.module';
     ProfileModule,
     CatalogModule,
     MediaModule,
+    PricingModule,
+    // Before ListingsModule: GET /listings/count must not match /listings/:id.
+    SearchModule,
     ListingsModule,
   ],
   controllers: [HealthController],
