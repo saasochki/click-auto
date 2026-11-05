@@ -8,11 +8,17 @@ import { feedQueryOptions } from '@/entities/feed/feed-query';
 import {
   FEED_PAGE_SIZE,
   FEED_PATH,
+  filterConfigParams,
   readFeedFilters,
   toSearchParams,
   type RawSearchParams,
 } from '@/entities/feed/filters';
-import { listBrands, listCategories, listModels } from '@/shared/api/generated/catalog/catalog';
+import {
+  getGetFilterConfigQueryOptions,
+  listBrands,
+  listCategories,
+  listModels,
+} from '@/shared/api/generated/catalog/catalog';
 import { getQueryClient } from '@/shared/api/query-client';
 import type { Place } from '@/shared/lib/place';
 import { Feed, type Crumb } from './feed';
@@ -115,12 +121,20 @@ export async function FeedPage({
   const params = { ...toSearchParams(type, filters, place), limit: FEED_PAGE_SIZE };
 
   const queryClient = getQueryClient();
-  await queryClient.prefetchInfiniteQuery(
-    feedQueryOptions(params, {
-      headers: { 'accept-language': locale },
-      next: { revalidate: 30 },
-    }),
-  );
+  await Promise.all([
+    queryClient.prefetchInfiniteQuery(
+      feedQueryOptions(params, {
+        headers: { 'accept-language': locale },
+        next: { revalidate: 30 },
+      }),
+    ),
+    // The panel is built from the filter config: without it the sidebar would appear late.
+    queryClient.prefetchQuery(
+      getGetFilterConfigQueryOptions(filterConfigParams(type, filters), {
+        request: { headers: { 'accept-language': locale }, next: { revalidate: 300 } },
+      }),
+    ),
+  ]);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

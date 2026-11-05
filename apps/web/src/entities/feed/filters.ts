@@ -7,7 +7,6 @@ import {
   CURRENCIES,
   DRIVES,
   FUEL_TYPES,
-  POSTED_WITHIN_DAYS,
   REGISTRATIONS,
   SEARCH_SORTS,
   STEERINGS,
@@ -24,7 +23,7 @@ import {
   parseAsStringLiteral,
   type inferParserType,
 } from 'nuqs/server';
-import type { SearchListingsParams } from '@/shared/api/generated/model';
+import type { GetFilterConfigParams, SearchListingsParams } from '@/shared/api/generated/model';
 import { placeParams, type Place } from '@/shared/lib/place';
 
 /**
@@ -125,6 +124,74 @@ export function readFeedFilters(
 
 export function emptyFilters(): FeedFilters {
   return readFeedFilters(new URLSearchParams());
+}
+
+type ParamKey = Exclude<keyof FeedFilters, 'attrs'>;
+
+function isParamKey(param: string): param is ParamKey {
+  return Object.hasOwn(feedParsers, param);
+}
+
+const attrName = (param: string): string | null =>
+  param.startsWith(ATTR_PARAM_PREFIX) ? param.slice(ATTR_PARAM_PREFIX.length) : null;
+
+/**
+ * Access by query parameter name, for the panel built from GET /catalog/filters.
+ * attr.<key> parameters live in `attrs`; unknown names read as empty and write nothing.
+ */
+export function paramList(filters: FeedFilters, param: string): string[] {
+  const attr = attrName(param);
+  if (attr) return filters.attrs[attr] ?? [];
+  if (!isParamKey(param)) return [];
+  const value = filters[param];
+  return Array.isArray(value) ? value.map(String) : [];
+}
+
+export function paramNumber(filters: FeedFilters, param: string): number | null {
+  if (!isParamKey(param)) return null;
+  const value = filters[param];
+  return typeof value === 'number' ? value : null;
+}
+
+export function paramFlag(filters: FeedFilters, param: string): boolean {
+  if (attrName(param)) return paramList(filters, param)[0] === 'true';
+  return isParamKey(param) && filters[param] === true;
+}
+
+export type ParamValue = string[] | string | number | boolean | null;
+
+/** Patch that sets one parameter; a flag that is off is dropped from the URL. */
+export function patchParam(
+  filters: FeedFilters,
+  param: string,
+  value: ParamValue,
+): Partial<FeedFilters> {
+  const attr = attrName(param);
+  if (attr) {
+    const list =
+      value === true
+        ? ['true']
+        : Array.isArray(value)
+          ? value
+          : typeof value === 'string'
+            ? [value]
+            : [];
+    const rest = Object.entries(filters.attrs).filter(([key]) => key !== attr);
+    return { attrs: Object.fromEntries(list.length ? [...rest, [attr, list]] : rest) };
+  }
+  if (!isParamKey(param)) return {};
+  return { [param]: value === false ? null : value } as Partial<FeedFilters>;
+}
+
+/** Patch that clears the parameters a field resets; "attr.*" clears every attribute. */
+export function resetPatch(resets: readonly string[] | undefined): Partial<FeedFilters> {
+  const empty = emptyFilters();
+  const patch: Partial<FeedFilters> = {};
+  for (const param of resets ?? []) {
+    if (param === `${ATTR_PARAM_PREFIX}*`) patch.attrs = {};
+    else if (isParamKey(param)) Object.assign(patch, { [param]: empty[param] });
+  }
+  return patch;
 }
 
 /** True when the URL itself names a place; then the place from the cookie is not applied. */
@@ -245,4 +312,10 @@ export function clearedFilters(type: ListingType, filters: FeedFilters): FeedFil
   };
 }
 
-export const POSTED_OPTIONS = POSTED_WITHIN_DAYS;
+/** Query of GET /catalog/filters: only goods depend on the category (it adds attribute filters). */
+export function filterConfigParams(
+  type: ListingType,
+  filters: Pick<FeedFilters, 'category'>,
+): GetFilterConfigParams {
+  return type === 'goods' && filters.category ? { type, category: filters.category } : { type };
+}

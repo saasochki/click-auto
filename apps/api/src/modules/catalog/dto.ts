@@ -1,6 +1,7 @@
-import { ATTRIBUTE_TYPES, CATEGORY_KINDS, COUNTRIES } from '@clickauto/shared';
+import { ATTRIBUTE_TYPES, CATEGORY_KINDS, COUNTRIES, LISTING_TYPES } from '@clickauto/shared';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
+import { FILTER_KINDS } from './domain/filter-config';
 
 export const brandSchema = z.object({ id: z.string().uuid(), slug: z.string(), name: z.string() });
 export class BrandDto extends createZodDto(brandSchema) {}
@@ -58,3 +59,44 @@ export class NearestCityQueryDto extends createZodDto(
 ) {}
 
 export class CategoriesQueryDto extends createZodDto(z.object({ kind: z.enum(CATEGORY_KINDS) })) {}
+
+export class FilterConfigQueryDto extends createZodDto(
+  z.object({
+    type: z.enum(LISTING_TYPES),
+    /** Goods: the chosen category adds its attribute filters. */
+    category: z
+      .string()
+      .regex(/^[a-z0-9-]{1,80}$/)
+      .optional(),
+  }),
+) {}
+
+const filterOptionSchema = z.object({
+  value: z.string(),
+  /** Only for values from the database; others are translated by the site. */
+  label: z.string().optional(),
+  /** Category tree: slug of the parent. */
+  parent: z.string().optional(),
+});
+
+const filterFieldSchema = z.object({
+  /** Stable id and label key on the site. */
+  key: z.string(),
+  kind: z.enum(FILTER_KINDS),
+  /** Query parameters of GET /listings the field writes. */
+  params: z.array(z.string()),
+  options: z.array(filterOptionSchema).optional(),
+  /** Site dictionary for option labels. */
+  dictionary: z.string().optional(),
+  unit: z.string().optional(),
+  grouping: z.boolean().optional(),
+  advanced: z.boolean().optional(),
+  hiddenWhen: z.object({ param: z.string(), only: z.array(z.string()) }).optional(),
+  /** Parameters reset when the field changes; a trailing "*" is a prefix. */
+  resets: z.array(z.string()).optional(),
+  max: z.number().int().optional(),
+});
+
+export class FilterConfigDto extends createZodDto(
+  z.object({ type: z.enum(LISTING_TYPES), fields: z.array(filterFieldSchema) }),
+) {}

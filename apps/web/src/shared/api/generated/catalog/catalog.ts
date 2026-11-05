@@ -25,6 +25,8 @@ import type {
 import type {
   BrandDto,
   CategoryDto,
+  FilterConfigDto,
+  GetFilterConfigParams,
   GetNearestCityParams,
   ListCategoriesParams,
   ModelDto,
@@ -519,6 +521,180 @@ export function useListCategoriesSuspense<TData = Awaited<ReturnType<typeof list
  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
   const queryOptions = getListCategoriesSuspenseQueryOptions(params,options)
+
+  const query = useSuspenseQuery(queryOptions, queryClient) as  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary Filter panel of a feed: fields, values and dependencies
+ */
+export type getFilterConfigResponse200 = {
+  data: FilterConfigDto
+  status: 200
+}
+    
+export type getFilterConfigResponseSuccess = (getFilterConfigResponse200) & {
+  headers: Headers;
+};
+;
+
+export type getFilterConfigResponse = (getFilterConfigResponseSuccess)
+
+export const getGetFilterConfigUrl = (params: GetFilterConfigParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/v1/catalog/filters?${stringifiedParams}` : `/api/v1/catalog/filters`
+}
+
+export const getFilterConfig = async (params: GetFilterConfigParams, options?: RequestInit): Promise<getFilterConfigResponse> => {
+  
+  return httpClient<getFilterConfigResponse>(getGetFilterConfigUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+
+
+export const getGetFilterConfigQueryKey = (params?: GetFilterConfigParams,) => {
+    return [
+    `/api/v1/catalog/filters`, ...(params ? [params]: [])
+    ] as const;
+    }
+
+    
+export const getGetFilterConfigQueryOptions = <TData = Awaited<ReturnType<typeof getFilterConfig>>, TError = unknown>(params: GetFilterConfigParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getFilterConfig>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetFilterConfigQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getFilterConfig>>> = ({ signal }) => getFilterConfig(params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getFilterConfig>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetFilterConfigQueryResult = NonNullable<Awaited<ReturnType<typeof getFilterConfig>>>
+export type GetFilterConfigQueryError = unknown
+
+
+export function useGetFilterConfig<TData = Awaited<ReturnType<typeof getFilterConfig>>, TError = unknown>(
+ params: GetFilterConfigParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getFilterConfig>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getFilterConfig>>,
+          TError,
+          Awaited<ReturnType<typeof getFilterConfig>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetFilterConfig<TData = Awaited<ReturnType<typeof getFilterConfig>>, TError = unknown>(
+ params: GetFilterConfigParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getFilterConfig>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getFilterConfig>>,
+          TError,
+          Awaited<ReturnType<typeof getFilterConfig>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetFilterConfig<TData = Awaited<ReturnType<typeof getFilterConfig>>, TError = unknown>(
+ params: GetFilterConfigParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getFilterConfig>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Filter panel of a feed: fields, values and dependencies
+ */
+
+export function useGetFilterConfig<TData = Awaited<ReturnType<typeof getFilterConfig>>, TError = unknown>(
+ params: GetFilterConfigParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getFilterConfig>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetFilterConfigQueryOptions(params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+export const getGetFilterConfigSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof getFilterConfig>>, TError = unknown>(params: GetFilterConfigParams, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getFilterConfig>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetFilterConfigQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getFilterConfig>>> = ({ signal }) => getFilterConfig(params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseSuspenseQueryOptions<Awaited<ReturnType<typeof getFilterConfig>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetFilterConfigSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof getFilterConfig>>>
+export type GetFilterConfigSuspenseQueryError = unknown
+
+
+export function useGetFilterConfigSuspense<TData = Awaited<ReturnType<typeof getFilterConfig>>, TError = unknown>(
+ params: GetFilterConfigParams, options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getFilterConfig>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetFilterConfigSuspense<TData = Awaited<ReturnType<typeof getFilterConfig>>, TError = unknown>(
+ params: GetFilterConfigParams, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getFilterConfig>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetFilterConfigSuspense<TData = Awaited<ReturnType<typeof getFilterConfig>>, TError = unknown>(
+ params: GetFilterConfigParams, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getFilterConfig>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Filter panel of a feed: fields, values and dependencies
+ */
+
+export function useGetFilterConfigSuspense<TData = Awaited<ReturnType<typeof getFilterConfig>>, TError = unknown>(
+ params: GetFilterConfigParams, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getFilterConfig>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient 
+ ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetFilterConfigSuspenseQueryOptions(params,options)
 
   const query = useSuspenseQuery(queryOptions, queryClient) as  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
