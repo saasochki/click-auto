@@ -22,7 +22,7 @@ Mobile-first сайт для покупки и продажи авто, това
 
 ```bash
 cp .env.example .env
-docker compose up -d              # PostgreSQL, Redis, Meilisearch, MinIO, imgproxy, Mailpit
+docker compose up -d              # PostgreSQL, Redis, Meilisearch, RustFS, imgproxy, Mailpit
 pnpm install
 pnpm db:generate
 pnpm db:migrate                   # применить миграции к локальной базе
@@ -42,6 +42,15 @@ pnpm dev
 
 ```bash
 pnpm lint && pnpm typecheck && pnpm test && pnpm build
+```
+
+E2E-тесты API ходят в настоящие PostgreSQL, Redis и S3 и создают данные. Запускайте их на отдельной базе, не на рабочей локальной:
+
+```bash
+docker compose exec postgres createdb -U clickauto clickauto_test   # один раз
+export DATABASE_URL=postgresql://clickauto:clickauto@localhost:5432/clickauto_test
+pnpm --filter @clickauto/db migrate:deploy && pnpm --filter @clickauto/db seed
+E2E=1 REDIS_URL=redis://localhost:6379/15 pnpm --filter api test
 ```
 
 Изменили API — обновите контракт и клиентов в том же PR:

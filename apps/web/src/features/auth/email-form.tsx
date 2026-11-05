@@ -8,7 +8,7 @@ import { useState, type FormEvent } from 'react';
 import { useStartEmailSignIn } from '@/shared/api/generated/auth/auth';
 import { API_URL } from '@/shared/config/env';
 import { useRouter } from '@/shared/i18n/routing';
-import { saveLoginEmail } from '@/shared/lib/login-email';
+import { saveLoginEmail, saveReturnPath } from '@/shared/lib/login-email';
 import { errorKey, problemCode } from '@/shared/lib/problem';
 
 export function EmailForm() {
@@ -37,6 +37,7 @@ export function EmailForm() {
       {
         onSuccess: () => {
           saveLoginEmail(parsed.data);
+          saveReturnPath(params.get('next'));
           router.push('/login/code');
         },
         onError: (err) => {
@@ -44,6 +45,7 @@ export function EmailForm() {
           // A code was sent recently: let the user enter it.
           if (code === 'otp_resend_too_soon') {
             saveLoginEmail(parsed.data);
+            saveReturnPath(params.get('next'));
             router.push('/login/code');
             return;
           }

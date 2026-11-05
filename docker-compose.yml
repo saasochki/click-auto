@@ -28,26 +28,29 @@ services:
     ports: ['7700:7700']
     volumes: [meili:/meili_data]
 
-  minio:
-    image: minio/minio:latest
-    command: server /data --console-address ":9001"
+  # S3-compatible storage. MinIO no longer publishes community images, so local and CI use RustFS;
+  # production keeps any S3-compatible storage (the API only speaks the S3 protocol).
+  s3:
+    image: rustfs/rustfs:1.0.4
     environment:
-      MINIO_ROOT_USER: clickauto
-      MINIO_ROOT_PASSWORD: clickauto-local
+      RUSTFS_ACCESS_KEY: clickauto
+      RUSTFS_SECRET_KEY: clickauto-local
+      RUSTFS_CONSOLE_ENABLE: 'true'
     ports: ['9000:9000', '9001:9001']
-    volumes: [minio:/data]
+    volumes: [s3:/data]
 
   imgproxy:
-    image: ghcr.io/imgproxy/imgproxy:latest
+    image: darthsim/imgproxy:v3.30
     environment:
       IMGPROXY_USE_S3: 'true'
-      IMGPROXY_S3_ENDPOINT: http://minio:9000
+      IMGPROXY_S3_ENDPOINT: http://s3:9000
       AWS_ACCESS_KEY_ID: clickauto
       AWS_SECRET_ACCESS_KEY: clickauto-local
+      AWS_REGION: us-east-1
       IMGPROXY_ENABLE_WEBP_DETECTION: 'true'
       IMGPROXY_ENABLE_AVIF_DETECTION: 'true'
     ports: ['8080:8080']
-    depends_on: [minio]
+    depends_on: [s3]
 
   mailpit:
     image: axllent/mailpit:latest
@@ -57,4 +60,4 @@ volumes:
   postgres:
   redis:
   meili:
-  minio:
+  s3:

@@ -8,7 +8,8 @@
     "start": "next start --port 3000",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src",
-    "api:generate": "orval --config orval.config.ts"
+    "api:generate": "orval --config orval.config.ts",
+    "test": "vitest run"
   },
   "dependencies": {
     "@clickauto/shared": "workspace:*",
@@ -30,6 +31,7 @@
     "eslint": "9.39.5",
     "orval": "7.21.0",
     "tailwindcss": "4.3.4",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "vitest": "3.2.7"
   }
 }

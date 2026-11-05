@@ -21,6 +21,12 @@ jobs:
       redis:
         image: redis:7-alpine
         ports: ['6379:6379']
+      s3:
+        image: rustfs/rustfs:1.0.4
+        env:
+          RUSTFS_ACCESS_KEY: clickauto
+          RUSTFS_SECRET_KEY: clickauto-local
+        ports: ['9000:9000']
     env:
       DATABASE_URL: postgresql://clickauto:clickauto@localhost:5432/clickauto_test
       REDIS_URL: redis://localhost:6379/15

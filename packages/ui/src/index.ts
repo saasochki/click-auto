@@ -1,4 +1,10 @@
 export { Button, type ButtonKind, type ButtonProps, type ButtonSize } from './button';
+export { Chip, ChipChoice, ChipMulti, type ChipProps, type ChoiceOption } from './chip';
 export { cn } from './cn';
+export { Field, type FieldProps } from './field';
 export { Input, type InputProps } from './input';
 export { OtpInput, type OtpInputProps } from './otp-input';
+export { Segmented } from './segmented';
+export { Select, type SelectOption, type SelectProps } from './select';
+export { Checkbox, Switch } from './switch';
+export { Textarea, type TextareaProps } from './textarea';

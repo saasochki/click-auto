@@ -156,7 +156,7 @@ stateDiagram-v2
 
 ### Region и City
 
-`Region` (`name_ru`, `name_ro`, `country`: `pmr` / `md`; [список](../analytics/08-dictionaries.md#регионы)) → `City` (`name_ru`, `name_ro`, координаты центра для геолокации).
+`Region` (`name_ru`, `name_ro`, `country`: `pmr` / `md`; [список](../analytics/08-dictionaries.md#регионы)) → `City` (`name_ru`, `name_ro`, координаты центра для геолокации). По координатам браузера выбирается ближайший город не дальше 60 км; дальше — пользователь выбирает регион сам.
 
 ### ExchangeRate
 

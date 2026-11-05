@@ -8,6 +8,9 @@ import { ConfigModule } from './config/config.module';
 import { HealthController } from './health/health.controller';
 import { InfraModule } from './infra/infra.module';
 import { IdentityModule } from './modules/identity/identity.module';
+import { CatalogModule } from './modules/catalog/catalog.module';
+import { ListingsModule } from './modules/listings/listings.module';
+import { MediaModule } from './modules/media/media.module';
 import { ProfileModule } from './modules/profile/profile.module';
 import { PrismaModule } from './prisma/prisma.module';
 
@@ -25,6 +28,9 @@ import { PrismaModule } from './prisma/prisma.module';
     InfraModule,
     IdentityModule,
     ProfileModule,
+    CatalogModule,
+    MediaModule,
+    ListingsModule,
   ],
   controllers: [HealthController],
   providers: [

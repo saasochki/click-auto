@@ -24,17 +24,25 @@ export function HeaderAccount() {
 
   const initials = (user.name ?? user.email ?? '?').slice(0, 2).toUpperCase();
   return (
-    <button
-      type="button"
-      title={user.username ? `@${user.username}` : undefined}
-      onClick={() =>
-        logout.mutate(undefined, {
-          onSuccess: () => queryClient.resetQueries({ queryKey: getGetMeQueryKey() }),
-        })
-      }
-      className="flex size-10 items-center justify-center rounded-full bg-accent-subtle text-label font-semibold text-accent-text"
-    >
-      {initials}
-    </button>
+    <div className="flex items-center gap-4">
+      <Link
+        href="/me/listings"
+        className="text-label font-semibold text-text hover:text-accent-text"
+      >
+        {t('myListings')}
+      </Link>
+      <button
+        type="button"
+        title={user.username ? `@${user.username}` : undefined}
+        onClick={() =>
+          logout.mutate(undefined, {
+            onSuccess: () => queryClient.resetQueries({ queryKey: getGetMeQueryKey() }),
+          })
+        }
+        className="flex size-10 items-center justify-center rounded-full bg-accent-subtle text-label font-semibold text-accent-text"
+      >
+        {initials}
+      </button>
+    </div>
   );
 }
