@@ -7,15 +7,22 @@
     "dev": "node --watch -r @swc-node/register src/main.ts",
     "start": "node dist/main.js",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "test": "vitest run",
+    "search:reindex": "node -r @swc-node/register src/commands.ts search:reindex",
+    "rates:refresh": "node -r @swc-node/register src/commands.ts rates:refresh"
   },
   "dependencies": {
     "@clickauto/db": "workspace:*",
+    "@clickauto/search": "workspace:*",
     "@clickauto/shared": "workspace:*",
     "@nestjs/common": "11.2.8",
     "@nestjs/core": "11.2.8",
+    "bullmq": "6.3.17",
+    "ioredis": "5.11.1",
     "reflect-metadata": "0.2.2",
-    "rxjs": "7.8.2"
+    "rxjs": "7.8.2",
+    "zod": "3.25.76"
   },
   "devDependencies": {
     "@clickauto/config": "workspace:*",
@@ -23,6 +30,7 @@
     "@swc/core": "1.16.21",
     "@types/node": "22.20.5",
     "eslint": "9.39.5",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "vitest": "3.2.7"
   }
 }

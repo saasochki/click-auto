@@ -1,3 +1,5 @@
+'use client';
+
 import { useRef, type ClipboardEvent, type KeyboardEvent } from 'react';
 import { cn } from './cn';
 

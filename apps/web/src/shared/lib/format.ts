@@ -35,3 +35,12 @@ export function formatDate(iso: string, locale: string): string {
 export function formatYear(iso: string): number {
   return new Date(iso).getFullYear();
 }
+
+/** "сегодня", "вчера", "3 дня назад"; older than a week — the date. */
+export function formatRelativeDay(iso: string, locale: string, now = new Date()): string {
+  const date = new Date(iso);
+  const startOf = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+  const days = Math.round((startOf(now) - startOf(date)) / 86_400_000);
+  if (days < 0 || days > 6) return formatDate(iso, locale);
+  return new Intl.RelativeTimeFormat(locale, { numeric: 'auto' }).format(-days, 'day');
+}

@@ -116,3 +116,45 @@ export const ImageIcon = (p: P) => (
     <path d="m21 15-5-5L5 21" />
   </Icon>
 );
+export const SearchIcon = (p: P) => (
+  <Icon {...p}>
+    <circle cx="11" cy="11" r="7" />
+    <path d="m20 20-3.5-3.5" />
+  </Icon>
+);
+export const FiltersIcon = (p: P) => (
+  <Icon {...p}>
+    <path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6" />
+  </Icon>
+);
+export const SortIcon = (p: P) => (
+  <Icon {...p}>
+    <path d="m3 16 4 4 4-4M7 20V4M21 8l-4-4-4 4M17 4v16" />
+  </Icon>
+);
+export const ChevronDownIcon = (p: P) => (
+  <Icon {...p}>
+    <path d="m6 9 6 6 6-6" />
+  </Icon>
+);
+export const CheckIcon = (p: P) => (
+  <Icon {...p}>
+    <path d="M20 6 9 17l-5-5" />
+  </Icon>
+);
+export const HomeIcon = (p: P) => (
+  <Icon {...p}>
+    <path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1Z" />
+  </Icon>
+);
+export const UserIcon = (p: P) => (
+  <Icon {...p}>
+    <circle cx="12" cy="8" r="4" />
+    <path d="M4 21a8 8 0 0 1 16 0" />
+  </Icon>
+);
+export const HeartIcon = (p: P) => (
+  <Icon {...p}>
+    <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8Z" />
+  </Icon>
+);

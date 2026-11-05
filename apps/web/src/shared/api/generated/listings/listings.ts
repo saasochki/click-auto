@@ -27,9 +27,13 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  CountListingsParams,
   CreateListingBody,
   ListingDto,
   Problem,
+  SearchCountDto,
+  SearchListingsParams,
+  SearchResultDto,
   UpdateListingBody
 } from '.././model';
 
@@ -37,6 +41,481 @@ import { httpClient } from '../../http-client';
 
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
+
+
+/**
+ * Category attributes are passed as attr.<key>=<value> (repeat or comma-separate values).
+ * @summary Feed with filters
+ */
+export type searchListingsResponse200 = {
+  data: SearchResultDto
+  status: 200
+}
+
+export type searchListingsResponse400 = {
+  data: Problem
+  status: 400
+}
+
+export type searchListingsResponse503 = {
+  data: Problem
+  status: 503
+}
+    
+export type searchListingsResponseSuccess = (searchListingsResponse200) & {
+  headers: Headers;
+};
+export type searchListingsResponseError = (searchListingsResponse400 | searchListingsResponse503) & {
+  headers: Headers;
+};
+
+export type searchListingsResponse = (searchListingsResponseSuccess | searchListingsResponseError)
+
+export const getSearchListingsUrl = (params: SearchListingsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    const explodeParameters = ["facets","region","city","car","condition","bodyType","transmission","drive","fuel","steering","color","registration","servedBrand"];
+
+    if (Array.isArray(value) && explodeParameters.includes(key)) {
+      value.forEach((v) => {
+        normalizedParams.append(key, v === null ? 'null' : v.toString());
+      });
+      return;
+    }
+      
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/v1/listings?${stringifiedParams}` : `/api/v1/listings`
+}
+
+export const searchListings = async (params: SearchListingsParams, options?: RequestInit): Promise<searchListingsResponse> => {
+  
+  return httpClient<searchListingsResponse>(getSearchListingsUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+
+
+export const getSearchListingsQueryKey = (params?: SearchListingsParams,) => {
+    return [
+    `/api/v1/listings`, ...(params ? [params]: [])
+    ] as const;
+    }
+
+    
+export const getSearchListingsQueryOptions = <TData = Awaited<ReturnType<typeof searchListings>>, TError = Problem>(params: SearchListingsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof searchListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getSearchListingsQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof searchListings>>> = ({ signal }) => searchListings(params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof searchListings>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type SearchListingsQueryResult = NonNullable<Awaited<ReturnType<typeof searchListings>>>
+export type SearchListingsQueryError = Problem
+
+
+export function useSearchListings<TData = Awaited<ReturnType<typeof searchListings>>, TError = Problem>(
+ params: SearchListingsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof searchListings>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof searchListings>>,
+          TError,
+          Awaited<ReturnType<typeof searchListings>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSearchListings<TData = Awaited<ReturnType<typeof searchListings>>, TError = Problem>(
+ params: SearchListingsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof searchListings>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof searchListings>>,
+          TError,
+          Awaited<ReturnType<typeof searchListings>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSearchListings<TData = Awaited<ReturnType<typeof searchListings>>, TError = Problem>(
+ params: SearchListingsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof searchListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Feed with filters
+ */
+
+export function useSearchListings<TData = Awaited<ReturnType<typeof searchListings>>, TError = Problem>(
+ params: SearchListingsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof searchListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getSearchListingsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+export const getSearchListingsSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof searchListings>>, TError = Problem>(params: SearchListingsParams, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof searchListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getSearchListingsQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof searchListings>>> = ({ signal }) => searchListings(params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseSuspenseQueryOptions<Awaited<ReturnType<typeof searchListings>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type SearchListingsSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof searchListings>>>
+export type SearchListingsSuspenseQueryError = Problem
+
+
+export function useSearchListingsSuspense<TData = Awaited<ReturnType<typeof searchListings>>, TError = Problem>(
+ params: SearchListingsParams, options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof searchListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSearchListingsSuspense<TData = Awaited<ReturnType<typeof searchListings>>, TError = Problem>(
+ params: SearchListingsParams, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof searchListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useSearchListingsSuspense<TData = Awaited<ReturnType<typeof searchListings>>, TError = Problem>(
+ params: SearchListingsParams, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof searchListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Feed with filters
+ */
+
+export function useSearchListingsSuspense<TData = Awaited<ReturnType<typeof searchListings>>, TError = Problem>(
+ params: SearchListingsParams, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof searchListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient 
+ ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getSearchListingsSuspenseQueryOptions(params,options)
+
+  const query = useSuspenseQuery(queryOptions, queryClient) as  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary Create a draft
+ */
+export type createListingResponse201 = {
+  data: ListingDto
+  status: 201
+}
+
+export type createListingResponse422 = {
+  data: Problem
+  status: 422
+}
+    
+export type createListingResponseSuccess = (createListingResponse201) & {
+  headers: Headers;
+};
+export type createListingResponseError = (createListingResponse422) & {
+  headers: Headers;
+};
+
+export type createListingResponse = (createListingResponseSuccess | createListingResponseError)
+
+export const getCreateListingUrl = () => {
+
+
+  
+
+  return `/api/v1/listings`
+}
+
+export const createListing = async (createListingBody: CreateListingBody, options?: RequestInit): Promise<createListingResponse> => {
+  
+  return httpClient<createListingResponse>(getCreateListingUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      createListingBody,)
+  }
+);}
+
+
+
+
+export const getCreateListingMutationOptions = <TError = Problem,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createListing>>, TError,{data: CreateListingBody}, TContext>, request?: SecondParameter<typeof httpClient>}
+): UseMutationOptions<Awaited<ReturnType<typeof createListing>>, TError,{data: CreateListingBody}, TContext> => {
+
+const mutationKey = ['createListing'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createListing>>, {data: CreateListingBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createListing(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateListingMutationResult = NonNullable<Awaited<ReturnType<typeof createListing>>>
+    export type CreateListingMutationBody = CreateListingBody
+    export type CreateListingMutationError = Problem
+
+    /**
+ * @summary Create a draft
+ */
+export const useCreateListing = <TError = Problem,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createListing>>, TError,{data: CreateListingBody}, TContext>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof createListing>>,
+        TError,
+        {data: CreateListingBody},
+        TContext
+      > => {
+
+      const mutationOptions = getCreateListingMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    /**
+ * Category attributes are passed as attr.<key>=<value> (repeat or comma-separate values).
+ * @summary Number of matches for the filter panel
+ */
+export type countListingsResponse200 = {
+  data: SearchCountDto
+  status: 200
+}
+
+export type countListingsResponse503 = {
+  data: Problem
+  status: 503
+}
+    
+export type countListingsResponseSuccess = (countListingsResponse200) & {
+  headers: Headers;
+};
+export type countListingsResponseError = (countListingsResponse503) & {
+  headers: Headers;
+};
+
+export type countListingsResponse = (countListingsResponseSuccess | countListingsResponseError)
+
+export const getCountListingsUrl = (params: CountListingsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    const explodeParameters = ["facets","region","city","car","condition","bodyType","transmission","drive","fuel","steering","color","registration","servedBrand"];
+
+    if (Array.isArray(value) && explodeParameters.includes(key)) {
+      value.forEach((v) => {
+        normalizedParams.append(key, v === null ? 'null' : v.toString());
+      });
+      return;
+    }
+      
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/v1/listings/count?${stringifiedParams}` : `/api/v1/listings/count`
+}
+
+export const countListings = async (params: CountListingsParams, options?: RequestInit): Promise<countListingsResponse> => {
+  
+  return httpClient<countListingsResponse>(getCountListingsUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+
+
+export const getCountListingsQueryKey = (params?: CountListingsParams,) => {
+    return [
+    `/api/v1/listings/count`, ...(params ? [params]: [])
+    ] as const;
+    }
+
+    
+export const getCountListingsQueryOptions = <TData = Awaited<ReturnType<typeof countListings>>, TError = Problem>(params: CountListingsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof countListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getCountListingsQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof countListings>>> = ({ signal }) => countListings(params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof countListings>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type CountListingsQueryResult = NonNullable<Awaited<ReturnType<typeof countListings>>>
+export type CountListingsQueryError = Problem
+
+
+export function useCountListings<TData = Awaited<ReturnType<typeof countListings>>, TError = Problem>(
+ params: CountListingsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof countListings>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof countListings>>,
+          TError,
+          Awaited<ReturnType<typeof countListings>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCountListings<TData = Awaited<ReturnType<typeof countListings>>, TError = Problem>(
+ params: CountListingsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof countListings>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof countListings>>,
+          TError,
+          Awaited<ReturnType<typeof countListings>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCountListings<TData = Awaited<ReturnType<typeof countListings>>, TError = Problem>(
+ params: CountListingsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof countListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Number of matches for the filter panel
+ */
+
+export function useCountListings<TData = Awaited<ReturnType<typeof countListings>>, TError = Problem>(
+ params: CountListingsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof countListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getCountListingsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+export const getCountListingsSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof countListings>>, TError = Problem>(params: CountListingsParams, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof countListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getCountListingsQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof countListings>>> = ({ signal }) => countListings(params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseSuspenseQueryOptions<Awaited<ReturnType<typeof countListings>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type CountListingsSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof countListings>>>
+export type CountListingsSuspenseQueryError = Problem
+
+
+export function useCountListingsSuspense<TData = Awaited<ReturnType<typeof countListings>>, TError = Problem>(
+ params: CountListingsParams, options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof countListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCountListingsSuspense<TData = Awaited<ReturnType<typeof countListings>>, TError = Problem>(
+ params: CountListingsParams, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof countListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCountListingsSuspense<TData = Awaited<ReturnType<typeof countListings>>, TError = Problem>(
+ params: CountListingsParams, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof countListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Number of matches for the filter panel
+ */
+
+export function useCountListingsSuspense<TData = Awaited<ReturnType<typeof countListings>>, TError = Problem>(
+ params: CountListingsParams, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof countListings>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient 
+ ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getCountListingsSuspenseQueryOptions(params,options)
+
+  const query = useSuspenseQuery(queryOptions, queryClient) as  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
 
 
 
@@ -312,96 +791,6 @@ export const useUpdateListing = <TError = Problem,
       > => {
 
       const mutationOptions = getUpdateListingMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    /**
- * @summary Create a draft
- */
-export type createListingResponse201 = {
-  data: ListingDto
-  status: 201
-}
-
-export type createListingResponse422 = {
-  data: Problem
-  status: 422
-}
-    
-export type createListingResponseSuccess = (createListingResponse201) & {
-  headers: Headers;
-};
-export type createListingResponseError = (createListingResponse422) & {
-  headers: Headers;
-};
-
-export type createListingResponse = (createListingResponseSuccess | createListingResponseError)
-
-export const getCreateListingUrl = () => {
-
-
-  
-
-  return `/api/v1/listings`
-}
-
-export const createListing = async (createListingBody: CreateListingBody, options?: RequestInit): Promise<createListingResponse> => {
-  
-  return httpClient<createListingResponse>(getCreateListingUrl(),
-  {      
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      createListingBody,)
-  }
-);}
-
-
-
-
-export const getCreateListingMutationOptions = <TError = Problem,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createListing>>, TError,{data: CreateListingBody}, TContext>, request?: SecondParameter<typeof httpClient>}
-): UseMutationOptions<Awaited<ReturnType<typeof createListing>>, TError,{data: CreateListingBody}, TContext> => {
-
-const mutationKey = ['createListing'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createListing>>, {data: CreateListingBody}> = (props) => {
-          const {data} = props ?? {};
-
-          return  createListing(data,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type CreateListingMutationResult = NonNullable<Awaited<ReturnType<typeof createListing>>>
-    export type CreateListingMutationBody = CreateListingBody
-    export type CreateListingMutationError = Problem
-
-    /**
- * @summary Create a draft
- */
-export const useCreateListing = <TError = Problem,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createListing>>, TError,{data: CreateListingBody}, TContext>, request?: SecondParameter<typeof httpClient>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof createListing>>,
-        TError,
-        {data: CreateListingBody},
-        TContext
-      > => {
-
-      const mutationOptions = getCreateListingMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
