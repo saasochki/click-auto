@@ -18,17 +18,24 @@ export function NumberBox({
   placeholder,
   label,
   locale,
+  grouping = true,
 }: {
   value: number | null;
   onCommit: (value: number | null) => void;
   placeholder: string;
   label: string;
   locale: string;
+  /** Years are shown as "2015", not "2 015". */
+  grouping?: boolean;
 }) {
-  const show = (v: number | null) => (v === null ? '' : formatNumber(v, locale));
+  const show = (v: number | null) =>
+    v === null ? '' : grouping ? formatNumber(v, locale) : String(v);
   const [text, setText] = useState(show(value));
   // Follow the value when it changes from outside (reset, chip removed).
-  useEffect(() => setText(value === null ? '' : formatNumber(value, locale)), [value, locale]);
+  useEffect(
+    () => setText(value === null ? '' : grouping ? formatNumber(value, locale) : String(value)),
+    [value, locale, grouping],
+  );
 
   const commit = () => {
     const next = digits(text);
@@ -61,6 +68,7 @@ export function RangeField({
   to,
   onChange,
   locale,
+  grouping,
   children,
 }: {
   label: ReactNode;
@@ -68,6 +76,7 @@ export function RangeField({
   to: number | null;
   onChange: (from: number | null, to: number | null) => void;
   locale: string;
+  grouping?: boolean;
   /** Extra controls under the boxes: currency, "Договорная". */
   children?: ReactNode;
 }) {
@@ -83,6 +92,7 @@ export function RangeField({
           placeholder={t('from')}
           label={`${name} ${t('from')}`}
           locale={locale}
+          grouping={grouping}
         />
         <NumberBox
           value={to}
@@ -90,6 +100,7 @@ export function RangeField({
           placeholder={t('to')}
           label={`${name} ${t('to')}`}
           locale={locale}
+          grouping={grouping}
         />
       </div>
       {children}

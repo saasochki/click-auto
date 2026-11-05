@@ -150,7 +150,8 @@ function CarFilters({
         label={t('year')}
         from={value.yearFrom}
         to={value.yearTo}
-        locale="en"
+        locale={locale}
+        grouping={false}
         onChange={(yearFrom, yearTo) => onChange({ yearFrom, yearTo })}
       />
       <RangeField
@@ -346,6 +347,7 @@ function AttributeFilters({
 /** "Подходит для моей машины": brand, model, year of the buyer's car (parts). */
 function CompatibilityField({ value, onChange }: { value: FeedFilters; onChange: Change }) {
   const t = useTranslations('filters');
+  const locale = useLocale();
   const brands = useListBrands();
   const list = brands.data?.status === 200 ? brands.data.data : [];
   const [brandId, setBrandId] = useState('');
@@ -377,7 +379,8 @@ function CompatibilityField({ value, onChange }: { value: FeedFilters; onChange:
         onCommit={(compatYear) => onChange({ compatYear })}
         placeholder={t('any')}
         label={t('compatYear')}
-        locale="en"
+        locale={locale}
+        grouping={false}
       />
     </Group>
   );
