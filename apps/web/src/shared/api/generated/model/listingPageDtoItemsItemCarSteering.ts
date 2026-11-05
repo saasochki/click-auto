@@ -8,9 +8,8 @@
 /**
  * @nullable
  */
-export type ListingPageDtoItemsItemCarSteering =
-  | (typeof ListingPageDtoItemsItemCarSteering)[keyof typeof ListingPageDtoItemsItemCarSteering]
-  | null;
+export type ListingPageDtoItemsItemCarSteering = typeof ListingPageDtoItemsItemCarSteering[keyof typeof ListingPageDtoItemsItemCarSteering] | null;
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ListingPageDtoItemsItemCarSteering = {

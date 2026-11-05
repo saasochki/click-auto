@@ -5,7 +5,8 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type MeDtoTheme = (typeof MeDtoTheme)[keyof typeof MeDtoTheme];
+export type MeDtoTheme = typeof MeDtoTheme[keyof typeof MeDtoTheme];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const MeDtoTheme = {

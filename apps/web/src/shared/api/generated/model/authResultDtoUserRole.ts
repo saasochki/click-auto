@@ -5,8 +5,8 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type AuthResultDtoUserRole =
-  (typeof AuthResultDtoUserRole)[keyof typeof AuthResultDtoUserRole];
+export type AuthResultDtoUserRole = typeof AuthResultDtoUserRole[keyof typeof AuthResultDtoUserRole];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const AuthResultDtoUserRole = {

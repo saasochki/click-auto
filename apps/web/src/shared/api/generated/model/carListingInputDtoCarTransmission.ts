@@ -8,9 +8,8 @@
 /**
  * @nullable
  */
-export type CarListingInputDtoCarTransmission =
-  | (typeof CarListingInputDtoCarTransmission)[keyof typeof CarListingInputDtoCarTransmission]
-  | null;
+export type CarListingInputDtoCarTransmission = typeof CarListingInputDtoCarTransmission[keyof typeof CarListingInputDtoCarTransmission] | null;
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CarListingInputDtoCarTransmission = {

@@ -8,12 +8,12 @@ import type { ListMyListingsStatus } from './listMyListingsStatus';
 import type { ListMyListingsType } from './listMyListingsType';
 
 export type ListMyListingsParams = {
-  status?: ListMyListingsStatus;
-  type?: ListMyListingsType;
-  /**
-   * @minimum 1
-   * @maximum 50
-   */
-  limit?: number;
-  cursor?: string;
+status?: ListMyListingsStatus;
+type?: ListMyListingsType;
+/**
+ * @minimum 1
+ * @maximum 50
+ */
+limit?: number;
+cursor?: string;
 };

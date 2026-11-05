@@ -4,7 +4,11 @@
  * ClickAuto API
  * OpenAPI spec version: 1.0.0
  */
-import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQuery,
+  useSuspenseQuery
+} from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -19,819 +23,741 @@ import type {
   UseQueryOptions,
   UseQueryResult,
   UseSuspenseQueryOptions,
-  UseSuspenseQueryResult,
+  UseSuspenseQueryResult
 } from '@tanstack/react-query';
 
-import type { CreateListingBody, ListingDto, Problem, UpdateListingBody } from '.././model';
+import type {
+  CreateListingBody,
+  ListingDto,
+  Problem,
+  UpdateListingBody
+} from '.././model';
 
 import { httpClient } from '../../http-client';
 
+
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
+
 
 /**
  * @summary Public card of an active listing
  */
 export type getListingResponse200 = {
-  data: ListingDto;
-  status: 200;
-};
+  data: ListingDto
+  status: 200
+}
 
 export type getListingResponse404 = {
-  data: Problem;
-  status: 404;
-};
+  data: Problem
+  status: 404
+}
 
 export type getListingResponse410 = {
-  data: Problem;
-  status: 410;
-};
-
-export type getListingResponseSuccess = getListingResponse200 & {
+  data: Problem
+  status: 410
+}
+    
+export type getListingResponseSuccess = (getListingResponse200) & {
   headers: Headers;
 };
 export type getListingResponseError = (getListingResponse404 | getListingResponse410) & {
   headers: Headers;
 };
 
-export type getListingResponse = getListingResponseSuccess | getListingResponseError;
+export type getListingResponse = (getListingResponseSuccess | getListingResponseError)
 
-export const getGetListingUrl = (id: string) => {
-  return `/api/v1/listings/${id}`;
-};
+export const getGetListingUrl = (id: string,) => {
 
-export const getListing = async (
-  id: string,
-  options?: RequestInit,
-): Promise<getListingResponse> => {
-  return httpClient<getListingResponse>(getGetListingUrl(id), {
+
+  
+
+  return `/api/v1/listings/${id}`
+}
+
+export const getListing = async (id: string, options?: RequestInit): Promise<getListingResponse> => {
+  
+  return httpClient<getListingResponse>(getGetListingUrl(id),
+  {      
     ...options,
-    method: 'GET',
-  });
-};
+    method: 'GET'
+    
+    
+  }
+);}
 
-export const getGetListingQueryKey = (id?: string) => {
-  return [`/api/v1/listings/${id}`] as const;
-};
 
-export const getGetListingQueryOptions = <
-  TData = Awaited<ReturnType<typeof getListing>>,
-  TError = Problem,
->(
-  id: string,
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getListing>>, TError, TData>>;
-    request?: SecondParameter<typeof httpClient>;
-  },
+
+
+
+export const getGetListingQueryKey = (id?: string,) => {
+    return [
+    `/api/v1/listings/${id}`
+    ] as const;
+    }
+
+    
+export const getGetListingQueryOptions = <TData = Awaited<ReturnType<typeof getListing>>, TError = Problem>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getListing>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getGetListingQueryKey(id);
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getListing>>> = ({ signal }) =>
-    getListing(id, { signal, ...requestOptions });
+  const queryKey =  queryOptions?.queryKey ?? getGetListingQueryKey(id);
 
-  return { queryKey, queryFn, enabled: !!id, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof getListing>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
+  
 
-export type GetListingQueryResult = NonNullable<Awaited<ReturnType<typeof getListing>>>;
-export type GetListingQueryError = Problem;
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getListing>>> = ({ signal }) => getListing(id, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getListing>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetListingQueryResult = NonNullable<Awaited<ReturnType<typeof getListing>>>
+export type GetListingQueryError = Problem
+
 
 export function useGetListing<TData = Awaited<ReturnType<typeof getListing>>, TError = Problem>(
-  id: string,
-  options: {
-    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getListing>>, TError, TData>> &
-      Pick<
+ id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getListing>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getListing>>,
           TError,
           Awaited<ReturnType<typeof getListing>>
-        >,
-        'initialData'
-      >;
-    request?: SecondParameter<typeof httpClient>;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+        > , 'initialData'
+      >, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetListing<TData = Awaited<ReturnType<typeof getListing>>, TError = Problem>(
-  id: string,
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getListing>>, TError, TData>> &
-      Pick<
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getListing>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getListing>>,
           TError,
           Awaited<ReturnType<typeof getListing>>
-        >,
-        'initialData'
-      >;
-    request?: SecondParameter<typeof httpClient>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+        > , 'initialData'
+      >, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 export function useGetListing<TData = Awaited<ReturnType<typeof getListing>>, TError = Problem>(
-  id: string,
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getListing>>, TError, TData>>;
-    request?: SecondParameter<typeof httpClient>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getListing>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Public card of an active listing
  */
 
 export function useGetListing<TData = Awaited<ReturnType<typeof getListing>>, TError = Problem>(
-  id: string,
-  options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getListing>>, TError, TData>>;
-    request?: SecondParameter<typeof httpClient>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getGetListingQueryOptions(id, options);
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getListing>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
-    queryKey: DataTag<QueryKey, TData, TError>;
-  };
+  const queryOptions = getGetListingQueryOptions(id,options)
 
-  query.queryKey = queryOptions.queryKey;
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
 
   return query;
 }
 
-export const getGetListingSuspenseQueryOptions = <
-  TData = Awaited<ReturnType<typeof getListing>>,
-  TError = Problem,
->(
-  id: string,
-  options?: {
-    query?: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getListing>>, TError, TData>>;
-    request?: SecondParameter<typeof httpClient>;
-  },
+
+
+
+export const getGetListingSuspenseQueryOptions = <TData = Awaited<ReturnType<typeof getListing>>, TError = Problem>(id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getListing>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getGetListingQueryKey(id);
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getListing>>> = ({ signal }) =>
-    getListing(id, { signal, ...requestOptions });
+  const queryKey =  queryOptions?.queryKey ?? getGetListingQueryKey(id);
 
-  return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
-    Awaited<ReturnType<typeof getListing>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
+  
 
-export type GetListingSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof getListing>>>;
-export type GetListingSuspenseQueryError = Problem;
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getListing>>> = ({ signal }) => getListing(id, { signal, ...requestOptions });
 
-export function useGetListingSuspense<
-  TData = Awaited<ReturnType<typeof getListing>>,
-  TError = Problem,
->(
-  id: string,
-  options: {
-    query: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getListing>>, TError, TData>>;
-    request?: SecondParameter<typeof httpClient>;
-  },
-  queryClient?: QueryClient,
-): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetListingSuspense<
-  TData = Awaited<ReturnType<typeof getListing>>,
-  TError = Problem,
->(
-  id: string,
-  options?: {
-    query?: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getListing>>, TError, TData>>;
-    request?: SecondParameter<typeof httpClient>;
-  },
-  queryClient?: QueryClient,
-): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetListingSuspense<
-  TData = Awaited<ReturnType<typeof getListing>>,
-  TError = Problem,
->(
-  id: string,
-  options?: {
-    query?: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getListing>>, TError, TData>>;
-    request?: SecondParameter<typeof httpClient>;
-  },
-  queryClient?: QueryClient,
-): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseSuspenseQueryOptions<Awaited<ReturnType<typeof getListing>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetListingSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof getListing>>>
+export type GetListingSuspenseQueryError = Problem
+
+
+export function useGetListingSuspense<TData = Awaited<ReturnType<typeof getListing>>, TError = Problem>(
+ id: string, options: { query:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getListing>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetListingSuspense<TData = Awaited<ReturnType<typeof getListing>>, TError = Problem>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getListing>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetListingSuspense<TData = Awaited<ReturnType<typeof getListing>>, TError = Problem>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getListing>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient
+  ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Public card of an active listing
  */
 
-export function useGetListingSuspense<
-  TData = Awaited<ReturnType<typeof getListing>>,
-  TError = Problem,
->(
-  id: string,
-  options?: {
-    query?: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getListing>>, TError, TData>>;
-    request?: SecondParameter<typeof httpClient>;
-  },
-  queryClient?: QueryClient,
-): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-  const queryOptions = getGetListingSuspenseQueryOptions(id, options);
+export function useGetListingSuspense<TData = Awaited<ReturnType<typeof getListing>>, TError = Problem>(
+ id: string, options?: { query?:Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getListing>>, TError, TData>>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient 
+ ):  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useSuspenseQuery(queryOptions, queryClient) as UseSuspenseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
+  const queryOptions = getGetListingSuspenseQueryOptions(id,options)
 
-  query.queryKey = queryOptions.queryKey;
+  const query = useSuspenseQuery(queryOptions, queryClient) as  UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
 
   return query;
 }
+
+
+
 
 /**
  * @summary Replace listing content
  */
 export type updateListingResponse200 = {
-  data: ListingDto;
-  status: 200;
-};
+  data: ListingDto
+  status: 200
+}
 
 export type updateListingResponse409 = {
-  data: Problem;
-  status: 409;
-};
+  data: Problem
+  status: 409
+}
 
 export type updateListingResponse422 = {
-  data: Problem;
-  status: 422;
-};
-
-export type updateListingResponseSuccess = updateListingResponse200 & {
+  data: Problem
+  status: 422
+}
+    
+export type updateListingResponseSuccess = (updateListingResponse200) & {
   headers: Headers;
 };
 export type updateListingResponseError = (updateListingResponse409 | updateListingResponse422) & {
   headers: Headers;
 };
 
-export type updateListingResponse = updateListingResponseSuccess | updateListingResponseError;
+export type updateListingResponse = (updateListingResponseSuccess | updateListingResponseError)
 
-export const getUpdateListingUrl = (id: string) => {
-  return `/api/v1/listings/${id}`;
-};
+export const getUpdateListingUrl = (id: string,) => {
 
-export const updateListing = async (
-  id: string,
-  updateListingBody: UpdateListingBody,
-  options?: RequestInit,
-): Promise<updateListingResponse> => {
-  return httpClient<updateListingResponse>(getUpdateListingUrl(id), {
+
+  
+
+  return `/api/v1/listings/${id}`
+}
+
+export const updateListing = async (id: string,
+    updateListingBody: UpdateListingBody, options?: RequestInit): Promise<updateListingResponse> => {
+  
+  return httpClient<updateListingResponse>(getUpdateListingUrl(id),
+  {      
     ...options,
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(updateListingBody),
-  });
-};
+    body: JSON.stringify(
+      updateListingBody,)
+  }
+);}
 
-export const getUpdateListingMutationOptions = <TError = Problem, TContext = unknown>(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof updateListing>>,
-    TError,
-    { id: string; data: UpdateListingBody },
-    TContext
-  >;
-  request?: SecondParameter<typeof httpClient>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof updateListing>>,
-  TError,
-  { id: string; data: UpdateListingBody },
-  TContext
-> => {
-  const mutationKey = ['updateListing'];
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof updateListing>>,
-    { id: string; data: UpdateListingBody }
-  > = (props) => {
-    const { id, data } = props ?? {};
 
-    return updateListing(id, data, requestOptions);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
+export const getUpdateListingMutationOptions = <TError = Problem,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateListing>>, TError,{id: string;data: UpdateListingBody}, TContext>, request?: SecondParameter<typeof httpClient>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateListing>>, TError,{id: string;data: UpdateListingBody}, TContext> => {
 
-export type UpdateListingMutationResult = NonNullable<Awaited<ReturnType<typeof updateListing>>>;
-export type UpdateListingMutationBody = UpdateListingBody;
-export type UpdateListingMutationError = Problem;
+const mutationKey = ['updateListing'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
 
-/**
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateListing>>, {id: string;data: UpdateListingBody}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateListing(id,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateListingMutationResult = NonNullable<Awaited<ReturnType<typeof updateListing>>>
+    export type UpdateListingMutationBody = UpdateListingBody
+    export type UpdateListingMutationError = Problem
+
+    /**
  * @summary Replace listing content
  */
-export const useUpdateListing = <TError = Problem, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof updateListing>>,
-      TError,
-      { id: string; data: UpdateListingBody },
-      TContext
-    >;
-    request?: SecondParameter<typeof httpClient>;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof updateListing>>,
-  TError,
-  { id: string; data: UpdateListingBody },
-  TContext
-> => {
-  const mutationOptions = getUpdateListingMutationOptions(options);
+export const useUpdateListing = <TError = Problem,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateListing>>, TError,{id: string;data: UpdateListingBody}, TContext>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof updateListing>>,
+        TError,
+        {id: string;data: UpdateListingBody},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient);
-};
-/**
+      const mutationOptions = getUpdateListingMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    /**
  * @summary Create a draft
  */
 export type createListingResponse201 = {
-  data: ListingDto;
-  status: 201;
-};
+  data: ListingDto
+  status: 201
+}
 
 export type createListingResponse422 = {
-  data: Problem;
-  status: 422;
-};
-
-export type createListingResponseSuccess = createListingResponse201 & {
+  data: Problem
+  status: 422
+}
+    
+export type createListingResponseSuccess = (createListingResponse201) & {
   headers: Headers;
 };
-export type createListingResponseError = createListingResponse422 & {
+export type createListingResponseError = (createListingResponse422) & {
   headers: Headers;
 };
 
-export type createListingResponse = createListingResponseSuccess | createListingResponseError;
+export type createListingResponse = (createListingResponseSuccess | createListingResponseError)
 
 export const getCreateListingUrl = () => {
-  return `/api/v1/listings`;
-};
 
-export const createListing = async (
-  createListingBody: CreateListingBody,
-  options?: RequestInit,
-): Promise<createListingResponse> => {
-  return httpClient<createListingResponse>(getCreateListingUrl(), {
+
+  
+
+  return `/api/v1/listings`
+}
+
+export const createListing = async (createListingBody: CreateListingBody, options?: RequestInit): Promise<createListingResponse> => {
+  
+  return httpClient<createListingResponse>(getCreateListingUrl(),
+  {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(createListingBody),
-  });
-};
+    body: JSON.stringify(
+      createListingBody,)
+  }
+);}
 
-export const getCreateListingMutationOptions = <TError = Problem, TContext = unknown>(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof createListing>>,
-    TError,
-    { data: CreateListingBody },
-    TContext
-  >;
-  request?: SecondParameter<typeof httpClient>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof createListing>>,
-  TError,
-  { data: CreateListingBody },
-  TContext
-> => {
-  const mutationKey = ['createListing'];
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof createListing>>,
-    { data: CreateListingBody }
-  > = (props) => {
-    const { data } = props ?? {};
 
-    return createListing(data, requestOptions);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
+export const getCreateListingMutationOptions = <TError = Problem,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createListing>>, TError,{data: CreateListingBody}, TContext>, request?: SecondParameter<typeof httpClient>}
+): UseMutationOptions<Awaited<ReturnType<typeof createListing>>, TError,{data: CreateListingBody}, TContext> => {
 
-export type CreateListingMutationResult = NonNullable<Awaited<ReturnType<typeof createListing>>>;
-export type CreateListingMutationBody = CreateListingBody;
-export type CreateListingMutationError = Problem;
+const mutationKey = ['createListing'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
 
-/**
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createListing>>, {data: CreateListingBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createListing(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateListingMutationResult = NonNullable<Awaited<ReturnType<typeof createListing>>>
+    export type CreateListingMutationBody = CreateListingBody
+    export type CreateListingMutationError = Problem
+
+    /**
  * @summary Create a draft
  */
-export const useCreateListing = <TError = Problem, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof createListing>>,
-      TError,
-      { data: CreateListingBody },
-      TContext
-    >;
-    request?: SecondParameter<typeof httpClient>;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof createListing>>,
-  TError,
-  { data: CreateListingBody },
-  TContext
-> => {
-  const mutationOptions = getCreateListingMutationOptions(options);
+export const useCreateListing = <TError = Problem,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createListing>>, TError,{data: CreateListingBody}, TContext>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof createListing>>,
+        TError,
+        {data: CreateListingBody},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient);
-};
-export type publishListingResponse200 = {
-  data: ListingDto;
-  status: 200;
-};
+      const mutationOptions = getCreateListingMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    export type publishListingResponse200 = {
+  data: ListingDto
+  status: 200
+}
 
 export type publishListingResponse409 = {
-  data: Problem;
-  status: 409;
-};
+  data: Problem
+  status: 409
+}
 
 export type publishListingResponse422 = {
-  data: Problem;
-  status: 422;
-};
-
-export type publishListingResponseSuccess = publishListingResponse200 & {
+  data: Problem
+  status: 422
+}
+    
+export type publishListingResponseSuccess = (publishListingResponse200) & {
   headers: Headers;
 };
-export type publishListingResponseError = (
-  | publishListingResponse409
-  | publishListingResponse422
-) & {
+export type publishListingResponseError = (publishListingResponse409 | publishListingResponse422) & {
   headers: Headers;
 };
 
-export type publishListingResponse = publishListingResponseSuccess | publishListingResponseError;
+export type publishListingResponse = (publishListingResponseSuccess | publishListingResponseError)
 
-export const getPublishListingUrl = (id: string) => {
-  return `/api/v1/listings/${id}/publish`;
-};
+export const getPublishListingUrl = (id: string,) => {
 
-export const publishListing = async (
-  id: string,
-  options?: RequestInit,
-): Promise<publishListingResponse> => {
-  return httpClient<publishListingResponse>(getPublishListingUrl(id), {
+
+  
+
+  return `/api/v1/listings/${id}/publish`
+}
+
+export const publishListing = async (id: string, options?: RequestInit): Promise<publishListingResponse> => {
+  
+  return httpClient<publishListingResponse>(getPublishListingUrl(id),
+  {      
     ...options,
-    method: 'POST',
-  });
-};
+    method: 'POST'
+    
+    
+  }
+);}
 
-export const getPublishListingMutationOptions = <TError = Problem, TContext = unknown>(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof publishListing>>,
-    TError,
-    { id: string },
-    TContext
-  >;
-  request?: SecondParameter<typeof httpClient>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof publishListing>>,
-  TError,
-  { id: string },
-  TContext
-> => {
-  const mutationKey = ['publishListing'];
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
 
-  const mutationFn: MutationFunction<Awaited<ReturnType<typeof publishListing>>, { id: string }> = (
-    props,
-  ) => {
-    const { id } = props ?? {};
 
-    return publishListing(id, requestOptions);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
+export const getPublishListingMutationOptions = <TError = Problem,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof publishListing>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof httpClient>}
+): UseMutationOptions<Awaited<ReturnType<typeof publishListing>>, TError,{id: string}, TContext> => {
 
-export type PublishListingMutationResult = NonNullable<Awaited<ReturnType<typeof publishListing>>>;
+const mutationKey = ['publishListing'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
 
-export type PublishListingMutationError = Problem;
+      
 
-export const usePublishListing = <TError = Problem, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof publishListing>>,
-      TError,
-      { id: string },
-      TContext
-    >;
-    request?: SecondParameter<typeof httpClient>;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof publishListing>>,
-  TError,
-  { id: string },
-  TContext
-> => {
-  const mutationOptions = getPublishListingMutationOptions(options);
 
-  return useMutation(mutationOptions, queryClient);
-};
-/**
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof publishListing>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  publishListing(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PublishListingMutationResult = NonNullable<Awaited<ReturnType<typeof publishListing>>>
+    
+    export type PublishListingMutationError = Problem
+
+    export const usePublishListing = <TError = Problem,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof publishListing>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof publishListing>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+
+      const mutationOptions = getPublishListingMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    /**
  * @summary Hide from search
  */
 export type hideListingResponse200 = {
-  data: ListingDto;
-  status: 200;
-};
+  data: ListingDto
+  status: 200
+}
 
 export type hideListingResponse409 = {
-  data: Problem;
-  status: 409;
-};
-
-export type hideListingResponseSuccess = hideListingResponse200 & {
+  data: Problem
+  status: 409
+}
+    
+export type hideListingResponseSuccess = (hideListingResponse200) & {
   headers: Headers;
 };
-export type hideListingResponseError = hideListingResponse409 & {
+export type hideListingResponseError = (hideListingResponse409) & {
   headers: Headers;
 };
 
-export type hideListingResponse = hideListingResponseSuccess | hideListingResponseError;
+export type hideListingResponse = (hideListingResponseSuccess | hideListingResponseError)
 
-export const getHideListingUrl = (id: string) => {
-  return `/api/v1/listings/${id}/hide`;
-};
+export const getHideListingUrl = (id: string,) => {
 
-export const hideListing = async (
-  id: string,
-  options?: RequestInit,
-): Promise<hideListingResponse> => {
-  return httpClient<hideListingResponse>(getHideListingUrl(id), {
+
+  
+
+  return `/api/v1/listings/${id}/hide`
+}
+
+export const hideListing = async (id: string, options?: RequestInit): Promise<hideListingResponse> => {
+  
+  return httpClient<hideListingResponse>(getHideListingUrl(id),
+  {      
     ...options,
-    method: 'POST',
-  });
-};
+    method: 'POST'
+    
+    
+  }
+);}
 
-export const getHideListingMutationOptions = <TError = Problem, TContext = unknown>(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof hideListing>>,
-    TError,
-    { id: string },
-    TContext
-  >;
-  request?: SecondParameter<typeof httpClient>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof hideListing>>,
-  TError,
-  { id: string },
-  TContext
-> => {
-  const mutationKey = ['hideListing'];
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
 
-  const mutationFn: MutationFunction<Awaited<ReturnType<typeof hideListing>>, { id: string }> = (
-    props,
-  ) => {
-    const { id } = props ?? {};
 
-    return hideListing(id, requestOptions);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
+export const getHideListingMutationOptions = <TError = Problem,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof hideListing>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof httpClient>}
+): UseMutationOptions<Awaited<ReturnType<typeof hideListing>>, TError,{id: string}, TContext> => {
 
-export type HideListingMutationResult = NonNullable<Awaited<ReturnType<typeof hideListing>>>;
+const mutationKey = ['hideListing'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
 
-export type HideListingMutationError = Problem;
+      
 
-/**
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof hideListing>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  hideListing(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type HideListingMutationResult = NonNullable<Awaited<ReturnType<typeof hideListing>>>
+    
+    export type HideListingMutationError = Problem
+
+    /**
  * @summary Hide from search
  */
-export const useHideListing = <TError = Problem, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof hideListing>>,
-      TError,
-      { id: string },
-      TContext
-    >;
-    request?: SecondParameter<typeof httpClient>;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<Awaited<ReturnType<typeof hideListing>>, TError, { id: string }, TContext> => {
-  const mutationOptions = getHideListingMutationOptions(options);
+export const useHideListing = <TError = Problem,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof hideListing>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof hideListing>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient);
-};
-/**
+      const mutationOptions = getHideListingMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    /**
  * @summary Return to search
  */
 export type unhideListingResponse200 = {
-  data: ListingDto;
-  status: 200;
-};
+  data: ListingDto
+  status: 200
+}
 
 export type unhideListingResponse409 = {
-  data: Problem;
-  status: 409;
-};
-
-export type unhideListingResponseSuccess = unhideListingResponse200 & {
+  data: Problem
+  status: 409
+}
+    
+export type unhideListingResponseSuccess = (unhideListingResponse200) & {
   headers: Headers;
 };
-export type unhideListingResponseError = unhideListingResponse409 & {
+export type unhideListingResponseError = (unhideListingResponse409) & {
   headers: Headers;
 };
 
-export type unhideListingResponse = unhideListingResponseSuccess | unhideListingResponseError;
+export type unhideListingResponse = (unhideListingResponseSuccess | unhideListingResponseError)
 
-export const getUnhideListingUrl = (id: string) => {
-  return `/api/v1/listings/${id}/unhide`;
-};
+export const getUnhideListingUrl = (id: string,) => {
 
-export const unhideListing = async (
-  id: string,
-  options?: RequestInit,
-): Promise<unhideListingResponse> => {
-  return httpClient<unhideListingResponse>(getUnhideListingUrl(id), {
+
+  
+
+  return `/api/v1/listings/${id}/unhide`
+}
+
+export const unhideListing = async (id: string, options?: RequestInit): Promise<unhideListingResponse> => {
+  
+  return httpClient<unhideListingResponse>(getUnhideListingUrl(id),
+  {      
     ...options,
-    method: 'POST',
-  });
-};
+    method: 'POST'
+    
+    
+  }
+);}
 
-export const getUnhideListingMutationOptions = <TError = Problem, TContext = unknown>(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof unhideListing>>,
-    TError,
-    { id: string },
-    TContext
-  >;
-  request?: SecondParameter<typeof httpClient>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof unhideListing>>,
-  TError,
-  { id: string },
-  TContext
-> => {
-  const mutationKey = ['unhideListing'];
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
 
-  const mutationFn: MutationFunction<Awaited<ReturnType<typeof unhideListing>>, { id: string }> = (
-    props,
-  ) => {
-    const { id } = props ?? {};
 
-    return unhideListing(id, requestOptions);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
+export const getUnhideListingMutationOptions = <TError = Problem,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof unhideListing>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof httpClient>}
+): UseMutationOptions<Awaited<ReturnType<typeof unhideListing>>, TError,{id: string}, TContext> => {
 
-export type UnhideListingMutationResult = NonNullable<Awaited<ReturnType<typeof unhideListing>>>;
+const mutationKey = ['unhideListing'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
 
-export type UnhideListingMutationError = Problem;
+      
 
-/**
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof unhideListing>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  unhideListing(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UnhideListingMutationResult = NonNullable<Awaited<ReturnType<typeof unhideListing>>>
+    
+    export type UnhideListingMutationError = Problem
+
+    /**
  * @summary Return to search
  */
-export const useUnhideListing = <TError = Problem, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof unhideListing>>,
-      TError,
-      { id: string },
-      TContext
-    >;
-    request?: SecondParameter<typeof httpClient>;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof unhideListing>>,
-  TError,
-  { id: string },
-  TContext
-> => {
-  const mutationOptions = getUnhideListingMutationOptions(options);
+export const useUnhideListing = <TError = Problem,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof unhideListing>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof unhideListing>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient);
-};
-/**
+      const mutationOptions = getUnhideListingMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    /**
  * @summary Take off sale
  */
 export type removeListingResponse200 = {
-  data: ListingDto;
-  status: 200;
-};
+  data: ListingDto
+  status: 200
+}
 
 export type removeListingResponse409 = {
-  data: Problem;
-  status: 409;
-};
-
-export type removeListingResponseSuccess = removeListingResponse200 & {
+  data: Problem
+  status: 409
+}
+    
+export type removeListingResponseSuccess = (removeListingResponse200) & {
   headers: Headers;
 };
-export type removeListingResponseError = removeListingResponse409 & {
+export type removeListingResponseError = (removeListingResponse409) & {
   headers: Headers;
 };
 
-export type removeListingResponse = removeListingResponseSuccess | removeListingResponseError;
+export type removeListingResponse = (removeListingResponseSuccess | removeListingResponseError)
 
-export const getRemoveListingUrl = (id: string) => {
-  return `/api/v1/listings/${id}/remove`;
-};
+export const getRemoveListingUrl = (id: string,) => {
 
-export const removeListing = async (
-  id: string,
-  options?: RequestInit,
-): Promise<removeListingResponse> => {
-  return httpClient<removeListingResponse>(getRemoveListingUrl(id), {
+
+  
+
+  return `/api/v1/listings/${id}/remove`
+}
+
+export const removeListing = async (id: string, options?: RequestInit): Promise<removeListingResponse> => {
+  
+  return httpClient<removeListingResponse>(getRemoveListingUrl(id),
+  {      
     ...options,
-    method: 'POST',
-  });
-};
+    method: 'POST'
+    
+    
+  }
+);}
 
-export const getRemoveListingMutationOptions = <TError = Problem, TContext = unknown>(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof removeListing>>,
-    TError,
-    { id: string },
-    TContext
-  >;
-  request?: SecondParameter<typeof httpClient>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof removeListing>>,
-  TError,
-  { id: string },
-  TContext
-> => {
-  const mutationKey = ['removeListing'];
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
 
-  const mutationFn: MutationFunction<Awaited<ReturnType<typeof removeListing>>, { id: string }> = (
-    props,
-  ) => {
-    const { id } = props ?? {};
 
-    return removeListing(id, requestOptions);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
+export const getRemoveListingMutationOptions = <TError = Problem,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof removeListing>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof httpClient>}
+): UseMutationOptions<Awaited<ReturnType<typeof removeListing>>, TError,{id: string}, TContext> => {
 
-export type RemoveListingMutationResult = NonNullable<Awaited<ReturnType<typeof removeListing>>>;
+const mutationKey = ['removeListing'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
 
-export type RemoveListingMutationError = Problem;
+      
 
-/**
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof removeListing>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  removeListing(id,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RemoveListingMutationResult = NonNullable<Awaited<ReturnType<typeof removeListing>>>
+    
+    export type RemoveListingMutationError = Problem
+
+    /**
  * @summary Take off sale
  */
-export const useRemoveListing = <TError = Problem, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof removeListing>>,
-      TError,
-      { id: string },
-      TContext
-    >;
-    request?: SecondParameter<typeof httpClient>;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof removeListing>>,
-  TError,
-  { id: string },
-  TContext
-> => {
-  const mutationOptions = getRemoveListingMutationOptions(options);
+export const useRemoveListing = <TError = Problem,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof removeListing>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof removeListing>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient);
-};
+      const mutationOptions = getRemoveListingMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    

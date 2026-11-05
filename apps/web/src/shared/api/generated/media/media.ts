@@ -4,235 +4,212 @@
  * ClickAuto API
  * OpenAPI spec version: 1.0.0
  */
-import { useMutation } from '@tanstack/react-query';
+import {
+  useMutation
+} from '@tanstack/react-query';
 import type {
   MutationFunction,
   QueryClient,
   UseMutationOptions,
-  UseMutationResult,
+  UseMutationResult
 } from '@tanstack/react-query';
 
-import type { CreateUploadDto, PhotoDto, Problem, UploadTicketDto } from '.././model';
+import type {
+  CreateUploadDto,
+  PhotoDto,
+  Problem,
+  UploadTicketDto
+} from '.././model';
 
 import { httpClient } from '../../http-client';
 
+
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
+
 
 /**
  * @summary Get a presigned URL for a photo
  */
 export type createPhotoUploadResponse201 = {
-  data: UploadTicketDto;
-  status: 201;
-};
+  data: UploadTicketDto
+  status: 201
+}
 
 export type createPhotoUploadResponse422 = {
-  data: Problem;
-  status: 422;
-};
-
-export type createPhotoUploadResponseSuccess = createPhotoUploadResponse201 & {
+  data: Problem
+  status: 422
+}
+    
+export type createPhotoUploadResponseSuccess = (createPhotoUploadResponse201) & {
   headers: Headers;
 };
-export type createPhotoUploadResponseError = createPhotoUploadResponse422 & {
+export type createPhotoUploadResponseError = (createPhotoUploadResponse422) & {
   headers: Headers;
 };
 
-export type createPhotoUploadResponse =
-  | createPhotoUploadResponseSuccess
-  | createPhotoUploadResponseError;
+export type createPhotoUploadResponse = (createPhotoUploadResponseSuccess | createPhotoUploadResponseError)
 
 export const getCreatePhotoUploadUrl = () => {
-  return `/api/v1/media/uploads`;
-};
 
-export const createPhotoUpload = async (
-  createUploadDto: CreateUploadDto,
-  options?: RequestInit,
-): Promise<createPhotoUploadResponse> => {
-  return httpClient<createPhotoUploadResponse>(getCreatePhotoUploadUrl(), {
+
+  
+
+  return `/api/v1/media/uploads`
+}
+
+export const createPhotoUpload = async (createUploadDto: CreateUploadDto, options?: RequestInit): Promise<createPhotoUploadResponse> => {
+  
+  return httpClient<createPhotoUploadResponse>(getCreatePhotoUploadUrl(),
+  {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(createUploadDto),
-  });
-};
+    body: JSON.stringify(
+      createUploadDto,)
+  }
+);}
 
-export const getCreatePhotoUploadMutationOptions = <
-  TError = Problem,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof createPhotoUpload>>,
-    TError,
-    { data: CreateUploadDto },
-    TContext
-  >;
-  request?: SecondParameter<typeof httpClient>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof createPhotoUpload>>,
-  TError,
-  { data: CreateUploadDto },
-  TContext
-> => {
-  const mutationKey = ['createPhotoUpload'];
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof createPhotoUpload>>,
-    { data: CreateUploadDto }
-  > = (props) => {
-    const { data } = props ?? {};
 
-    return createPhotoUpload(data, requestOptions);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
+export const getCreatePhotoUploadMutationOptions = <TError = Problem,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPhotoUpload>>, TError,{data: CreateUploadDto}, TContext>, request?: SecondParameter<typeof httpClient>}
+): UseMutationOptions<Awaited<ReturnType<typeof createPhotoUpload>>, TError,{data: CreateUploadDto}, TContext> => {
 
-export type CreatePhotoUploadMutationResult = NonNullable<
-  Awaited<ReturnType<typeof createPhotoUpload>>
->;
-export type CreatePhotoUploadMutationBody = CreateUploadDto;
-export type CreatePhotoUploadMutationError = Problem;
+const mutationKey = ['createPhotoUpload'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
 
-/**
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createPhotoUpload>>, {data: CreateUploadDto}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createPhotoUpload(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreatePhotoUploadMutationResult = NonNullable<Awaited<ReturnType<typeof createPhotoUpload>>>
+    export type CreatePhotoUploadMutationBody = CreateUploadDto
+    export type CreatePhotoUploadMutationError = Problem
+
+    /**
  * @summary Get a presigned URL for a photo
  */
-export const useCreatePhotoUpload = <TError = Problem, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof createPhotoUpload>>,
-      TError,
-      { data: CreateUploadDto },
-      TContext
-    >;
-    request?: SecondParameter<typeof httpClient>;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof createPhotoUpload>>,
-  TError,
-  { data: CreateUploadDto },
-  TContext
-> => {
-  const mutationOptions = getCreatePhotoUploadMutationOptions(options);
+export const useCreatePhotoUpload = <TError = Problem,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPhotoUpload>>, TError,{data: CreateUploadDto}, TContext>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof createPhotoUpload>>,
+        TError,
+        {data: CreateUploadDto},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient);
-};
-/**
+      const mutationOptions = getCreatePhotoUploadMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    /**
  * @summary Process the uploaded photo
  */
 export type completePhotoUploadResponse200 = {
-  data: PhotoDto;
-  status: 200;
-};
+  data: PhotoDto
+  status: 200
+}
 
 export type completePhotoUploadResponse409 = {
-  data: Problem;
-  status: 409;
-};
+  data: Problem
+  status: 409
+}
 
 export type completePhotoUploadResponse422 = {
-  data: Problem;
-  status: 422;
-};
-
-export type completePhotoUploadResponseSuccess = completePhotoUploadResponse200 & {
+  data: Problem
+  status: 422
+}
+    
+export type completePhotoUploadResponseSuccess = (completePhotoUploadResponse200) & {
   headers: Headers;
 };
-export type completePhotoUploadResponseError = (
-  | completePhotoUploadResponse409
-  | completePhotoUploadResponse422
-) & {
+export type completePhotoUploadResponseError = (completePhotoUploadResponse409 | completePhotoUploadResponse422) & {
   headers: Headers;
 };
 
-export type completePhotoUploadResponse =
-  | completePhotoUploadResponseSuccess
-  | completePhotoUploadResponseError;
+export type completePhotoUploadResponse = (completePhotoUploadResponseSuccess | completePhotoUploadResponseError)
 
-export const getCompletePhotoUploadUrl = (mediaId: string) => {
-  return `/api/v1/media/${mediaId}/complete`;
-};
+export const getCompletePhotoUploadUrl = (mediaId: string,) => {
 
-export const completePhotoUpload = async (
-  mediaId: string,
-  options?: RequestInit,
-): Promise<completePhotoUploadResponse> => {
-  return httpClient<completePhotoUploadResponse>(getCompletePhotoUploadUrl(mediaId), {
+
+  
+
+  return `/api/v1/media/${mediaId}/complete`
+}
+
+export const completePhotoUpload = async (mediaId: string, options?: RequestInit): Promise<completePhotoUploadResponse> => {
+  
+  return httpClient<completePhotoUploadResponse>(getCompletePhotoUploadUrl(mediaId),
+  {      
     ...options,
-    method: 'POST',
-  });
-};
+    method: 'POST'
+    
+    
+  }
+);}
 
-export const getCompletePhotoUploadMutationOptions = <
-  TError = Problem,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof completePhotoUpload>>,
-    TError,
-    { mediaId: string },
-    TContext
-  >;
-  request?: SecondParameter<typeof httpClient>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof completePhotoUpload>>,
-  TError,
-  { mediaId: string },
-  TContext
-> => {
-  const mutationKey = ['completePhotoUpload'];
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof completePhotoUpload>>,
-    { mediaId: string }
-  > = (props) => {
-    const { mediaId } = props ?? {};
 
-    return completePhotoUpload(mediaId, requestOptions);
-  };
 
-  return { mutationFn, ...mutationOptions };
-};
+export const getCompletePhotoUploadMutationOptions = <TError = Problem,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof completePhotoUpload>>, TError,{mediaId: string}, TContext>, request?: SecondParameter<typeof httpClient>}
+): UseMutationOptions<Awaited<ReturnType<typeof completePhotoUpload>>, TError,{mediaId: string}, TContext> => {
 
-export type CompletePhotoUploadMutationResult = NonNullable<
-  Awaited<ReturnType<typeof completePhotoUpload>>
->;
+const mutationKey = ['completePhotoUpload'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
 
-export type CompletePhotoUploadMutationError = Problem;
+      
 
-/**
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof completePhotoUpload>>, {mediaId: string}> = (props) => {
+          const {mediaId} = props ?? {};
+
+          return  completePhotoUpload(mediaId,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CompletePhotoUploadMutationResult = NonNullable<Awaited<ReturnType<typeof completePhotoUpload>>>
+    
+    export type CompletePhotoUploadMutationError = Problem
+
+    /**
  * @summary Process the uploaded photo
  */
-export const useCompletePhotoUpload = <TError = Problem, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof completePhotoUpload>>,
-      TError,
-      { mediaId: string },
-      TContext
-    >;
-    request?: SecondParameter<typeof httpClient>;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof completePhotoUpload>>,
-  TError,
-  { mediaId: string },
-  TContext
-> => {
-  const mutationOptions = getCompletePhotoUploadMutationOptions(options);
+export const useCompletePhotoUpload = <TError = Problem,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof completePhotoUpload>>, TError,{mediaId: string}, TContext>, request?: SecondParameter<typeof httpClient>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof completePhotoUpload>>,
+        TError,
+        {mediaId: string},
+        TContext
+      > => {
 
-  return useMutation(mutationOptions, queryClient);
-};
+      const mutationOptions = getCompletePhotoUploadMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    

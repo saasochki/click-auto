@@ -5,8 +5,8 @@
  * OpenAPI spec version: 1.0.0
  */
 
-export type ListingDtoPriceCurrency =
-  (typeof ListingDtoPriceCurrency)[keyof typeof ListingDtoPriceCurrency];
+export type ListingDtoPriceCurrency = typeof ListingDtoPriceCurrency[keyof typeof ListingDtoPriceCurrency];
+
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ListingDtoPriceCurrency = {
