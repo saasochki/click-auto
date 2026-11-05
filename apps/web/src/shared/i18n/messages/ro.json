@@ -13,7 +13,14 @@
   },
   "home": {
     "title": "Găsiți-vă mașina",
-    "subtitle": "Mașini, produse și servicii auto în Transnistria și Moldova"
+    "subtitle": "Mașini, produse și servicii auto în Transnistria și Moldova",
+    "count": "{count, plural, one {{formatted} anunț} few {{formatted} anunțuri} other {{formatted} de anunțuri}} lângă dvs.",
+    "countEverywhere": "{count, plural, one {{formatted} anunț} few {{formatted} anunțuri} other {{formatted} de anunțuri}} în Transnistria și Moldova",
+    "filters": "Filtre",
+    "fresh": "Anunțuri noi",
+    "all": "Toate",
+    "goodsAndServices": "Produse și servicii",
+    "emptyCars": "Încă nu sunt anunțuri aici. Încercați altă regiune."
   },
   "auth": {
     "login": {
@@ -348,6 +355,10 @@
       "share": "Distribuie linkul",
       "copied": "Linkul a fost copiat",
       "toMyListings": "La anunțurile mele"
+    },
+    "hide": {
+      "label": "Ascunde din căutare",
+      "hint": "Anunțul nu-l va vedea nimeni în afară de dvs."
     }
   },
   "myListings": {
@@ -392,5 +403,135 @@
       "remove": "Anunțul a fost retras din vânzare"
     },
     "failed": "Nu a reușit. Reîncărcați pagina și încercați din nou"
+  },
+  "nav": {
+    "label": "Navigare",
+    "home": "Acasă",
+    "post": "Publică",
+    "profile": "Profil"
+  },
+  "footer": {
+    "about": "Auto, produse și servicii auto în Transnistria și Moldova",
+    "sections": "Secțiuni",
+    "copyright": "© {year} ClickAuto"
+  },
+  "place": {
+    "title": "Unde căutăm?",
+    "close": "Închide",
+    "done": "Gata",
+    "all": "Toate regiunile",
+    "country": {
+      "pmr": "Transnistria",
+      "md": "Moldova"
+    },
+    "allIn": {
+      "pmr": "Toate orașele din Transnistria",
+      "md": "Toate orașele din Moldova"
+    },
+    "countryLabel": "Țara",
+    "search": "Caută orașul",
+    "nothing": "Nu s-a găsit nimic",
+    "geoFailed": "Nu am putut determina locația. Alegeți regiunea și orașul — vă vom arăta anunțurile din apropiere."
+  },
+  "feed": {
+    "source": "Sursa: {name}",
+    "from": "de la",
+    "mobileService": "Deplasare la client",
+    "searchPlaceholder": {
+      "car": "Marcă, model sau oraș",
+      "goods": "Denumire sau cod OEM",
+      "service": "Denumirea serviciului"
+    },
+    "count": "{count, plural, one {{formatted} anunț} few {{formatted} anunțuri} other {{formatted} de anunțuri}}",
+    "emptyTitle": "Nu s-a găsit nimic",
+    "emptyText": "Încercați să eliminați o parte din filtre sau să alegeți altă regiune",
+    "resetFilters": "Resetează filtrele",
+    "error": "Anunțurile nu s-au încărcat. Reîncărcați pagina.",
+    "more": "Arată mai multe",
+    "back": "Înapoi",
+    "breadcrumbs": "Navigare pe secțiuni",
+    "home": "Acasă",
+    "section": {
+      "cars": "Automobile",
+      "goods": "Produse auto",
+      "services": "Servicii"
+    },
+    "metaTitle": "{title} — ClickAuto",
+    "metaDescription": {
+      "cars": "{title}: anunțuri de vânzare în Transnistria și Moldova. Prețuri, fotografii, contacte.",
+      "goods": "{title}: anunțuri în Transnistria și Moldova. Piese, anvelope, jante și accesorii.",
+      "services": "{title}: service auto, vulcanizare, evacuator și alte servicii în Transnistria și Moldova."
+    }
+  },
+  "filters": {
+    "title": "Filtre",
+    "close": "Închide",
+    "button": "Filtre",
+    "buttonCount": "Filtre · {count}",
+    "reset": "Resetează",
+    "show": "Arată",
+    "showCount": "Arată {count}",
+    "all": "Toate",
+    "any": "Oricare",
+    "anyBrand": "Orice marcă",
+    "from": "de la",
+    "to": "până la",
+    "brand": "Marca",
+    "model": "Modelul",
+    "addBrand": "Adaugă o marcă",
+    "removeBrand": "Elimină marca",
+    "price": "Preț",
+    "currency": "Valuta",
+    "currencies": {
+      "usd": "$",
+      "eur": "€",
+      "prb": "rub.",
+      "mdl": "lei"
+    },
+    "showNegotiable": "Arată și „Negociabil”",
+    "year": "Anul fabricației",
+    "mileage": "Rulaj, km",
+    "fuel": "Combustibil",
+    "transmission": "Cutia de viteze",
+    "bodyType": "Tip caroserie",
+    "drive": "Tracțiune",
+    "engine": "Capacitate motor, cm³",
+    "power": "Putere, CP",
+    "steering": "Volan",
+    "color": "Culoare",
+    "registration": "Înmatriculare",
+    "exchange": "Schimb posibil",
+    "posted": "Data publicării",
+    "postedAny": "Oricând",
+    "postedDays": "{days, plural, one {În ultima zi} few {În ultimele # zile} other {În ultimele # de zile}}",
+    "more": "Toate filtrele",
+    "category": "Categorie",
+    "allCategories": "Toate categoriile",
+    "compatibility": "Potrivit pentru mașina mea",
+    "compatibilityChip": "Pentru mașina mea",
+    "compatYear": "Anul mașinii",
+    "servedBrand": "Marca auto",
+    "mobile": "Deplasare la client",
+    "yes": "da",
+    "removeChip": "Elimină filtrul „{name}”",
+    "chip": {
+      "fromValue": "de la {value}",
+      "toValue": "până la {value}",
+      "range": "{from}–{to}"
+    },
+    "units": {
+      "km": "km",
+      "cc": "cm³",
+      "hp": "CP"
+    }
+  },
+  "sort": {
+    "label": "Sortare",
+    "relevance": "După relevanță",
+    "date_desc": "Mai întâi cele noi",
+    "price_asc": "Mai întâi cele ieftine",
+    "price_desc": "Mai întâi cele scumpe",
+    "mileage_asc": "Cu rulaj mai mic",
+    "year_desc": "Mai întâi cele mai noi ca an"
   }
 }

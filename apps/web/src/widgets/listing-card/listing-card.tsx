@@ -1,18 +1,13 @@
 import { useLocale, useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
 import { ListingPrice } from '@/entities/listing/listing-meta';
+import { SOURCE_NAMES } from '@/entities/listing/source';
 import type { ListingDto } from '@/shared/api/generated/model';
 import { Link } from '@/shared/i18n/routing';
 import { formatDate, formatNumber, formatYear } from '@/shared/lib/format';
 import { BackIcon, PhoneIcon, PinIcon } from '@/shared/ui/icons';
 import { Description, VinCopy } from './card-parts';
 import { Gallery } from './gallery';
-
-const SOURCE_NAMES: Record<string, string> = {
-  '999md': '999.md',
-  makler: 'makler.md',
-  klaxon: 'klaxon.md',
-};
 
 function Spec({ label, value }: { label: string; value: ReactNode }) {
   return (

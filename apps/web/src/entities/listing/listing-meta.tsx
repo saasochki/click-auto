@@ -14,8 +14,20 @@ export function ListingPrice({ listing, className }: { listing: Priced; classNam
   return <span className={className}>{text}</span>;
 }
 
+/** What the subtitle needs: both the full listing and the feed summary have it. */
+export interface SubtitleSource {
+  car: {
+    engineVolumeCc: number | null;
+    transmission: NonNullable<ListingDto['car']>['transmission'];
+    mileageKm: number | null;
+  } | null;
+  goods: { category: { name: string } } | null;
+  service: { category: { name: string } } | null;
+  city: { name: string };
+}
+
 /** One line under the title in lists: "2,5 AT · 98 000 км · Тирасполь". */
-export function useListingSubtitle(): (listing: ListingDto) => string {
+export function useListingSubtitle(): (listing: SubtitleSource) => string {
   const locale = useLocale();
   const t = useTranslations('dict');
   const tl = useTranslations('listing');

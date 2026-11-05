@@ -1,13 +1,15 @@
 'use client';
 
 import type { ListingInput } from '@clickauto/shared';
-import { Button, cn } from '@clickauto/ui';
+import { Button, cn, Switch } from '@clickauto/ui';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import {
   createListing,
+  hideListing,
   publishListing,
+  unhideListing,
   updateListing,
 } from '@/shared/api/generated/listings/listings';
 import {
@@ -66,6 +68,22 @@ export function ListingForm({
   const isCar = type === 'car';
   const lastStep = isCar ? CAR_STEPS - 1 : 0;
   const isDraft = !listing || listing.status === 'draft';
+  // "Скрыть из поиска" (design 25): a hidden listing is visible to nobody but the author.
+  const [hidden, setHidden] = useState(listing?.status === 'hidden');
+
+  /** Applies the switch after saving: hide an active listing or bring a hidden one back. */
+  const applyVisibility = async (saved: ListingDto): Promise<ListingDto> => {
+    const action =
+      hidden && saved.status === 'active'
+        ? hideListing
+        : !hidden && saved.status === 'hidden'
+          ? unhideListing
+          : null;
+    if (!action) return saved;
+    const res = await action(saved.id);
+    if (res.status !== 200) throw new Error('unexpected_status');
+    return res.data;
+  };
 
   const save = useMutation({
     mutationFn: async ({ input, mode }: { input: ListingInput; mode: SaveMode }) => {
@@ -77,10 +95,11 @@ export function ListingForm({
         : await createListing(body);
       // httpClient already throws ApiError on 4xx/5xx; these checks only narrow the type.
       if (saved.status !== 200 && saved.status !== 201) throw new Error('unexpected_status');
-      if (mode !== 'publish') return saved.data;
+      if (mode === 'draft') return saved.data;
+      if (mode === 'save') return applyVisibility(saved.data);
       const published = await publishListing(saved.data.id);
       if (published.status !== 200) throw new Error('unexpected_status');
-      return published.data;
+      return applyVisibility(published.data);
     },
     onSuccess: async (saved, { mode }) => {
       await Promise.all([
@@ -88,7 +107,8 @@ export function ListingForm({
         queryClient.invalidateQueries({ queryKey: getCountMyListingsQueryKey() }),
         queryClient.invalidateQueries({ queryKey: getGetMyListingQueryKey(saved.id) }),
       ]);
-      if (mode === 'publish') onPublished(saved);
+      // A listing published straight into "hidden" has nothing to share: go to the list.
+      if (mode === 'publish' && saved.status === 'active') onPublished(saved);
       else router.push(`/me/listings?status=${saved.status}`);
     },
     onError: (error) => {
@@ -182,6 +202,14 @@ export function ListingForm({
         {isCar && step === 2 ? <CarDescriptionStep {...props} /> : null}
         {type === 'goods' ? <GoodsFields {...props} /> : null}
         {type === 'service' ? <ServiceFields {...props} /> : null}
+        {step === lastStep ? (
+          <Switch
+            checked={hidden}
+            onChange={setHidden}
+            label={t('hide.label')}
+            hint={t('hide.hint')}
+          />
+        ) : null}
 
         <footer className="fixed inset-x-0 bottom-0 z-10 border-t border-border bg-bg px-4 pt-3 pb-safe">
           <div className="mx-auto flex max-w-2xl gap-3">

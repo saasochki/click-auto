@@ -6,5 +6,6 @@ export { Input, type InputProps } from './input';
 export { OtpInput, type OtpInputProps } from './otp-input';
 export { Segmented } from './segmented';
 export { Select, type SelectOption, type SelectProps } from './select';
+export { Sheet, type SheetProps } from './sheet';
 export { Checkbox, Switch } from './switch';
 export { Textarea, type TextareaProps } from './textarea';

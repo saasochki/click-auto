@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { PAGE_LIMIT_DEFAULT, PAGE_LIMIT_MAX } from './constants';
 import {
   BODY_TYPES,
+  COUNTRIES,
   CAR_CONDITIONS,
   COLORS,
   CURRENCIES,
@@ -79,6 +80,8 @@ export const searchQuerySchema = z.object({
   cursor: z.string().max(200).optional(),
   facets: many(z.enum(SEARCH_FACETS), SEARCH_FACETS.length),
 
+  /** Place: the whole PMR or Moldova, regions or cities (OR-ed). */
+  country: z.enum(COUNTRIES).optional(),
   region: many(slug),
   city: many(slug),
   /** Whole major units of priceCurrency. */

@@ -28,6 +28,16 @@ describe('buildSearchFilter', () => {
     ]);
   });
 
+  it('ORs places of different levels', () => {
+    const filter = buildSearchFilter(
+      parse({ type: 'car', country: 'pmr', city: 'balti' }),
+      {},
+      null,
+      now,
+    );
+    expect(filter).toContain('(country = "pmr" OR citySlug IN ["balti"])');
+  });
+
   it('adds negotiable listings to a price range only on request', () => {
     const base = { type: 'car', priceTo: '45000' };
     expect(buildSearchFilter(parse(base), {}, { to: 4_500_000 }, now)).toContain(

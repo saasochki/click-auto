@@ -32,8 +32,9 @@
 
 ## Списки, фильтры, пагинация
 
-- Пагинация курсором: `?limit=20&cursor=...`, ответ `{ "items": [...], "nextCursor": "..." | null }`. `limit` — до 50.
-- Фильтры — плоские query-параметры: `?type=car&brand=toyota&model=camry&yearFrom=2015&priceFrom=5000&priceTo=15000&priceCurrency=USD&region=chisinau`.
+- Пагинация курсором: `?limit=20&cursor=...`, ответ `{ "items": [...], "nextCursor": "..." | null }`. `limit` — до 50. Курсор непрозрачный: клиент передаёт его как есть.
+- Лента `GET /api/v1/listings?type=car|goods|service` дополнительно отдаёт `total` (точное число до 10 000) и `facets`. `GET /api/v1/listings/count` с теми же параметрами отдаёт только `{ "total": N }` — для кнопки «Показать N» в фильтрах. Без текста `q` и без `sort` лента идёт от новых к старым, с текстом — по релевантности.
+- Фильтры — плоские query-параметры: `?type=car&car=toyota:camry&yearFrom=2015&priceFrom=5000&priceTo=15000&priceCurrency=USD&region=chisinau`. Цена — в целых единицах валюты `priceCurrency` (по умолчанию USD) и сравнивается с ценой, пересчитанной в USD по последним курсам; «Договорная» попадает в диапазон только с `negotiable=true`. Место: `country` (`pmr` / `md`), `region`, `city` — по slug, условия разных уровней объединяются через «или». Дата выкладки — `posted=1|3|7|30` (дней).
 - Мультивыбор — повтор параметра: `?fuel=petrol&fuel=hybrid`.
 - Пары «марка + модель» — `?car=toyota:camry&car=kia:optima`, до 5 пар.
 - Атрибуты категорий — с префиксом `attr.`: `?category=tires&attr.diameter=17&attr.season=winter`.

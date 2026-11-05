@@ -1,3 +1,5 @@
+'use client';
+
 import type { ChoiceOption } from './chip';
 import { cn } from './cn';
 

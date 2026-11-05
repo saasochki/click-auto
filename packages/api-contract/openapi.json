@@ -675,6 +675,18 @@
             }
           },
           {
+            "name": "country",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pmr",
+                "md"
+              ]
+            }
+          },
+          {
             "name": "region",
             "required": false,
             "in": "query",
@@ -1266,6 +1278,18 @@
                   "category"
                 ]
               }
+            }
+          },
+          {
+            "name": "country",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pmr",
+                "md"
+              ]
             }
           },
           {

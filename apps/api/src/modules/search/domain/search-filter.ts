@@ -31,6 +31,7 @@ export function buildSearchFilter(
   const filter: string[] = [`type = ${lit(query.type)}`];
 
   const places: string[] = [];
+  if (query.country) places.push(`country = ${lit(query.country)}`);
   if (query.region?.length) places.push(inList('regionSlug', query.region));
   if (query.city?.length) places.push(inList('citySlug', query.city));
   if (places.length) filter.push(`(${places.join(' OR ')})`);

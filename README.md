@@ -27,7 +27,9 @@ pnpm install
 pnpm db:generate
 pnpm db:migrate                   # применить миграции к локальной базе
 pnpm db:seed                      # регионы, города, категории, источники импорта
-pnpm --filter @clickauto/db seed:dev   # только локально: марки и тестовые пользователи @example.com
+pnpm --filter @clickauto/db seed:dev   # только локально: марки, тестовые пользователи @example.com и выдуманные объявления
+pnpm --filter worker search:reindex    # собрать индекс поиска из базы
+pnpm --filter worker rates:refresh     # загрузить курсы НБМ и ПРБ
 pnpm dev
 ```
 
