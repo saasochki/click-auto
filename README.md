@@ -22,7 +22,7 @@ Mobile-first сайт для покупки и продажи авто, това
 
 ```bash
 cp .env.example .env
-docker compose up -d              # PostgreSQL, Redis, Meilisearch, MinIO, imgproxy, Mailpit
+docker compose up -d              # PostgreSQL, Redis, Meilisearch, RustFS, imgproxy, Mailpit
 pnpm install
 pnpm db:generate
 pnpm db:migrate                   # применить миграции к локальной базе

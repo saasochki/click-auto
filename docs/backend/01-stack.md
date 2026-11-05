@@ -11,7 +11,7 @@
 | Поиск и фильтры | Meilisearch 1.x | Быстрые фасетные фильтры, сортировка, опечатки, поиск по RU и RO. Проще OpenSearch в эксплуатации |
 | Кэш, очереди, лимиты | Redis 7 + BullMQ | Одноразовые коды, rate limit, очереди импорта и уведомлений, адаптер Socket.IO |
 | Чат в реальном времени | Socket.IO (шлюз NestJS) + Redis adapter | Комнаты, переподключение, горизонтальное масштабирование |
-| Файлы | S3-совместимое хранилище MinIO (локально и на VPS) | Фото объявлений, в том числе скопированные при импорте |
+| Файлы | S3-совместимое хранилище RustFS (локально, в CI и на VPS). API работает по протоколу S3, хранилище можно заменить без правок кода. MinIO не используем: с 2025 года нет бесплатных образов | Фото объявлений, в том числе скопированные при импорте |
 | Обработка фото | imgproxy | Ресайз, WebP/AVIF на лету, кэш на CDN |
 | Парсинг | Crawlee + Playwright (воркер на BullMQ) | Парсинг 999.md, makler.md, klaxon.md, ретраи, ротация, работа с JS-страницами |
 | Аутентификация | Email OTP + Google OpenID Connect, сессии в httpOnly cookies | Без паролей, по решениям аналитики |
@@ -20,7 +20,7 @@
 | Документация API | OpenAPI 3.1 (генерация из NestJS) | Клиент для фронта генерируется автоматически |
 | Тесты | Vitest, Supertest, Testcontainers | Юнит, интеграционные с реальными PostgreSQL и Redis |
 | Логи и мониторинг | pino (JSON-логи), Sentry, Prometheus + Grafana | Ошибки, метрики, алерты на импорт |
-| Инфраструктура | Docker, docker compose локально и на сервере, CI на GitHub Actions. Хостинг — VPS Spaceship | Все сервисы (API, воркер, сайт, админка, PostgreSQL, Redis, Meilisearch, MinIO, imgproxy) в Docker на VPS, перед ними reverse proxy с TLS |
+| Инфраструктура | Docker, docker compose локально и на сервере, CI на GitHub Actions. Хостинг — VPS Spaceship | Все сервисы (API, воркер, сайт, админка, PostgreSQL, Redis, Meilisearch, RustFS, imgproxy) в Docker на VPS, перед ними reverse proxy с TLS |
 | Пакетный менеджер, монорепо | pnpm workspaces + Turborepo | Общие пакеты, кэш сборок |
 
 ## Внешние источники данных

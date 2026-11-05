@@ -24,6 +24,18 @@ const envSchema = z.object({
     .default('false')
     .transform((value) => value === 'true'),
   MAIL_FROM: z.string().default('ClickAuto <no-reply@localhost>'),
+  /** S3-compatible storage (RustFS locally and on the VPS). */
+  S3_ENDPOINT: z.string().url().default('http://localhost:9000'),
+  /** S3 host as the browser sees it, for presigned upload URLs. Defaults to S3_ENDPOINT. */
+  S3_PUBLIC_ENDPOINT: z.string().url().optional(),
+  S3_REGION: z.string().default('us-east-1'),
+  S3_BUCKET: z.string().default('clickauto'),
+  S3_ACCESS_KEY: z.string().default('clickauto'),
+  S3_SECRET_KEY: z.string().default('clickauto-local'),
+  /** imgproxy base URL; key and salt (hex) sign URLs in production. */
+  IMGPROXY_URL: z.string().url().default('http://localhost:8080'),
+  IMGPROXY_KEY: z.string().optional(),
+  IMGPROXY_SALT: z.string().optional(),
   /** Google OAuth client. Without them the Google sign-in endpoints answer 503. */
   GOOGLE_CLIENT_ID: z.string().optional(),
   GOOGLE_CLIENT_SECRET: z.string().optional(),

@@ -151,15 +151,15 @@ flowchart LR
 - Сессии: httpOnly, Secure, SameSite=Lax cookies; ротация refresh-токена; список активных сессий в профиле.
 - CSRF: SameSite + проверка заголовка `Origin` для изменяющих запросов.
 - Rate limit на вход, отправку кода, создание объявлений и сообщений.
-- Загрузка фото: проверка MIME и размера, удаление EXIF, загрузка напрямую в S3 по подписанному URL.
+- Загрузка фото: JPEG, PNG или WebP до 15 МБ. Браузер грузит файл напрямую в S3 по подписанному URL (живёт 15 минут), затем API проверяет файл, поворачивает по EXIF, уменьшает до 2560 px по длинной стороне, пересохраняет в JPEG (качество 85) без метаданных. Показываем через imgproxy (WebP/AVIF, подписанные URL в production).
 - Персональные данные: телефоны в публичных ответах только для карточки объявления, не в списках.
 
 ## Окружения
 
 | Окружение | Назначение |
 | --- | --- |
-| local | docker compose: PostgreSQL, Redis, Meilisearch, MinIO, imgproxy, Mailpit |
+| local | docker compose: PostgreSQL, Redis, Meilisearch, RustFS, imgproxy, Mailpit |
 | staging | Копия прода с тестовыми данными, автодеплой из `develop` |
 | production | Деплой по релизу. Схема веток — по [gitflow](../gitflow.md) |
 
-staging и production работают на VPS Spaceship в docker compose: reverse proxy с TLS, сайт, админка, API, воркер, PostgreSQL, Redis, Meilisearch, MinIO, imgproxy. Бэкапы PostgreSQL и MinIO — ежедневно, хранятся вне сервера.
+staging и production работают на VPS Spaceship в docker compose: reverse proxy с TLS, сайт, админка, API, воркер, PostgreSQL, Redis, Meilisearch, RustFS, imgproxy. Бэкапы PostgreSQL и RustFS — ежедневно, хранятся вне сервера.

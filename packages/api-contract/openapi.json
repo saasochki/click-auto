@@ -306,6 +306,830 @@
           "me"
         ]
       }
+    },
+    "/api/v1/catalog/brands": {
+      "get": {
+        "operationId": "listBrands",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BrandDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "catalog"
+        ]
+      }
+    },
+    "/api/v1/catalog/brands/{brandId}/models": {
+      "get": {
+        "operationId": "listModels",
+        "parameters": [
+          {
+            "name": "brandId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ModelDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "catalog"
+        ]
+      }
+    },
+    "/api/v1/catalog/categories": {
+      "get": {
+        "operationId": "listCategories",
+        "parameters": [
+          {
+            "name": "kind",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "goods",
+                "service"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CategoryDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Flat category list with attributes",
+        "tags": [
+          "catalog"
+        ]
+      }
+    },
+    "/api/v1/catalog/regions": {
+      "get": {
+        "operationId": "listRegions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RegionDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Regions with cities",
+        "tags": [
+          "catalog"
+        ]
+      }
+    },
+    "/api/v1/catalog/cities/nearest": {
+      "get": {
+        "operationId": "getNearestCity",
+        "parameters": [
+          {
+            "name": "lat",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "minimum": -90,
+              "maximum": 90,
+              "exclusiveMaximum": false,
+              "exclusiveMinimum": false,
+              "type": "number"
+            }
+          },
+          {
+            "name": "lng",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "minimum": -180,
+              "maximum": 180,
+              "exclusiveMaximum": false,
+              "exclusiveMinimum": false,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NearestCityDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "city_not_found — ask the user to pick",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Nearest known city for geolocation",
+        "tags": [
+          "catalog"
+        ]
+      }
+    },
+    "/api/v1/media/uploads": {
+      "post": {
+        "operationId": "createPhotoUpload",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUploadDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadTicketDto"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "summary": "Get a presigned URL for a photo",
+        "tags": [
+          "media"
+        ]
+      }
+    },
+    "/api/v1/media/{mediaId}/complete": {
+      "post": {
+        "operationId": "completePhotoUpload",
+        "parameters": [
+          {
+            "name": "mediaId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PhotoDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "upload_missing",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "image_invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "summary": "Process the uploaded photo",
+        "tags": [
+          "media"
+        ]
+      }
+    },
+    "/api/v1/me/listings": {
+      "get": {
+        "operationId": "listMyListings",
+        "parameters": [
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "draft",
+                "active",
+                "hidden",
+                "removed",
+                "blocked"
+              ]
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "car",
+                "goods",
+                "service"
+              ]
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 50,
+              "exclusiveMaximum": false,
+              "exclusiveMinimum": false,
+              "default": 20,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "cursor",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListingPageDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "summary": "",
+        "tags": [
+          "me"
+        ]
+      }
+    },
+    "/api/v1/me/listings/counts": {
+      "get": {
+        "operationId": "countMyListings",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MyListingCountsDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "summary": "Counts by status for tabs",
+        "tags": [
+          "me"
+        ]
+      }
+    },
+    "/api/v1/me/listings/{id}": {
+      "get": {
+        "operationId": "getMyListing",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListingDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "summary": "Own listing in any status, for editing",
+        "tags": [
+          "me"
+        ]
+      }
+    },
+    "/api/v1/listings/{id}": {
+      "get": {
+        "operationId": "getListing",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListingDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Hidden, removed or blocked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Public card of an active listing",
+        "tags": [
+          "listings"
+        ]
+      },
+      "patch": {
+        "operationId": "updateListing",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "description": "Listing version",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CarListingInputDto"
+                  },
+                  {
+                    "$ref": "#/components/schemas/GoodsListingInputDto"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ServiceListingInputDto"
+                  }
+                ],
+                "discriminator": {
+                  "propertyName": "type"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListingDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "version_conflict or listing_not_editable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "summary": "Replace listing content",
+        "tags": [
+          "listings"
+        ]
+      }
+    },
+    "/api/v1/listings": {
+      "post": {
+        "operationId": "createListing",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CarListingInputDto"
+                  },
+                  {
+                    "$ref": "#/components/schemas/GoodsListingInputDto"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ServiceListingInputDto"
+                  }
+                ],
+                "discriminator": {
+                  "propertyName": "type"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListingDto"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "summary": "Create a draft",
+        "tags": [
+          "listings"
+        ]
+      }
+    },
+    "/api/v1/listings/{id}/publish": {
+      "post": {
+        "operationId": "publishListing",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListingDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "invalid_status_transition",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "summary": "",
+        "tags": [
+          "listings"
+        ]
+      }
+    },
+    "/api/v1/listings/{id}/hide": {
+      "post": {
+        "operationId": "hideListing",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListingDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "summary": "Hide from search",
+        "tags": [
+          "listings"
+        ]
+      }
+    },
+    "/api/v1/listings/{id}/unhide": {
+      "post": {
+        "operationId": "unhideListing",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListingDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "summary": "Return to search",
+        "tags": [
+          "listings"
+        ]
+      }
+    },
+    "/api/v1/listings/{id}/remove": {
+      "post": {
+        "operationId": "removeListing",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListingDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "summary": "Take off sale",
+        "tags": [
+          "listings"
+        ]
+      }
     }
   },
   "info": {
@@ -611,6 +1435,1972 @@
           "role",
           "needsProfile",
           "createdAt"
+        ]
+      },
+      "BrandDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "name"
+        ]
+      },
+      "ModelDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "brandId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "brandId",
+          "slug",
+          "name"
+        ]
+      },
+      "CategoryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "goods",
+              "service"
+            ]
+          },
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "parentId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "attributes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "number",
+                    "range",
+                    "enum",
+                    "multi_enum",
+                    "bool",
+                    "text"
+                  ]
+                },
+                "options": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "nullable": true
+                },
+                "unit": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "required": {
+                  "type": "boolean"
+                },
+                "filterable": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "key",
+                "type",
+                "options",
+                "unit",
+                "required",
+                "filterable"
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "slug",
+          "name",
+          "parentId",
+          "attributes"
+        ]
+      },
+      "RegionDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string",
+            "enum": [
+              "pmr",
+              "md"
+            ]
+          },
+          "cities": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "slug": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "slug",
+                "name"
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "country",
+          "cities"
+        ]
+      },
+      "NearestCityDto": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "slug": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "slug",
+              "name"
+            ]
+          },
+          "region": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "slug": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "country": {
+                "type": "string",
+                "enum": [
+                  "pmr",
+                  "md"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "slug",
+              "name",
+              "country"
+            ]
+          },
+          "distanceKm": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "city",
+          "region",
+          "distanceKm"
+        ]
+      },
+      "CreateUploadDto": {
+        "type": "object",
+        "properties": {
+          "mimeType": {
+            "type": "string",
+            "enum": [
+              "image/jpeg",
+              "image/png",
+              "image/webp"
+            ]
+          },
+          "sizeBytes": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "maximum": 15728640,
+            "exclusiveMaximum": false
+          }
+        },
+        "required": [
+          "mimeType",
+          "sizeBytes"
+        ]
+      },
+      "UploadTicketDto": {
+        "type": "object",
+        "properties": {
+          "mediaId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "uploadUrl": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "required": [
+          "mediaId",
+          "uploadUrl"
+        ]
+      },
+      "PhotoDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "thumbUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "width": {
+            "type": "integer",
+            "nullable": true
+          },
+          "height": {
+            "type": "integer",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "url",
+          "thumbUrl",
+          "width",
+          "height"
+        ]
+      },
+      "ListingPageDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "car",
+                    "goods",
+                    "service"
+                  ]
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "draft",
+                    "active",
+                    "hidden",
+                    "removed",
+                    "blocked"
+                  ]
+                },
+                "origin": {
+                  "type": "string",
+                  "enum": [
+                    "native",
+                    "imported"
+                  ]
+                },
+                "title": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "price": {
+                  "type": "object",
+                  "properties": {
+                    "amount": {
+                      "type": "integer"
+                    },
+                    "currency": {
+                      "type": "string",
+                      "enum": [
+                        "MDL",
+                        "PRB",
+                        "USD",
+                        "EUR"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "amount",
+                    "currency"
+                  ],
+                  "nullable": true
+                },
+                "priceNegotiable": {
+                  "type": "boolean"
+                },
+                "city": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "regionId": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "regionName": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "regionId",
+                    "regionName"
+                  ]
+                },
+                "photos": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "format": "uuid"
+                      },
+                      "url": {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "thumbUrl": {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "width": {
+                        "type": "integer",
+                        "nullable": true
+                      },
+                      "height": {
+                        "type": "integer",
+                        "nullable": true
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "url",
+                      "thumbUrl",
+                      "width",
+                      "height"
+                    ]
+                  }
+                },
+                "owner": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "username": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "name": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "username",
+                    "name",
+                    "createdAt"
+                  ],
+                  "nullable": true
+                },
+                "contactPhone": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "contactName": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "car": {
+                  "type": "object",
+                  "properties": {
+                    "brand": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "slug": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "slug",
+                        "name"
+                      ],
+                      "nullable": true
+                    },
+                    "model": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "slug": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "slug",
+                        "name"
+                      ],
+                      "nullable": true
+                    },
+                    "customModelName": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "year": {
+                      "type": "integer"
+                    },
+                    "mileageKm": {
+                      "type": "integer",
+                      "nullable": true
+                    },
+                    "bodyType": {
+                      "type": "string",
+                      "enum": [
+                        "sedan",
+                        "hatchback",
+                        "wagon",
+                        "liftback",
+                        "coupe",
+                        "convertible",
+                        "suv",
+                        "crossover",
+                        "minivan",
+                        "pickup",
+                        "van",
+                        "minibus"
+                      ],
+                      "nullable": true
+                    },
+                    "transmission": {
+                      "type": "string",
+                      "enum": [
+                        "manual",
+                        "automatic",
+                        "robot",
+                        "cvt"
+                      ],
+                      "nullable": true
+                    },
+                    "drive": {
+                      "type": "string",
+                      "enum": [
+                        "fwd",
+                        "rwd",
+                        "awd"
+                      ],
+                      "nullable": true
+                    },
+                    "fuelTypes": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "petrol",
+                          "cng",
+                          "lpg",
+                          "diesel",
+                          "hybrid",
+                          "plugin_hybrid",
+                          "electric"
+                        ]
+                      }
+                    },
+                    "engineVolumeCc": {
+                      "type": "integer",
+                      "nullable": true
+                    },
+                    "powerHp": {
+                      "type": "integer",
+                      "nullable": true
+                    },
+                    "steering": {
+                      "type": "string",
+                      "enum": [
+                        "left",
+                        "right"
+                      ],
+                      "nullable": true
+                    },
+                    "color": {
+                      "type": "string",
+                      "enum": [
+                        "white",
+                        "black",
+                        "gray",
+                        "silver",
+                        "blue",
+                        "light_blue",
+                        "red",
+                        "burgundy",
+                        "green",
+                        "beige",
+                        "brown",
+                        "yellow",
+                        "orange",
+                        "purple",
+                        "gold",
+                        "other"
+                      ],
+                      "nullable": true
+                    },
+                    "registration": {
+                      "type": "string",
+                      "enum": [
+                        "pmr",
+                        "md",
+                        "neutral",
+                        "foreign"
+                      ],
+                      "nullable": true
+                    },
+                    "condition": {
+                      "type": "string",
+                      "enum": [
+                        "new",
+                        "used",
+                        "needs_repair"
+                      ]
+                    },
+                    "ownersCount": {
+                      "type": "integer",
+                      "nullable": true
+                    },
+                    "vin": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "exchangePossible": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "brand",
+                    "model",
+                    "customModelName",
+                    "year",
+                    "mileageKm",
+                    "bodyType",
+                    "transmission",
+                    "drive",
+                    "fuelTypes",
+                    "engineVolumeCc",
+                    "powerHp",
+                    "steering",
+                    "color",
+                    "registration",
+                    "condition",
+                    "ownersCount",
+                    "vin",
+                    "exchangePossible"
+                  ],
+                  "nullable": true
+                },
+                "goods": {
+                  "type": "object",
+                  "properties": {
+                    "category": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "slug": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "slug",
+                        "name"
+                      ]
+                    },
+                    "condition": {
+                      "type": "string",
+                      "enum": [
+                        "new",
+                        "used"
+                      ]
+                    },
+                    "attributes": {
+                      "type": "object",
+                      "additionalProperties": {}
+                    },
+                    "compatibleModels": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "modelId": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "yearFrom": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "yearTo": {
+                            "type": "integer",
+                            "nullable": true
+                          }
+                        },
+                        "required": [
+                          "modelId",
+                          "yearFrom",
+                          "yearTo"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "category",
+                    "condition",
+                    "attributes",
+                    "compatibleModels"
+                  ],
+                  "nullable": true
+                },
+                "service": {
+                  "type": "object",
+                  "properties": {
+                    "category": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "slug": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "slug",
+                        "name"
+                      ]
+                    },
+                    "address": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "workingHours": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "mobileService": {
+                      "type": "boolean"
+                    },
+                    "servedBrands": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "format": "uuid"
+                      }
+                    }
+                  },
+                  "required": [
+                    "category",
+                    "address",
+                    "workingHours",
+                    "mobileService",
+                    "servedBrands"
+                  ],
+                  "nullable": true
+                },
+                "source": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "999md",
+                        "makler",
+                        "klaxon"
+                      ]
+                    },
+                    "url": {
+                      "type": "string",
+                      "format": "uri"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "url"
+                  ],
+                  "nullable": true
+                },
+                "version": {
+                  "type": "integer"
+                },
+                "publishedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "nullable": true
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "id",
+                "type",
+                "status",
+                "origin",
+                "title",
+                "description",
+                "price",
+                "priceNegotiable",
+                "city",
+                "photos",
+                "owner",
+                "contactPhone",
+                "contactName",
+                "car",
+                "goods",
+                "service",
+                "source",
+                "version",
+                "publishedAt",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "items",
+          "nextCursor"
+        ]
+      },
+      "MyListingCountsDto": {
+        "type": "object",
+        "properties": {
+          "draft": {
+            "type": "integer"
+          },
+          "active": {
+            "type": "integer"
+          },
+          "hidden": {
+            "type": "integer"
+          },
+          "removed": {
+            "type": "integer"
+          },
+          "blocked": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "draft",
+          "active",
+          "hidden",
+          "removed",
+          "blocked"
+        ]
+      },
+      "ListingDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "car",
+              "goods",
+              "service"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "active",
+              "hidden",
+              "removed",
+              "blocked"
+            ]
+          },
+          "origin": {
+            "type": "string",
+            "enum": [
+              "native",
+              "imported"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "price": {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "integer"
+              },
+              "currency": {
+                "type": "string",
+                "enum": [
+                  "MDL",
+                  "PRB",
+                  "USD",
+                  "EUR"
+                ]
+              }
+            },
+            "required": [
+              "amount",
+              "currency"
+            ],
+            "nullable": true
+          },
+          "priceNegotiable": {
+            "type": "boolean"
+          },
+          "city": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "name": {
+                "type": "string"
+              },
+              "regionId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "regionName": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "regionId",
+              "regionName"
+            ]
+          },
+          "photos": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "thumbUrl": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "width": {
+                  "type": "integer",
+                  "nullable": true
+                },
+                "height": {
+                  "type": "integer",
+                  "nullable": true
+                }
+              },
+              "required": [
+                "id",
+                "url",
+                "thumbUrl",
+                "width",
+                "height"
+              ]
+            }
+          },
+          "owner": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "username": {
+                "type": "string",
+                "nullable": true
+              },
+              "name": {
+                "type": "string",
+                "nullable": true
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "required": [
+              "id",
+              "username",
+              "name",
+              "createdAt"
+            ],
+            "nullable": true
+          },
+          "contactPhone": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactName": {
+            "type": "string",
+            "nullable": true
+          },
+          "car": {
+            "type": "object",
+            "properties": {
+              "brand": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "slug",
+                  "name"
+                ],
+                "nullable": true
+              },
+              "model": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "slug",
+                  "name"
+                ],
+                "nullable": true
+              },
+              "customModelName": {
+                "type": "string",
+                "nullable": true
+              },
+              "year": {
+                "type": "integer"
+              },
+              "mileageKm": {
+                "type": "integer",
+                "nullable": true
+              },
+              "bodyType": {
+                "type": "string",
+                "enum": [
+                  "sedan",
+                  "hatchback",
+                  "wagon",
+                  "liftback",
+                  "coupe",
+                  "convertible",
+                  "suv",
+                  "crossover",
+                  "minivan",
+                  "pickup",
+                  "van",
+                  "minibus"
+                ],
+                "nullable": true
+              },
+              "transmission": {
+                "type": "string",
+                "enum": [
+                  "manual",
+                  "automatic",
+                  "robot",
+                  "cvt"
+                ],
+                "nullable": true
+              },
+              "drive": {
+                "type": "string",
+                "enum": [
+                  "fwd",
+                  "rwd",
+                  "awd"
+                ],
+                "nullable": true
+              },
+              "fuelTypes": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "petrol",
+                    "cng",
+                    "lpg",
+                    "diesel",
+                    "hybrid",
+                    "plugin_hybrid",
+                    "electric"
+                  ]
+                }
+              },
+              "engineVolumeCc": {
+                "type": "integer",
+                "nullable": true
+              },
+              "powerHp": {
+                "type": "integer",
+                "nullable": true
+              },
+              "steering": {
+                "type": "string",
+                "enum": [
+                  "left",
+                  "right"
+                ],
+                "nullable": true
+              },
+              "color": {
+                "type": "string",
+                "enum": [
+                  "white",
+                  "black",
+                  "gray",
+                  "silver",
+                  "blue",
+                  "light_blue",
+                  "red",
+                  "burgundy",
+                  "green",
+                  "beige",
+                  "brown",
+                  "yellow",
+                  "orange",
+                  "purple",
+                  "gold",
+                  "other"
+                ],
+                "nullable": true
+              },
+              "registration": {
+                "type": "string",
+                "enum": [
+                  "pmr",
+                  "md",
+                  "neutral",
+                  "foreign"
+                ],
+                "nullable": true
+              },
+              "condition": {
+                "type": "string",
+                "enum": [
+                  "new",
+                  "used",
+                  "needs_repair"
+                ]
+              },
+              "ownersCount": {
+                "type": "integer",
+                "nullable": true
+              },
+              "vin": {
+                "type": "string",
+                "nullable": true
+              },
+              "exchangePossible": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "brand",
+              "model",
+              "customModelName",
+              "year",
+              "mileageKm",
+              "bodyType",
+              "transmission",
+              "drive",
+              "fuelTypes",
+              "engineVolumeCc",
+              "powerHp",
+              "steering",
+              "color",
+              "registration",
+              "condition",
+              "ownersCount",
+              "vin",
+              "exchangePossible"
+            ],
+            "nullable": true
+          },
+          "goods": {
+            "type": "object",
+            "properties": {
+              "category": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "slug",
+                  "name"
+                ]
+              },
+              "condition": {
+                "type": "string",
+                "enum": [
+                  "new",
+                  "used"
+                ]
+              },
+              "attributes": {
+                "type": "object",
+                "additionalProperties": {}
+              },
+              "compatibleModels": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "modelId": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "yearFrom": {
+                      "type": "integer",
+                      "nullable": true
+                    },
+                    "yearTo": {
+                      "type": "integer",
+                      "nullable": true
+                    }
+                  },
+                  "required": [
+                    "modelId",
+                    "yearFrom",
+                    "yearTo"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "category",
+              "condition",
+              "attributes",
+              "compatibleModels"
+            ],
+            "nullable": true
+          },
+          "service": {
+            "type": "object",
+            "properties": {
+              "category": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "slug",
+                  "name"
+                ]
+              },
+              "address": {
+                "type": "string",
+                "nullable": true
+              },
+              "workingHours": {
+                "type": "string",
+                "nullable": true
+              },
+              "mobileService": {
+                "type": "boolean"
+              },
+              "servedBrands": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            },
+            "required": [
+              "category",
+              "address",
+              "workingHours",
+              "mobileService",
+              "servedBrands"
+            ],
+            "nullable": true
+          },
+          "source": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "999md",
+                  "makler",
+                  "klaxon"
+                ]
+              },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              }
+            },
+            "required": [
+              "code",
+              "url"
+            ],
+            "nullable": true
+          },
+          "version": {
+            "type": "integer"
+          },
+          "publishedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "status",
+          "origin",
+          "title",
+          "description",
+          "price",
+          "priceNegotiable",
+          "city",
+          "photos",
+          "owner",
+          "contactPhone",
+          "contactName",
+          "car",
+          "goods",
+          "service",
+          "source",
+          "version",
+          "publishedAt",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CarListingInputDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "car"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 3000,
+            "default": ""
+          },
+          "price": {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "integer",
+                "minimum": 0,
+                "exclusiveMinimum": true
+              },
+              "currency": {
+                "type": "string",
+                "enum": [
+                  "MDL",
+                  "PRB",
+                  "USD",
+                  "EUR"
+                ]
+              }
+            },
+            "required": [
+              "amount",
+              "currency"
+            ],
+            "nullable": true,
+            "default": null
+          },
+          "priceNegotiable": {
+            "type": "boolean",
+            "default": false
+          },
+          "cityId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "contactPhone": {
+            "type": "string",
+            "pattern": "^\\+[1-9]\\d{6,14}$",
+            "nullable": true,
+            "default": null
+          },
+          "photoIds": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "default": []
+          },
+          "car": {
+            "type": "object",
+            "properties": {
+              "modelId": {
+                "type": "string",
+                "format": "uuid",
+                "nullable": true,
+                "default": null
+              },
+              "brandId": {
+                "type": "string",
+                "format": "uuid",
+                "nullable": true,
+                "default": null
+              },
+              "customModelName": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60,
+                "nullable": true,
+                "default": null
+              },
+              "generationId": {
+                "type": "string",
+                "format": "uuid",
+                "nullable": true,
+                "default": null
+              },
+              "year": {
+                "type": "integer",
+                "minimum": 1900,
+                "exclusiveMinimum": false,
+                "maximum": 2027,
+                "exclusiveMaximum": false
+              },
+              "mileageKm": {
+                "type": "integer",
+                "minimum": 0,
+                "exclusiveMinimum": false,
+                "maximum": 5000000,
+                "exclusiveMaximum": false,
+                "nullable": true,
+                "default": null
+              },
+              "bodyType": {
+                "type": "string",
+                "enum": [
+                  "sedan",
+                  "hatchback",
+                  "wagon",
+                  "liftback",
+                  "coupe",
+                  "convertible",
+                  "suv",
+                  "crossover",
+                  "minivan",
+                  "pickup",
+                  "van",
+                  "minibus"
+                ],
+                "nullable": true,
+                "default": null
+              },
+              "transmission": {
+                "type": "string",
+                "enum": [
+                  "manual",
+                  "automatic",
+                  "robot",
+                  "cvt"
+                ],
+                "nullable": true,
+                "default": null
+              },
+              "drive": {
+                "type": "string",
+                "enum": [
+                  "fwd",
+                  "rwd",
+                  "awd"
+                ],
+                "nullable": true,
+                "default": null
+              },
+              "fuelTypes": {
+                "type": "array",
+                "maxItems": 7,
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "petrol",
+                    "cng",
+                    "lpg",
+                    "diesel",
+                    "hybrid",
+                    "plugin_hybrid",
+                    "electric"
+                  ]
+                },
+                "default": []
+              },
+              "engineVolumeCc": {
+                "type": "integer",
+                "minimum": 0,
+                "exclusiveMinimum": true,
+                "maximum": 20000,
+                "exclusiveMaximum": false,
+                "nullable": true,
+                "default": null
+              },
+              "powerHp": {
+                "type": "integer",
+                "minimum": 0,
+                "exclusiveMinimum": true,
+                "maximum": 3000,
+                "exclusiveMaximum": false,
+                "nullable": true,
+                "default": null
+              },
+              "steering": {
+                "type": "string",
+                "enum": [
+                  "left",
+                  "right"
+                ],
+                "nullable": true,
+                "default": null
+              },
+              "color": {
+                "type": "string",
+                "enum": [
+                  "white",
+                  "black",
+                  "gray",
+                  "silver",
+                  "blue",
+                  "light_blue",
+                  "red",
+                  "burgundy",
+                  "green",
+                  "beige",
+                  "brown",
+                  "yellow",
+                  "orange",
+                  "purple",
+                  "gold",
+                  "other"
+                ],
+                "nullable": true,
+                "default": null
+              },
+              "registration": {
+                "type": "string",
+                "enum": [
+                  "pmr",
+                  "md",
+                  "neutral",
+                  "foreign"
+                ],
+                "nullable": true,
+                "default": null
+              },
+              "condition": {
+                "type": "string",
+                "enum": [
+                  "new",
+                  "used",
+                  "needs_repair"
+                ]
+              },
+              "ownersCount": {
+                "type": "integer",
+                "minimum": 0,
+                "exclusiveMinimum": false,
+                "maximum": 99,
+                "exclusiveMaximum": false,
+                "nullable": true,
+                "default": null
+              },
+              "vin": {
+                "type": "string",
+                "pattern": "^[A-HJ-NPR-Z0-9]{17}$",
+                "nullable": true,
+                "default": null
+              },
+              "exchangePossible": {
+                "type": "boolean",
+                "default": false
+              }
+            },
+            "required": [
+              "year",
+              "condition"
+            ]
+          }
+        },
+        "required": [
+          "type",
+          "cityId",
+          "car"
+        ]
+      },
+      "GoodsListingInputDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "goods"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 120
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 3000,
+            "default": ""
+          },
+          "price": {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "integer",
+                "minimum": 0,
+                "exclusiveMinimum": true
+              },
+              "currency": {
+                "type": "string",
+                "enum": [
+                  "MDL",
+                  "PRB",
+                  "USD",
+                  "EUR"
+                ]
+              }
+            },
+            "required": [
+              "amount",
+              "currency"
+            ],
+            "nullable": true,
+            "default": null
+          },
+          "priceNegotiable": {
+            "type": "boolean",
+            "default": false
+          },
+          "cityId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "contactPhone": {
+            "type": "string",
+            "pattern": "^\\+[1-9]\\d{6,14}$",
+            "nullable": true,
+            "default": null
+          },
+          "photoIds": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "default": []
+          },
+          "goods": {
+            "type": "object",
+            "properties": {
+              "categoryId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "condition": {
+                "type": "string",
+                "enum": [
+                  "new",
+                  "used"
+                ]
+              },
+              "attributes": {
+                "type": "object",
+                "additionalProperties": {
+                  "oneOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "string",
+                      "maxLength": 200
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "array",
+                      "maxItems": 50,
+                      "items": {
+                        "type": "string",
+                        "maxLength": 100
+                      }
+                    }
+                  ]
+                },
+                "default": {}
+              },
+              "compatibleModels": {
+                "type": "array",
+                "maxItems": 50,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "modelId": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "yearFrom": {
+                      "type": "integer",
+                      "minimum": 1900,
+                      "exclusiveMinimum": false,
+                      "maximum": 2027,
+                      "exclusiveMaximum": false,
+                      "nullable": true,
+                      "default": null
+                    },
+                    "yearTo": {
+                      "type": "integer",
+                      "minimum": 1900,
+                      "exclusiveMinimum": false,
+                      "maximum": 2027,
+                      "exclusiveMaximum": false,
+                      "nullable": true,
+                      "default": null
+                    }
+                  },
+                  "required": [
+                    "modelId"
+                  ]
+                },
+                "default": []
+              }
+            },
+            "required": [
+              "categoryId",
+              "condition"
+            ]
+          }
+        },
+        "required": [
+          "type",
+          "title",
+          "cityId",
+          "goods"
+        ]
+      },
+      "ServiceListingInputDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "service"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 120
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 3000,
+            "default": ""
+          },
+          "price": {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "integer",
+                "minimum": 0,
+                "exclusiveMinimum": true
+              },
+              "currency": {
+                "type": "string",
+                "enum": [
+                  "MDL",
+                  "PRB",
+                  "USD",
+                  "EUR"
+                ]
+              }
+            },
+            "required": [
+              "amount",
+              "currency"
+            ],
+            "nullable": true,
+            "default": null
+          },
+          "priceNegotiable": {
+            "type": "boolean",
+            "default": false
+          },
+          "cityId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "contactPhone": {
+            "type": "string",
+            "pattern": "^\\+[1-9]\\d{6,14}$",
+            "nullable": true,
+            "default": null
+          },
+          "photoIds": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "default": []
+          },
+          "service": {
+            "type": "object",
+            "properties": {
+              "categoryId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "address": {
+                "type": "string",
+                "maxLength": 200,
+                "nullable": true,
+                "default": null
+              },
+              "workingHours": {
+                "type": "string",
+                "maxLength": 200,
+                "nullable": true,
+                "default": null
+              },
+              "mobileService": {
+                "type": "boolean",
+                "default": false
+              },
+              "servedBrands": {
+                "type": "array",
+                "maxItems": 100,
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "default": []
+              }
+            },
+            "required": [
+              "categoryId"
+            ]
+          }
+        },
+        "required": [
+          "type",
+          "title",
+          "cityId",
+          "service"
         ]
       }
     }
