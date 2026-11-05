@@ -1,10 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import type { CategoryAttribute, CategoryKind } from '@clickauto/db';
-import type { Locale } from '@clickauto/shared';
+import type { ListingType, Locale } from '@clickauto/shared';
 import type { z } from 'zod';
 import { AppError } from '../../common/problem';
 import { pickName } from '../../common/locale';
 import { PrismaService } from '../../prisma/prisma.service';
+import {
+  CAR_FIELDS,
+  goodsFields,
+  serviceFields,
+  type CategoryOption,
+  type FilterConfig,
+} from './domain/filter-config';
 import type { attributeSchema, BrandDto, CategoryDto, ModelDto, RegionDto } from './dto';
 
 type Attribute = z.infer<typeof attributeSchema>;
@@ -86,6 +93,40 @@ export class CatalogService {
     }
     const all = await this.categories(kind, 'ru');
     return all.find((c) => c.id === categoryId)?.attributes ?? [];
+  }
+
+  /**
+   * Filter panel of a feed. For goods a known category adds its attributes and, for parts and
+   * electronics, the compatibility filter; an unknown category is ignored like in the feed.
+   */
+  async filterConfig(
+    type: ListingType,
+    category: string | undefined,
+    locale: Locale,
+  ): Promise<FilterConfig> {
+    if (type === 'car') return { type, fields: CAR_FIELDS };
+    const list = await this.categories(type, locale);
+    const bySlug = new Map(list.map((c) => [c.slug, c]));
+    const byId = new Map(list.map((c) => [c.id, c]));
+    const categories: CategoryOption[] = list.map((c) => ({
+      slug: c.slug,
+      name: c.name,
+      parentSlug: c.parentId ? (byId.get(c.parentId)?.slug ?? null) : null,
+    }));
+    if (type === 'service') {
+      const brands = await this.brands();
+      return { type, fields: serviceFields(categories, brands) };
+    }
+    const chosen = category ? bySlug.get(category) : undefined;
+    let root = chosen;
+    while (root?.parentId) root = byId.get(root.parentId);
+    return {
+      type,
+      fields: goodsFields(
+        categories,
+        chosen && root ? { root: root.slug, attributes: chosen.attributes } : null,
+      ),
+    };
   }
 
   async regions(locale: Locale): Promise<RegionDto[]> {

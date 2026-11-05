@@ -404,6 +404,51 @@
         ]
       }
     },
+    "/api/v1/catalog/filters": {
+      "get": {
+        "operationId": "getFilterConfig",
+        "parameters": [
+          {
+            "name": "type",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "car",
+                "goods",
+                "service"
+              ]
+            }
+          },
+          {
+            "name": "category",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "pattern": "^[a-z0-9-]{1,80}$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FilterConfigDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Filter panel of a feed: fields, values and dependencies",
+        "tags": [
+          "catalog"
+        ]
+      }
+    },
     "/api/v1/catalog/regions": {
       "get": {
         "operationId": "listRegions",
@@ -2646,6 +2691,122 @@
           "name",
           "parentId",
           "attributes"
+        ]
+      },
+      "FilterConfigDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "car",
+              "goods",
+              "service"
+            ]
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "chips",
+                    "checkboxes",
+                    "chip_multi",
+                    "select",
+                    "range",
+                    "switch",
+                    "checkbox",
+                    "price",
+                    "posted",
+                    "car_pairs",
+                    "category",
+                    "compatibility",
+                    "text"
+                  ]
+                },
+                "params": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "options": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "label": {
+                        "type": "string"
+                      },
+                      "parent": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  }
+                },
+                "dictionary": {
+                  "type": "string"
+                },
+                "unit": {
+                  "type": "string"
+                },
+                "grouping": {
+                  "type": "boolean"
+                },
+                "advanced": {
+                  "type": "boolean"
+                },
+                "hiddenWhen": {
+                  "type": "object",
+                  "properties": {
+                    "param": {
+                      "type": "string"
+                    },
+                    "only": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "param",
+                    "only"
+                  ]
+                },
+                "resets": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "max": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "key",
+                "kind",
+                "params"
+              ]
+            }
+          }
+        },
+        "required": [
+          "type",
+          "fields"
         ]
       },
       "RegionDto": {

@@ -8,6 +8,8 @@ import {
   BrandDto,
   CategoriesQueryDto,
   CategoryDto,
+  FilterConfigDto,
+  FilterConfigQueryDto,
   ModelDto,
   NearestCityDto,
   NearestCityQueryDto,
@@ -41,6 +43,19 @@ export class CatalogController {
     @RequestLocale() locale: Locale,
   ): Promise<CategoryDto[]> {
     return this.catalog.categories(query.kind, locale);
+  }
+
+  @Get('filters')
+  @ApiOperation({
+    operationId: 'getFilterConfig',
+    summary: 'Filter panel of a feed: fields, values and dependencies',
+  })
+  @ApiOkResponse({ type: FilterConfigDto })
+  getFilterConfig(
+    @Query() query: FilterConfigQueryDto,
+    @RequestLocale() locale: Locale,
+  ): Promise<FilterConfigDto> {
+    return this.catalog.filterConfig(query.type, query.category, locale);
   }
 
   @Get('regions')
